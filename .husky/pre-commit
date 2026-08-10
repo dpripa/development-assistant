@@ -1,4 +1,26 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-make lint && make tests
+set -e
+
+export PATH="/usr/bin:/opt/homebrew/bin:/usr/local/bin:/bin:/usr/sbin:/sbin:$PATH"
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+	. "$NVM_DIR/nvm.sh" >/dev/null 2>&1
+	nvm use --silent >/dev/null
+fi
+
+if ! command -v composer >/dev/null 2>&1; then
+	echo "Composer is required for the pre-commit hook, but it was not found in PATH." >&2
+	echo "Install Composer with Homebrew or make it available in /usr/local/bin or /opt/homebrew/bin." >&2
+	exit 127
+fi
+
+if ! command -v node >/dev/null 2>&1 || ! command -v npm >/dev/null 2>&1; then
+	echo "Node.js and npm are required for the pre-commit hook, but they were not found in PATH." >&2
+	echo "Install the Node.js version from .nvmrc via nvm before committing." >&2
+	exit 127
+fi
+
+make lint
