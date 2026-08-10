@@ -10,11 +10,11 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - name: Cache Composer Packages
               id: composer-cache
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: vendor
                   key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -25,7 +25,7 @@ jobs:
               run: composer install
 
             - name: Use Node.js 14.x
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: 14.x
                   cache: 'npm'
@@ -35,7 +35,7 @@ jobs:
               run: npm install
 
             - name: Prepare to Release
-              run: make prepare-to-release
+              run: make prepare-to-release && composer install --no-dev --optimize-autoloader
 
             - name: Deploy
               uses: SamKirkland/FTP-Deploy-Action@4.3.2
@@ -50,11 +50,13 @@ jobs:
                       .github/**
                       .husky/**
                       .script/**
+                      backups/**
+                      docker/**
                       node_modules/**
+                      scripts/**
                       src/**
-                      test/**
                       tmp/**
-                      vendor/**
+                      wp/**
                       .editorconfig
                       .env
                       .env.bak
@@ -63,18 +65,17 @@ jobs:
                       .eslintrc
                       .gitignore
                       .nvmrc
-                      .phpunit.result.cache
                       .stylelintignore
                       .stylelintrc
                       .travis.yml
                       autoload.json
                       composer.json
                       composer.lock
+                      docker-compose.yml
                       Makefile
                       package.json
                       package-lock.json
                       phpcs.xml
-                      phunit.xml.dist
                       README.md
                       scoper.inc.php
                       webpack.config.js

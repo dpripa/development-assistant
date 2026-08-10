@@ -6,12 +6,16 @@
 
 	<file>.</file>
 	<exclude-pattern>asset/*</exclude-pattern>
+	<exclude-pattern>backups/*</exclude-pattern>
+	<exclude-pattern>docker/*</exclude-pattern>
 	<exclude-pattern>lib/*</exclude-pattern>
 	<exclude-pattern>node_modules/*</exclude-pattern>
 	<exclude-pattern>release/*</exclude-pattern>
+	<exclude-pattern>scripts/*</exclude-pattern>
 	<exclude-pattern>src/*</exclude-pattern>
 	<exclude-pattern>tmp/*</exclude-pattern>
 	<exclude-pattern>vendor/*</exclude-pattern>
+	<exclude-pattern>wp/*</exclude-pattern>
 	<exclude-pattern>*.js</exclude-pattern>
 
 	<rule ref="PSR2.Methods.MethodDeclaration.Underscore">

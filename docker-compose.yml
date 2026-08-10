@@ -1,0 +1,109 @@
+services:
+  wordpress:
+    build:
+      context: ./docker/wordpress
+    image: development-assistant-wordpress:php8.2-apache-xdebug
+    restart: unless-stopped
+    depends_on:
+      - db
+      - mailpit
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${WP_DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${WP_DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD:-wordpress}
+      WP_PORT: ${WP_PORT:-21601}
+      WP_URL_SYNC_ATTEMPTS: ${WP_URL_SYNC_ATTEMPTS:-15}
+      WP_SITE_TITLE: ${WP_SITE_TITLE:-Development Assistant Local}
+      WP_ADMIN_USER: ${WP_ADMIN_USER:-admin}
+      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD:-admin}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL:-admin@example.com}
+      REQUIRED_PLUGINS: ${REQUIRED_PLUGINS:-query-monitor wp-crontrol user-switching wp-migrate-db}
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
+      XDEBUG_MODE: ${XDEBUG_MODE:-off}
+      XDEBUG_START_WITH_REQUEST: ${XDEBUG_START_WITH_REQUEST:-trigger}
+      XDEBUG_CLIENT_HOST: ${XDEBUG_CLIENT_HOST:-host.docker.internal}
+      XDEBUG_CLIENT_PORT: ${XDEBUG_CLIENT_PORT:-21699}
+      XDEBUG_DISCOVER_CLIENT_HOST: ${XDEBUG_DISCOVER_CLIENT_HOST:-0}
+      XDEBUG_IDEKEY: ${XDEBUG_IDEKEY:-DEVELOPMENT_ASSISTANT}
+      PHP_IDE_CONFIG: ${PHP_IDE_CONFIG:-serverName=development-assistant}
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/development-assistant
+      - ./scripts/init-wp.sh:/usr/local/bin/init-wp.sh:ro
+      - ./scripts/sync-wp-env.sh:/usr/local/bin/sync-wp-env.sh:ro
+
+  proxy:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on:
+      - wordpress
+    ports:
+      - "${WP_PORT:-21601}:443"
+    volumes:
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/certs:/etc/nginx/certs:ro
+
+  db:
+    image: mariadb:11.4
+    restart: unless-stopped
+    environment:
+      MARIADB_DATABASE: ${WP_DB_NAME:-wordpress}
+      MARIADB_USER: ${WP_DB_USER:-wordpress}
+      MARIADB_PASSWORD: ${WP_DB_PASSWORD:-wordpress}
+      MARIADB_ROOT_PASSWORD: ${WP_DB_ROOT_PASSWORD:-root}
+    volumes:
+      - db_data:/var/lib/mysql
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - "${MAILPIT_PORT:-21603}:8025"
+
+  wp-cli:
+    image: wordpress:cli-php8.2
+    profiles:
+      - tools
+    depends_on:
+      - db
+      - wordpress
+    user: "33:33"
+    working_dir: /var/www/html
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${WP_DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${WP_DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${WP_DB_PASSWORD:-wordpress}
+      WP_PORT: ${WP_PORT:-21601}
+      WP_URL_SYNC_ATTEMPTS: ${WP_URL_SYNC_ATTEMPTS:-15}
+      WP_SITE_TITLE: ${WP_SITE_TITLE:-Development Assistant Local}
+      WP_ADMIN_USER: ${WP_ADMIN_USER:-admin}
+      WP_ADMIN_PASSWORD: ${WP_ADMIN_PASSWORD:-admin}
+      WP_ADMIN_EMAIL: ${WP_ADMIN_EMAIL:-admin@example.com}
+      REQUIRED_PLUGINS: ${REQUIRED_PLUGINS:-query-monitor wp-crontrol user-switching wp-migrate-db}
+      WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/development-assistant
+      - ./scripts/sync-wp-env.sh:/usr/local/bin/sync-wp-env.sh:ro
+
+  composer:
+    image: composer:2
+    profiles:
+      - tools
+    working_dir: /app
+    volumes:
+      - ./:/app
+
+  adminer:
+    image: adminer:latest
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${ADMINER_PORT:-21602}:8080"
+
+volumes:
+  wordpress_data:
+  db_data:

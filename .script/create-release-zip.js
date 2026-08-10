@@ -27,7 +27,17 @@ archive.pipe( output );
 
 let directories = release.directories;
 for ( let i = 0; i < directories.length; i++ ) {
-	archive.directory( directories[i], name + '/' + directories[i], null );
+	archive.glob(
+		'**/*',
+		{
+			cwd: directories[i],
+			dot: true,
+			ignore: [ '**/.DS_Store' ]
+		},
+		{
+			prefix: name + '/' + directories[i]
+		}
+	);
 }
 
 let files = release.files;
