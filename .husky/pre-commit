@@ -11,9 +11,8 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
 	nvm use --silent >/dev/null
 fi
 
-if ! command -v composer >/dev/null 2>&1; then
-	echo "Composer is required for the pre-commit hook, but it was not found in PATH." >&2
-	echo "Install Composer with Homebrew or make it available in /usr/local/bin or /opt/homebrew/bin." >&2
+if ! command -v composer >/dev/null 2>&1 && ! command -v docker >/dev/null 2>&1; then
+	echo "Composer or Docker with Compose is required for the pre-commit hook." >&2
 	exit 127
 fi
 

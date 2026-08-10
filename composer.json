@@ -28,9 +28,7 @@
     "ext-mbstring": "*"
   },
   "require-dev": {
-    "wp-coding-standards/wpcs": "^3.1.0",
-    "phpunit/phpunit": "^9.6.23",
-    "yoast/phpunit-polyfills": "^3.1.2"
+    "wp-coding-standards/wpcs": "^3.4.1"
   },
   "autoload": {
     "psr-4": {
@@ -39,7 +37,6 @@
   },
   "scripts": {
     "lint": "phpcs",
-    "fix": "phpcbf",
-    "tests": "./vendor/bin/phpunit"
+    "fix": "phpcbf"
   }
 }

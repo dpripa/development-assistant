@@ -16,7 +16,7 @@ ftp
 		include: release.directories.map(
 			( dir ) => dir + '/**'
 		).concat(release.files),
-		exclude: [ 'node_modules/**', 'src/**' ],
+		exclude: [ '**/.DS_Store', 'node_modules/**', 'src/**' ],
 		deleteRemote: false,
 		forcePasv: true,
 		sftp: false,

@@ -8,4 +8,9 @@ vendor
 ehthumbs.db
 Thumbs.db
 tmp
-.phpunit.result.cache
+docker/certs/*
+!docker/certs/.gitkeep
+backups/db/*
+!backups/db/.gitkeep
+wp/*
+!wp/.gitkeep
