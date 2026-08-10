@@ -46,7 +46,7 @@
       "asset",
       "inc",
       "lang",
-      "lib"
+      "vendor"
     ],
     "files": [
       "development-assistant.php",

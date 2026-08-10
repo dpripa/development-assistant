@@ -32,21 +32,14 @@
     "phpunit/phpunit": "^9.6.23",
     "yoast/phpunit-polyfills": "^3.1.2"
   },
+  "autoload": {
+    "psr-4": {
+      "WPDevAssist\\": "inc/"
+    }
+  },
   "scripts": {
-    "no-dev": "composer install --no-dev",
     "lint": "phpcs",
     "fix": "phpcbf",
-    "tests": "./vendor/bin/phpunit",
-    "post-install-cmd": [
-      "@build-autoload"
-    ],
-    "post-update-cmd": [
-      "@build-autoload"
-    ],
-    "build-autoload": [
-      "mkdir -p ./lib",
-      "cp ./autoload.json ./lib/composer.json",
-      "@composer dump-autoload --working-dir ./lib --no-dev --classmap-authoritative"
-    ]
+    "tests": "./vendor/bin/phpunit"
   }
 }

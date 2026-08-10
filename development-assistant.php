@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 const KEY       = 'wp_dev_assist';
 const ROOT_FILE = __FILE__;
 
-$autoload = __DIR__ . '/lib/vendor/autoload.php';
+$autoload = __DIR__ . '/vendor/autoload.php';
 
 if ( ! file_exists( $autoload ) ) {
 	throw new Exception( 'Autoloader not exists' );

@@ -20,6 +20,7 @@ create-release-zip:
 	make lint && \
 	make tests && \
 	make build-src && \
+	composer install --no-dev --optimize-autoloader && \
 	npm run create-release-zip
 
 deploy-to-dev:
@@ -27,6 +28,7 @@ deploy-to-dev:
 	make lint && \
 	make tests && \
 	make build-src && \
+	composer install --no-dev --optimize-autoloader && \
 	npm run deploy-to-dev
 
 tests:
