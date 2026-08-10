@@ -1,9 +1,8 @@
 <?php
 namespace WPDevAssist\PluginsScreen;
 
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Feature;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\AdminNotice;
 use ZipArchive;
 use RecursiveIteratorIterator;
 use RecursiveDirectoryIterator;
@@ -11,15 +10,13 @@ use const WPDevAssist\KEY;
 
 defined( 'ABSPATH' ) || exit;
 
-class Downloader extends Feature {
+class Downloader {
 	protected const DOWNLOAD_QUERY_KEY = KEY . '_download_plugin';
 
 	protected ActionQuery $action_query;
 	protected AdminNotice $admin_notice;
 
 	public function __construct( ActionQuery $action_query, AdminNotice $admin_notice ) {
-		parent::__construct();
-
 		$this->action_query = $action_query;
 		$this->admin_notice = $admin_notice;
 

@@ -24,12 +24,10 @@
   },
   "require": {
     "php": ">=7.4.0",
-    "omgpress/omgcore": "0.1.15",
     "ext-zip": "*",
     "ext-mbstring": "*"
   },
   "require-dev": {
-    "humbug/php-scoper": "^0.18.17",
     "wp-coding-standards/wpcs": "^3.1.0",
     "phpunit/phpunit": "^9.6.23",
     "yoast/phpunit-polyfills": "^3.1.2"
@@ -40,13 +38,13 @@
     "fix": "phpcbf",
     "tests": "./vendor/bin/phpunit",
     "post-install-cmd": [
-      "@prefix-dependencies"
+      "@build-autoload"
     ],
     "post-update-cmd": [
-      "@prefix-dependencies"
+      "@build-autoload"
     ],
-    "prefix-dependencies": [
-      "php-scoper add-prefix --force --output-dir=lib --quiet",
+    "build-autoload": [
+      "mkdir -p ./lib",
       "cp ./autoload.json ./lib/composer.json",
       "@composer dump-autoload --working-dir ./lib --no-dev --classmap-authoritative"
     ]

@@ -1,16 +1,15 @@
 <?php
 namespace WPDevAssist;
 
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Asset;
-use WPDevAssist\OmgCore\Feature;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\AdminNotice;
+use WPDevAssist\Asset;
 use WPDevAssist\PluginsScreen\ActivationManager;
 use WPDevAssist\PluginsScreen\Downloader;
 
 defined( 'ABSPATH' ) || exit;
 
-class PluginsScreen extends Feature {
+class PluginsScreen {
 	protected const COLUMN_KEY = KEY . '_dev_actions';
 
 	protected ActionQuery $action_query;
@@ -21,8 +20,6 @@ class PluginsScreen extends Feature {
 	protected Downloader $downloader;
 
 	public function __construct( ActionQuery $action_query, Asset $asset, AdminNotice $admin_notice, Setting $setting ) {
-		parent::__construct();
-
 		$this->asset              = $asset;
 		$this->setting            = $setting;
 		$this->activation_manager = new ActivationManager( $action_query, $admin_notice );

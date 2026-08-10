@@ -2,9 +2,9 @@
 namespace WPDevAssist\Setting;
 
 use WPDevAssist\MailHog;
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Env;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\AdminNotice;
+use WPDevAssist\Env;
 use WPDevAssist\Setting;
 use const WPDevAssist\KEY;
 

@@ -4,10 +4,10 @@ namespace WPDevAssist\Setting;
 use Exception;
 use WP_Error;
 use WPDevAssist\Model\ActionLink;
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Asset;
-use WPDevAssist\OmgCore\Env;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\AdminNotice;
+use WPDevAssist\Asset;
+use WPDevAssist\Env;
 use const WPDevAssist\KEY;
 
 class SupportUser extends Page {

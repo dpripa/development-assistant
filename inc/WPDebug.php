@@ -2,13 +2,12 @@
 namespace WPDevAssist;
 
 use Exception;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Feature;
-use WPDevAssist\OmgCore\Fs;
+use WPDevAssist\AdminNotice;
+use WPDevAssist\Fs;
 
 defined( 'ABSPATH' ) || exit;
 
-class WPDebug extends Feature {
+class WPDebug {
 	protected const CONFIG_FILE_PATH               = ABSPATH . 'wp-config.php';
 	protected const ORIGINAL_DEBUG_VALUE_KEY       = KEY . '_original_wp_debug_value';
 	protected const ORIGINAL_DEBUG_VALUE_DEFAULT   = 'disabled';
@@ -26,8 +25,6 @@ class WPDebug extends Feature {
 	 * @throws Exception
 	 */
 	public function __construct( AdminNotice $admin_notice, Fs $fs, Htaccess $htaccess ) {
-		parent::__construct();
-
 		$this->admin_notice = $admin_notice;
 		$this->fs           = $fs;
 		$this->htaccess     = $htaccess;

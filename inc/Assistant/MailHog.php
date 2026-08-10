@@ -1,7 +1,7 @@
 <?php
 namespace WPDevAssist\Assistant;
 
-use WPDevAssist\OmgCore\ActionQuery;
+use WPDevAssist\ActionQuery;
 use WPDevAssist\Setting;
 use WPDevAssist\Setting\DevEnv;
 

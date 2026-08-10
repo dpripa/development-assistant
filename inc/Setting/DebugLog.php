@@ -2,10 +2,10 @@
 namespace WPDevAssist\Setting;
 
 use WPDevAssist\Model\ActionLink;
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\Asset;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Fs;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\Asset;
+use WPDevAssist\AdminNotice;
+use WPDevAssist\Fs;
 use WPDevAssist\Setting;
 use const WPDevAssist\KEY;
 

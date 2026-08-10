@@ -2,13 +2,12 @@
 namespace WPDevAssist;
 
 use Exception;
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\Asset;
-use WPDevAssist\OmgCore\Feature;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\Asset;
 
 defined( 'ABSPATH' ) || exit;
 
-class Assistant extends Feature {
+class Assistant {
 	public const TITLE_HOOK = KEY . '_assistant_panel_title';
 
 	protected Asset $asset;
@@ -24,8 +23,6 @@ class Assistant extends Feature {
 		Htaccess $htaccess,
 		MailHog $mail_hog
 	) {
-		parent::__construct();
-
 		$this->asset        = $asset;
 		$this->action_query = $action_query;
 		$this->setting      = $setting;

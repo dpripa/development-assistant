@@ -2,21 +2,18 @@
 namespace WPDevAssist;
 
 use PHPMailer;
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Feature;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\AdminNotice;
 
 defined( 'ABSPATH' ) || exit;
 
-class MailHog extends Feature {
+class MailHog {
 	public const SEND_TEST_EMAIL_QUERY_KEY = KEY . '_mail_hog_send_test_email';
 
 	protected AdminNotice $admin_notice;
 	protected ?bool $is_http_host_exists = null;
 
 	public function __construct( ActionQuery $action_query, AdminNotice $admin_notice ) {
-		parent::__construct();
-
 		$this->admin_notice = $admin_notice;
 
 		if ( ! $this->is_enabled() || ! $this->is_http_host_exists() ) {

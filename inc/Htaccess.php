@@ -1,19 +1,16 @@
 <?php
 namespace WPDevAssist;
 
-use WPDevAssist\OmgCore\Feature;
-use WPDevAssist\OmgCore\Fs;
+use WPDevAssist\Fs;
 
 defined( 'ABSPATH' ) || exit;
 
-class Htaccess extends Feature {
+class Htaccess {
 	protected const PATH = ABSPATH . '.htaccess';
 
 	protected Fs $fs;
 
 	public function __construct( Fs $fs ) {
-		parent::__construct();
-
 		$this->fs = $fs;
 	}
 

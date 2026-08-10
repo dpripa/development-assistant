@@ -1,8 +1,8 @@
 <?php
 namespace WPDevAssist\Setting;
 
-use WPDevAssist\OmgCore\Asset;
-use WPDevAssist\OmgCore\AdminNotice;
+use WPDevAssist\Asset;
+use WPDevAssist\AdminNotice;
 
 defined( 'ABSPATH' ) || exit;
 

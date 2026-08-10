@@ -1,12 +1,11 @@
 <?php
 namespace WPDevAssist\Setting;
 
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Feature;
+use WPDevAssist\AdminNotice;
 
 defined( 'ABSPATH' ) || exit;
 
-abstract class BasePage extends Feature {
+abstract class BasePage {
 	public const KEY = '';
 
 	protected const SETTING_KEYS = array();
@@ -14,8 +13,6 @@ abstract class BasePage extends Feature {
 	protected AdminNotice $admin_notice;
 
 	public function __construct( AdminNotice $admin_notice ) {
-		parent::__construct();
-
 		$this->admin_notice = $admin_notice;
 
 		add_action( 'admin_init', $this->add_sections() );

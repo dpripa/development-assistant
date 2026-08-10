@@ -2,7 +2,7 @@
 namespace WPDevAssist\Assistant;
 
 use WPDevAssist\Htaccess;
-use WPDevAssist\OmgCore\ActionQuery;
+use WPDevAssist\ActionQuery;
 use WPDevAssist\Setting;
 use WPDevAssist\Setting\DebugLog;
 

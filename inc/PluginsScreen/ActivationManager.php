@@ -1,15 +1,14 @@
 <?php
 namespace WPDevAssist\PluginsScreen;
 
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Feature;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\AdminNotice;
 use const WPDevAssist\KEY;
 use const WPDevAssist\ROOT_FILE;
 
 defined( 'ABSPATH' ) || exit;
 
-class ActivationManager extends Feature {
+class ActivationManager {
 	public const DEACTIVATION_RESET_QUERY_KEY = KEY . '_deactivation_reset';
 	public const DEACTIVATED_KEY              = KEY . '_temporarily_deactivated_plugins';
 
@@ -21,8 +20,6 @@ class ActivationManager extends Feature {
 	protected AdminNotice $admin_notice;
 
 	public function __construct( ActionQuery $action_query, AdminNotice $admin_notice ) {
-		parent::__construct();
-
 		$this->action_query = $action_query;
 		$this->admin_notice = $admin_notice;
 

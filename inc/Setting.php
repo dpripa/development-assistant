@@ -1,11 +1,11 @@
 <?php
 namespace WPDevAssist;
 
-use WPDevAssist\OmgCore\ActionQuery;
-use WPDevAssist\OmgCore\AdminNotice;
-use WPDevAssist\OmgCore\Asset;
-use WPDevAssist\OmgCore\Env;
-use WPDevAssist\OmgCore\Fs;
+use WPDevAssist\ActionQuery;
+use WPDevAssist\AdminNotice;
+use WPDevAssist\Asset;
+use WPDevAssist\Env;
+use WPDevAssist\Fs;
 use WPDevAssist\Setting\Page;
 use WPDevAssist\Setting\Control;
 use WPDevAssist\Setting\DebugLog;
