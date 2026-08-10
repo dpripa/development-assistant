@@ -1,6 +1,5 @@
 asset
 node_modules
-lib
 release
 vendor
 .DS_Store
