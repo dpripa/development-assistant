@@ -1,0 +1,80 @@
+name: deploy-to-prod
+
+on: workflow_dispatch
+
+permissions:
+    contents: read
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Cache Composer Packages
+              id: composer-cache
+              uses: actions/cache@v3
+              with:
+                  path: vendor
+                  key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+                  restore-keys: |
+                      ${{ runner.os }}-php-
+
+            - name: Install Composer Dependencies
+              run: composer install
+
+            - name: Use Node.js 14.x
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 14.x
+                  cache: 'npm'
+                  cache-dependency-path: "package-lock.json"
+
+            - name: Install NPM Dependencies
+              run: npm install
+
+            - name: Prepare to Release
+              run: make prepare-to-release
+
+            - name: Deploy
+              uses: SamKirkland/FTP-Deploy-Action@4.3.2
+              with:
+                  server: ${{ secrets.PROD_FTP_HOST }}
+                  server-dir: ${{ secrets.PROD_FTP_PATH }}
+                  username: ${{ secrets.PROD_FTP_NAME }}
+                  password: ${{ secrets.PROD_FTP_PWD }}
+                  exclude: |
+                      **/.git
+                      **/.git/**
+                      .github/**
+                      .husky/**
+                      .script/**
+                      node_modules/**
+                      src/**
+                      test/**
+                      tmp/**
+                      vendor/**
+                      .editorconfig
+                      .env
+                      .env.bak
+                      .env.example
+                      .eslintignore
+                      .eslintrc
+                      .gitignore
+                      .nvmrc
+                      .phpunit.result.cache
+                      .stylelintignore
+                      .stylelintrc
+                      .travis.yml
+                      autoload.json
+                      composer.json
+                      composer.lock
+                      Makefile
+                      package.json
+                      package-lock.json
+                      phpcs.xml
+                      phunit.xml.dist
+                      README.md
+                      scoper.inc.php
+                      webpack.config.js

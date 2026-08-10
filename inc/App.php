@@ -46,12 +46,6 @@ class App extends Core {
 		);
 	}
 
-	protected function init(): callable {
-		return function (): void {
-			parent::init()();
-		};
-	}
-
 	protected function activate(): callable {
 		return function (): void {
 			parent::activate()();

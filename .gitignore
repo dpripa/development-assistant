@@ -1,4 +1,12 @@
-.idea
+asset
+node_modules
+lib
+release
+vendor
 .DS_Store
+.env
+.env.bak
 ehthumbs.db
 Thumbs.db
+tmp
+.phpunit.result.cache

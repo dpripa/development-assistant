@@ -1,0 +1,11 @@
+{
+	"extends": [
+		"stylelint-config-wordpress",
+		"stylelint-order-htmlacademy"
+	],
+	"rules": {
+		"selector-list-comma-newline-after": "always",
+		"selector-class-pattern": null,
+		"no-descending-specificity": null
+	}
+}

@@ -1,0 +1,188 @@
+@import "variables";
+
+.da-assistant {
+	margin: 20px 20px 0 2px;
+	box-shadow: $box-shadow;
+}
+
+.da-assistant_open {
+
+	.da-assistant__arrow-down {
+		transform: rotate(0deg);
+
+		&::before {
+			position: relative;
+			left: -2px;
+		}
+	}
+
+	.da-assistant__section {
+		display: block;
+	}
+}
+
+.da-assistant_after-screen-meta-links {
+	margin-top: 40px;
+}
+
+.da-assistant__header {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 10px 8px 10px 12px;
+	background: #fff;
+	border: 1px solid $border-color;
+	cursor: pointer;
+}
+
+.da-assistant__header-content {
+	display: flex;
+	flex-grow: 1;
+	align-items: center;
+}
+
+.da-assistant__icon::before {
+	color: #646970;
+}
+
+.da-assistant__title {
+	margin-left: 6px;
+	font-weight: 600;
+	font-size: 14px;
+	color: #000;
+}
+
+.da-assistant__statuses {
+	display: flex;
+	align-items: center;
+	margin-left: 12px;
+}
+
+.da-assistant__status {
+	position: relative;
+	display: flex;
+	align-items: center;
+	padding: 3px 8px;
+	font-size: 0.9em;
+	color: $white;
+	border-radius: 50px;
+	cursor: help;
+
+	&:hover .da-assistant__status-description {
+		display: block;
+	}
+
+	&:not(:last-child) {
+		margin-right: 6px;
+	}
+}
+
+.da-assistant__status_success {
+	background: $success;
+}
+
+.da-assistant__status_warning {
+	background: $warning;
+}
+
+.da-assistant__status_error {
+	background: $error;
+}
+
+.da-assistant__status-description {
+	position: absolute;
+	top: calc(100% + 2px);
+	left: 0;
+	display: none;
+	padding: 3px 6px;
+	color: $white;
+	white-space: nowrap;
+	background: rgba(0, 0, 0, 0.75);
+	border-radius: 4px;
+	cursor: text;
+}
+
+.da-assistant__arrow-down {
+	float: right;
+	width: 20px;
+	height: 20px;
+	color: #787c82;
+	transform: rotate(180deg);
+
+	&::before {
+		content: "\f142";
+		font: normal 20px / 1 dashicons, sans-serif;
+		speak: never;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+.da-assistant__section {
+	display: none;
+	padding: 8px 12px;
+	border: 1px solid $border-color;
+	border-top: none;
+}
+
+.da-assistant__section_success {
+	background: rgba($success, 0.15);
+}
+
+.da-assistant__section_warning {
+	background: rgba($warning, 0.15);
+}
+
+.da-assistant__section_error {
+	background: rgba($error, 0.15);
+}
+
+.da-assistant__section-title {
+	margin-bottom: 6px;
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.da-assistant__section-title,
+.da-assistant__section-content {
+	max-width: 760px;
+}
+
+.da-assistant__controls {
+	display: flex;
+	align-items: center;
+	margin: 6px 0 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		margin: 0;
+
+		&:not(:last-child) {
+			margin-right: 10px;
+		}
+	}
+}
+
+.da-assistant__error-message {
+	display: inline-block;
+	margin: 6px 0 2px;
+	padding: 2px 6px;
+	color: $error;
+	background: rgba($error, 0.15);
+	border-radius: 4px;
+
+	code {
+		background: rgba($error, 0.15);
+	}
+}
+
+.da-assistant__simple-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+
+	li {
+		margin: 0;
+	}
+}

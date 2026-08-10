@@ -1,0 +1,12 @@
+{
+	"extends": "wordpress",
+	"parserOptions": {
+		"ecmaFeatures": {
+			"globalReturn": true,
+			"generators": false,
+			"objectLiteralDuplicateProperties": false
+		},
+		"ecmaVersion": 2017,
+		"sourceType": "module"
+	}
+}

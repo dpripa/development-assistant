@@ -1,0 +1,27 @@
+.da-setting-status {
+	font-size: 13px;
+	cursor: default;
+}
+
+.da-setting-status__label {
+	padding: 3px 12px;
+	color: $white;
+	border-radius: 50px;
+}
+
+.da-setting-status__label_disabled {
+	background-color: $gray-medium;
+}
+
+.da-setting-status__label_success {
+	background-color: $success;
+}
+
+.da-setting-status__label_failure {
+	background-color: $error;
+}
+
+.da-setting-status__description {
+	margin-top: 8px;
+	color: $gray-text;
+}

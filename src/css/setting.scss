@@ -1,0 +1,43 @@
+@import "variables";
+@import "setting/checkbox";
+@import "setting/text";
+@import "setting/status";
+
+.da-setting-page {
+
+	form {
+		max-width: 760px;
+	}
+
+	.form-table {
+
+		th {
+			vertical-align: middle;
+		}
+	}
+}
+
+.da-setting-list {
+	padding-left: 20px;
+	list-style: disc;
+}
+
+.da-setting-section__description {
+	margin-top: 1.5em;
+}
+
+h2 + .da-setting-section__description {
+	margin-top: 0;
+}
+
+.da-setting-page__title-info-link {
+	width: 18px;
+	height: 18px;
+	margin-left: 7px;
+	font-size: 18px;
+	text-decoration: none;
+}
+
+.da-setting__error-text {
+	color: $error;
+}

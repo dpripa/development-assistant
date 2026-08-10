@@ -1,0 +1,60 @@
+@import "variables";
+
+.da-debug-log__actions {
+	display: flex;
+	align-items: center;
+	margin: 0;
+
+	> li {
+		margin: 0;
+		padding-right: 10px;
+
+		&:last-child {
+			padding: 0;
+		}
+	}
+}
+
+.da-debug-log__status {
+	display: flex;
+	align-items: center;
+	color: $gray-text;
+	cursor: default;
+
+	span:last-child:not(:first-child) {
+		margin-left: 5px;
+	}
+}
+
+.da-debug-log__status_success {
+	color: $success;
+
+	a {
+		color: $success;
+	}
+}
+
+.da-debug-log__status_error {
+	color: $error;
+
+	a {
+		color: $error;
+	}
+}
+
+.da-debug-log__container {
+	margin-top: 10px;
+}
+
+.da-debug-log__content {
+	font-family: monospace;
+}
+
+.da-debug-log__content_error {
+	color: #d63638;
+}
+
+.da-debug-log__content_empty {
+	font-family: inherit;
+	font-style: italic;
+}

@@ -1,0 +1,54 @@
+{
+  "name": "omgpess/development-assistant",
+  "version": "1.2.10",
+  "type": "wordpress-plugin",
+  "description": "Toolkit for debugging and customer support.",
+  "homepage": "https://omgpress.com/development-assistant",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "OMG!PRESS",
+      "email": "hello@omgpress.com",
+      "homepage": "https://omgpress.com"
+    }
+  ],
+  "keywords": [
+    "wordpress"
+  ],
+  "config": {
+    "platform-check": false,
+    "optimize-autoloader": true,
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "require": {
+    "php": ">=7.4.0",
+    "omgpress/omgcore": "0.1.15",
+    "ext-zip": "*",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "humbug/php-scoper": "^0.18.17",
+    "wp-coding-standards/wpcs": "^3.1.0",
+    "phpunit/phpunit": "^9.6.23",
+    "yoast/phpunit-polyfills": "^3.1.2"
+  },
+  "scripts": {
+    "no-dev": "composer install --no-dev",
+    "lint": "phpcs",
+    "fix": "phpcbf",
+    "tests": "./vendor/bin/phpunit",
+    "post-install-cmd": [
+      "@prefix-dependencies"
+    ],
+    "post-update-cmd": [
+      "@prefix-dependencies"
+    ],
+    "prefix-dependencies": [
+      "php-scoper add-prefix --force --output-dir=lib --quiet",
+      "cp ./autoload.json ./lib/composer.json",
+      "@composer dump-autoload --working-dir ./lib --no-dev --classmap-authoritative"
+    ]
+  }
+}
