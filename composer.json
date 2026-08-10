@@ -1,15 +1,15 @@
 {
-  "name": "omgpess/development-assistant",
+  "name": "dpripa/development-assistant",
   "version": "1.2.10",
   "type": "wordpress-plugin",
   "description": "Toolkit for debugging and customer support.",
-  "homepage": "https://omgpress.com/development-assistant",
+  "homepage": "https://github.com/dpripa/development-assistant",
   "license": "GPL-2.0-or-later",
   "authors": [
     {
-      "name": "OMG!PRESS",
-      "email": "hello@omgpress.com",
-      "homepage": "https://omgpress.com"
+      "name": "Dmitry Pripa",
+      "email": "i@dpripa.com",
+      "homepage": "https://github.com/dpripa"
     }
   ],
   "keywords": [

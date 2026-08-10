@@ -1,7 +1,7 @@
 === Development Assistant ===
 
 Stable tag: 1.2.10
-Contributors: omgpress
+Contributors: Dmitry Pripa
 Requires PHP: 7.4.0
 Requires at least: 5.0.0
 Tested up to: 6.8.2
