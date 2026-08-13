@@ -1,6 +1,6 @@
 COMPOSE ?= docker compose
 
-.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src create-release-zip deploy-to-dev fix lint prepare-to-release
+.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src create-release-zip fix lint prepare-to-release
 
 init: setup
 
@@ -109,9 +109,6 @@ build-src:
 
 create-release-zip: composer-install lint build-src
 	./scripts/with-production-dependencies.sh npm run create-release-zip
-
-deploy-to-dev: composer-install lint build-src
-	./scripts/with-production-dependencies.sh npm run deploy-to-dev
 
 fix:
 	./scripts/run-composer.sh run fix && npm run fix-style && npm run fix-script

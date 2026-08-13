@@ -91,8 +91,7 @@
     "fs": "~0.0.1-security",
     "path": "~0.12.7",
     "archiver": "~5.0.0",
-    "log-beautify": "~1.2.0",
-    "ftp-deploy": "~2.3.8"
+    "log-beautify": "~1.2.0"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack --watch",
@@ -102,7 +101,6 @@
     "fix-style": "npx stylelint --allow-empty-input --fix 'src/**/*.{css,scss}'",
     "fix-script": "npx eslint --fix 'src/**/*.js'",
     "prepare": "husky install",
-    "create-release-zip": "node .script/create-release-zip.js",
-    "deploy-to-dev": "node .script/deploy-to-dev.js"
+    "create-release-zip": "node .script/create-release-zip.js"
   }
 }
