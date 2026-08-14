@@ -5,7 +5,7 @@
 	<config name="minimum_supported_wp_version" value="5.0.0"/>
 
 	<file>.</file>
-	<exclude-pattern>asset/*</exclude-pattern>
+	<exclude-pattern>assets/*</exclude-pattern>
 	<exclude-pattern>backups/*</exclude-pattern>
 	<exclude-pattern>docker/*</exclude-pattern>
 	<exclude-pattern>lib/*</exclude-pattern>

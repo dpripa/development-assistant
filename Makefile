@@ -21,7 +21,7 @@ node-install:
 
 assets:
 	@if [ ! -d node_modules ]; then $(MAKE) node-install; fi
-	@if [ ! -d asset ]; then $(MAKE) build-src; fi
+	@if [ ! -d assets ]; then $(MAKE) build-src; fi
 
 up: env cert wp-core composer-install assets
 	$(COMPOSE) up -d --build

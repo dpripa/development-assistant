@@ -15,7 +15,7 @@ const {default: ImageminPlugin} = require( 'imagemin-webpack-plugin' );
 const ImageminMozjpeg = require( 'imagemin-mozjpeg' );
 
 const paths = {
-	asset: path.resolve( __dirname, './asset' ),
+	assets: path.resolve( __dirname, './assets' ),
 	src: path.resolve( __dirname, './src' )
 };
 const dirs = {
@@ -97,11 +97,11 @@ const plugins = [
 		[
 			{
 				from: dirs.img,
-				to: `${paths.asset}/${dirs.img}`
+				to: `${paths.assets}/${dirs.img}`
 			},
 			{
 				from: dirs.font,
-				to: `${paths.asset}/${dirs.font}`
+				to: `${paths.assets}/${dirs.font}`
 			}
 		],
 		{
@@ -159,8 +159,8 @@ if ( isDev ) {
 	BrowserSync(
 		{
 			files: [
-				`${paths.asset}/${dirs.js}/*.js`,
-				`${paths.asset}/${dirs.css}/*.css`,
+				`${paths.assets}/${dirs.js}/*.js`,
+				`${paths.assets}/${dirs.css}/*.css`,
 				path.resolve( __dirname, '../**/*.php' )
 			],
 			port: process.env.BROWSERSYNC_PORT,
@@ -186,7 +186,7 @@ module.exports = {
 	entry: entry,
 	output: {
 		filename: `${dirs.js}/[name]${assetPrefix}.js`,
-		path: paths.asset
+		path: paths.assets
 	},
 	devtool: isDev ? '#cheap-module-source-map' : '',
 	stats: stats,

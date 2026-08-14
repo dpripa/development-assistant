@@ -8,10 +8,10 @@ defined( 'ABSPATH' ) || exit;
 class Asset {
 	protected string $key;
 	protected Fs $fs;
-	protected string $asset_dir = 'asset';
-	protected string $js_dir    = 'js';
-	protected string $css_dir   = 'css';
-	protected string $postfix   = '.min';
+	protected string $assets_dir = 'assets';
+	protected string $js_dir     = 'js';
+	protected string $css_dir    = 'css';
+	protected string $postfix    = '.min';
 
 	public function __construct( string $key, Fs $fs ) {
 		$this->key = $key;
@@ -28,7 +28,7 @@ class Asset {
 	): self {
 		$key      = $this->get_key( $name );
 		$filename = $name . $this->postfix . '.js';
-		$rel      = $this->asset_dir . '/' . $this->js_dir . '/' . $filename;
+		$rel      = $this->assets_dir . '/' . $this->js_dir . '/' . $filename;
 		$url      = $this->fs->get_url( $rel );
 		$path     = $this->fs->get_path( $rel );
 
@@ -58,7 +58,7 @@ class Asset {
 	public function enqueue_style( string $name, array $deps = array(), $addition = null ): self {
 		$key      = $this->get_key( $name );
 		$filename = $name . $this->postfix . '.css';
-		$rel      = $this->asset_dir . '/' . $this->css_dir . '/' . $filename;
+		$rel      = $this->assets_dir . '/' . $this->css_dir . '/' . $filename;
 		$url      = $this->fs->get_url( $rel );
 		$path     = $this->fs->get_path( $rel );
 
