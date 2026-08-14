@@ -1,8 +1,9 @@
 COMPOSE ?= docker compose
 PLUGIN_CONTAINER_DIR := /plugin-source
 RELEASE_ARCHIVE := release/development-assistant.zip
+WPORG_RELEASE_SCRIPT := ./scripts/wporg-release.sh
 
-.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip fix lint prepare-to-release
+.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip wporg-checkout wporg-update wporg-prepare wporg-status wporg-diff wporg-publish wporg-assets-publish fix lint prepare-to-release
 
 init: setup
 
@@ -119,6 +120,27 @@ dist-archive:
 
 create-release-zip: composer-install lint build-src
 	./scripts/with-production-dependencies.sh $(MAKE) dist-archive
+
+wporg-checkout:
+	$(WPORG_RELEASE_SCRIPT) checkout
+
+wporg-update:
+	$(WPORG_RELEASE_SCRIPT) update
+
+wporg-prepare: create-release-zip
+	$(WPORG_RELEASE_SCRIPT) prepare "$(version)"
+
+wporg-status:
+	$(WPORG_RELEASE_SCRIPT) status
+
+wporg-diff:
+	$(WPORG_RELEASE_SCRIPT) diff
+
+wporg-publish:
+	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish "$(version)"
+
+wporg-assets-publish:
+	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish-assets
 
 fix:
 	./scripts/run-composer.sh run fix && npm run fix-style && npm run fix-script

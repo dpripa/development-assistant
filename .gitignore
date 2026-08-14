@@ -1,6 +1,7 @@
 assets
 node_modules
-release
+release/*
+!release/.gitkeep
 vendor
 .DS_Store
 .env

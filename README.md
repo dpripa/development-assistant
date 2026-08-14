@@ -9,6 +9,7 @@ tooling, release workflow, and a complete local WordPress environment.
 - Docker with Docker Compose
 - `mkcert`
 - NVM with Node.js 14
+- Subversion, `rsync`, and `unzip` for publishing to WordPress.org
 
 Composer runs through Docker, so a host PHP or Composer installation is not
 required for the standard setup.
@@ -93,6 +94,55 @@ archive is built with a pinned WP-CLI `dist-archive` command in Docker, so Docke
 files, source assets, local state, and development tooling are not shipped to
 WordPress.org users.
 
-GitHub Actions can create the release ZIP and run the existing deployment
-workflows. Deployment credentials must be stored as GitHub Actions secrets and
-must never be committed to this repository.
+GitHub Actions can create the release ZIP. If WordPress.org publishing is later
+run in CI, its credentials must be stored as encrypted CI secrets and must never
+be committed to this repository.
+
+### WordPress.org SVN
+
+The ignored `release/wporg/` directory is the local working copy of the official
+WordPress.org SVN repository. Its top-level `assets/` contains directory banners,
+icons, and screenshots; plugin files are synchronized from the release ZIP into
+`trunk/`. The tracked `release/.gitkeep` reserves this local release workspace,
+while generated archives and the SVN checkout remain ignored.
+
+Check out or update the working copy:
+
+```sh
+make wporg-checkout
+make wporg-update
+```
+
+Set the case-sensitive WordPress.org username and the dedicated SVN password in
+the ignored `.env` file. Never use the main WordPress.org account password:
+
+```dotenv
+WPORG_SVN_USERNAME='your-wordpress-org-username'
+WPORG_SVN_PASSWORD='your-dedicated-svn-password'
+```
+
+Prepare a release locally, inspect the exact SVN changes, and publish only after
+reviewing them:
+
+```sh
+make wporg-prepare version=1.2.11
+make wporg-status
+make wporg-diff
+make wporg-publish version=1.2.11 confirm=publish
+```
+
+Preparation verifies that the plugin header, `readme.txt`, `package.json`,
+`package-lock.json`, and `composer.json` contain the requested version. It then
+syncs the production ZIP into `trunk/` and creates `tags/<version>` from that
+local trunk. Only the explicit publish command commits to WordPress.org.
+
+Directory banners, icons, and screenshots can be edited directly under
+`release/wporg/assets/` and published separately:
+
+```sh
+make wporg-assets-publish confirm=publish
+```
+
+The SVN password is passed to the client through standard input, is not included
+in the process arguments, and is not stored in the SVN authentication cache. In
+CI, use the CI provider's encrypted secrets instead of creating a `.env` file.
