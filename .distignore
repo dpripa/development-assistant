@@ -29,4 +29,3 @@ src
 tmp
 webpack.config.js
 wp
-**/.DS_Store
