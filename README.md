@@ -85,9 +85,10 @@ Create a release archive:
 make create-release-zip
 ```
 
-The release whitelist in `package.json` controls which plugin files are included
-in the ZIP. Docker files, source assets, local state, and development tooling are
-not shipped to WordPress.org users.
+The `.distignore` file controls which files are excluded from the ZIP. The
+archive is built with a pinned WP-CLI `dist-archive` command in Docker, so Docker
+files, source assets, local state, and development tooling are not shipped to
+WordPress.org users.
 
 GitHub Actions can create the release ZIP and run the existing deployment
 workflows. Deployment credentials must be stored as GitHub Actions secrets and

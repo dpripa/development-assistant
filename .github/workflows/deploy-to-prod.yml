@@ -49,7 +49,6 @@ jobs:
                       **/.git/**
                       .github/**
                       .husky/**
-                      .script/**
                       backups/**
                       docker/**
                       node_modules/**
@@ -58,6 +57,7 @@ jobs:
                       tmp/**
                       wp/**
                       .editorconfig
+                      .distignore
                       .env
                       .env.bak
                       .env.example

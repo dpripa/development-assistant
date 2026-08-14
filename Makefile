@@ -1,6 +1,8 @@
 COMPOSE ?= docker compose
+PLUGIN_CONTAINER_DIR := /var/www/html/wp-content/plugins/development-assistant
+RELEASE_ARCHIVE := release/development-assistant.zip
 
-.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src create-release-zip fix lint prepare-to-release
+.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip fix lint prepare-to-release
 
 init: setup
 
@@ -107,8 +109,16 @@ start-watch:
 build-src:
 	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run build
 
+dist-archive:
+	$(RM) "$(RELEASE_ARCHIVE)"
+	$(COMPOSE) --profile tools run --rm --no-deps --build wp-cli \
+		dist-archive "$(PLUGIN_CONTAINER_DIR)" "$(PLUGIN_CONTAINER_DIR)/$(RELEASE_ARCHIVE)" \
+		--create-target-dir \
+		--force \
+		--plugin-dirname=development-assistant
+
 create-release-zip: composer-install lint build-src
-	./scripts/with-production-dependencies.sh npm run create-release-zip
+	./scripts/with-production-dependencies.sh $(MAKE) dist-archive
 
 fix:
 	./scripts/run-composer.sh run fix && npm run fix-style && npm run fix-script

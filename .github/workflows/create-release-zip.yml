@@ -35,7 +35,7 @@ jobs:
               run: npm install
 
             - name: Prepare to Release
-              run: make lint && npm run build && composer install --no-dev --optimize-autoloader && npm run create-release-zip
+              run: make lint && npm run build && composer install --no-dev --optimize-autoloader && make dist-archive
 
             - name: Extract Repository Name
               id: repo-name

@@ -41,19 +41,6 @@
       "./js/plugins-screen.js"
     ]
   },
-  "release": {
-    "directories": [
-      "asset",
-      "inc",
-      "lang",
-      "vendor"
-    ],
-    "files": [
-      "development-assistant.php",
-      "license.txt",
-      "readme.txt"
-    ]
-  },
   "dependencies": {
     "jquery": "^3.5.1"
   },
@@ -89,9 +76,7 @@
     "webpack-cli": "^3.3.12",
     "webpack-fix-style-only-entries": "~0.4.0",
     "fs": "~0.0.1-security",
-    "path": "~0.12.7",
-    "archiver": "~5.0.0",
-    "log-beautify": "~1.2.0"
+    "path": "~0.12.7"
   },
   "scripts": {
     "start": "cross-env NODE_ENV=development webpack --watch",
@@ -100,7 +85,6 @@
     "lint-script": "npx eslint 'src/**/*.js'",
     "fix-style": "npx stylelint --allow-empty-input --fix 'src/**/*.{css,scss}'",
     "fix-script": "npx eslint --fix 'src/**/*.js'",
-    "prepare": "husky install",
-    "create-release-zip": "node .script/create-release-zip.js"
+    "prepare": "husky install"
   }
 }

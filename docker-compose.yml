@@ -62,7 +62,9 @@ services:
       - "${MAILPIT_PORT:-21603}:8025"
 
   wp-cli:
-    image: wordpress:cli-php8.2
+    build:
+      context: ./docker/wp-cli
+    image: development-assistant-wp-cli:php8.2
     profiles:
       - tools
     depends_on:
