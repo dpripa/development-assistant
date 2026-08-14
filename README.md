@@ -24,8 +24,8 @@ make setup
 ```
 
 `make setup` creates `.env`, installs Composer and npm dependencies, builds
-assets, generates a trusted local certificate, and downloads a WordPress core
-mirror for IDE indexing.
+assets, generates a trusted local certificate, and downloads WordPress into the
+local `wp/` runtime directory.
 
 Start the local WordPress stack:
 
@@ -33,9 +33,10 @@ Start the local WordPress stack:
 make up
 ```
 
-The current checkout is mounted directly as the active
-`development-assistant` plugin. No sibling repositories or global WordPress
-directories are required.
+The complete WordPress runtime is stored in `wp/`, including installed plugins,
+themes, uploads, and logs. The current checkout is exposed at the standard
+`wp/wp-content/plugins/development-assistant` path through a relative symlink.
+No sibling repositories or global WordPress directories are required.
 
 Local services:
 
@@ -69,7 +70,9 @@ make fix
 
 `make reinit` creates a database backup before replacing the local database
 volume. WordPress files, uploads, themes, and installed helper plugins remain in
-Docker-managed local state and are not committed.
+the ignored local `wp/` directory and are not committed. `make wp-core-update`
+updates WordPress Core without replacing `wp-content`, `wp-config.php`, or other
+local runtime configuration.
 
 ## Build And Release
 

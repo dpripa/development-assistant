@@ -4,6 +4,7 @@ services:
       context: ./docker/wordpress
     image: development-assistant-wordpress:php8.2-apache-xdebug
     restart: unless-stopped
+    working_dir: /app/wp
     depends_on:
       - db
       - mailpit
@@ -28,10 +29,11 @@ services:
       XDEBUG_IDEKEY: ${XDEBUG_IDEKEY:-DEVELOPMENT_ASSISTANT}
       PHP_IDE_CONFIG: ${PHP_IDE_CONFIG:-serverName=development-assistant}
     volumes:
-      - wordpress_data:/var/www/html
-      - ./:/var/www/html/wp-content/plugins/development-assistant
+      - ./:/app
       - ./scripts/init-wp.sh:/usr/local/bin/init-wp.sh:ro
       - ./scripts/sync-wp-env.sh:/usr/local/bin/sync-wp-env.sh:ro
+    tmpfs:
+      - /var/www/html
 
   proxy:
     image: nginx:1.27-alpine
@@ -71,7 +73,7 @@ services:
       - db
       - wordpress
     user: "33:33"
-    working_dir: /var/www/html
+    working_dir: /app/wp
     environment:
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_NAME: ${WP_DB_NAME:-wordpress}
@@ -86,9 +88,23 @@ services:
       REQUIRED_PLUGINS: ${REQUIRED_PLUGINS:-query-monitor wp-crontrol user-switching wp-migrate-db}
       WP_CLI_CACHE_DIR: /tmp/wp-cli-cache
     volumes:
-      - wordpress_data:/var/www/html
-      - ./:/var/www/html/wp-content/plugins/development-assistant
+      - ./:/app
       - ./scripts/sync-wp-env.sh:/usr/local/bin/sync-wp-env.sh:ro
+    tmpfs:
+      - /var/www/html
+
+  wp-cli-release:
+    build:
+      context: ./docker/wp-cli
+    image: development-assistant-wp-cli:php8.2
+    profiles:
+      - tools
+    user: "33:33"
+    working_dir: /plugin-source
+    volumes:
+      - ./:/plugin-source
+    tmpfs:
+      - /plugin-source/wp
 
   composer:
     image: composer:2
@@ -107,5 +123,4 @@ services:
       - "${ADMINER_PORT:-21602}:8080"
 
 volumes:
-  wordpress_data:
   db_data:

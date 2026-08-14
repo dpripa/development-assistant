@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-WP_ROOT="/var/www/html"
+WP_ROOT="${WP_ROOT:-/app/wp}"
 WP_CONTENT_DIR="$WP_ROOT/wp-content"
 WP_CONFIG="$WP_ROOT/wp-config.php"
 PROJECT_PLUGIN="development-assistant"
@@ -14,6 +14,30 @@ wp_cli() {
 
 build_target_url() {
   printf 'https://localhost:%s\n' "${WP_PORT:-21601}"
+}
+
+ensure_project_plugin_link() {
+  plugin_dir="$WP_CONTENT_DIR/plugins/$PROJECT_PLUGIN"
+  plugin_target="../../.."
+
+  mkdir -p "$WP_CONTENT_DIR/plugins"
+
+  if [ -L "$plugin_dir" ]; then
+    if [ "$(readlink "$plugin_dir")" != "$plugin_target" ]; then
+      echo "Project plugin symlink points to an unexpected target: $plugin_dir" >&2
+      exit 1
+    fi
+
+    return
+  fi
+
+  if [ -e "$plugin_dir" ]; then
+    echo "Project plugin path exists but is not a symlink: $plugin_dir" >&2
+    exit 1
+  fi
+
+  ln -s "$plugin_target" "$plugin_dir"
+  echo "Created project plugin symlink: $plugin_dir -> $plugin_target"
 }
 
 remove_bundled_extensions() {
@@ -165,6 +189,7 @@ activate_plugin() {
   wp_cli --skip-plugins --skip-themes plugin activate "$plugin_slug"
 }
 
+ensure_project_plugin_link
 ensure_wp_config
 remove_bundled_extensions
 
