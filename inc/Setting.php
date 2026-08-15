@@ -255,7 +255,7 @@ class Setting extends Page {
 			static::RESET_DEFAULT,
 			array(
 				'description' => sprintf(
-					esc_html__( 'It\'ll make look like the plugin was never installed and will undo any possible changes that may have been made using it %s.', 'development-assistant' ),
+					esc_html__( 'It\'ll undo any possible changes that may have been made using Development Assistant %s.', 'development-assistant' ),
 					'<i>' . esc_html__( '(the only exception is deleted data or files, it cannot be recovered)', 'development-assistant' ) . '</i>'
 				),
 			),
