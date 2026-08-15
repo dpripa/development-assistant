@@ -11,7 +11,8 @@
     "target": "ES2022",
     "types": [
       "jquery",
-      "node"
+      "node",
+      "vite/client"
     ]
   },
   "include": [
