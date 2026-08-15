@@ -46,17 +46,9 @@ export default defineConfig( ( { mode } ) => {
 					'support-user': resolve( import.meta.dirname, 'src/supportUser/index.ts' ),
 				},
 				output: {
-					assetFileNames: ( assetInfo ) => {
-						const extension = assetInfo.name?.split( '.' ).pop();
-
-						if ( extension === 'css' ) {
-							return `css/[name]${ suffix }.[ext]`;
-						}
-
-						return `[name]${ suffix }.[ext]`;
-					},
-					chunkFileNames: `js/[name]${ suffix }.js`,
-					entryFileNames: `js/[name]${ suffix }.js`,
+					assetFileNames: `[name]${ suffix }.[ext]`,
+					chunkFileNames: `[name]${ suffix }.js`,
+					entryFileNames: `[name]${ suffix }.js`,
 				},
 			},
 			sourcemap: isDevelopment,
