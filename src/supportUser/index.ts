@@ -6,12 +6,12 @@ const {
 	share_query_keys: shareQueryKeys,
 } = window.wp_dev_assist_support_user;
 
-$( document ).on( 'ready', () => {
-	initCopy();
-	initShare();
+jQuery( ( $ ) => {
+	initCopy( $ );
+	initShare( $ );
 } );
 
-function initCopy(): void {
+function initCopy( $: JQueryStatic ): void {
 	let copiedTextTimeout: ReturnType<typeof setTimeout> | undefined;
 
 	$( '#da-copy-support-user-credentials' ).on( 'click', function copyCredentials() {
@@ -43,7 +43,7 @@ function initCopy(): void {
 	} );
 }
 
-function initShare(): void {
+function initShare( $: JQueryStatic ): void {
 	$( '#da-share-support-user' ).on( 'click', () => {
 		const $email = $( '#da-share-support-user-email' );
 		const email = String( $email.val() ?? '' );

@@ -1,6 +1,6 @@
 import './styles.css';
 
-$( document ).on( 'ready', () => {
+jQuery( ( $ ) => {
 	const $assistant = $( '.da-assistant' );
 
 	if ( $( '#screen-meta-links' ).length ) {

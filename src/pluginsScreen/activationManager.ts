@@ -7,7 +7,7 @@ const {
 	reset,
 } = window.wp_dev_assist_plugins_screen;
 
-export default function initActivationManager(): void {
+export default function initActivationManager( $: JQueryStatic ): void {
 	if ( hasDeactivatedPlugins === 'yes' ) {
 		const $buttonActivate = $( '<a/>' );
 

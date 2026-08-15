@@ -24,7 +24,6 @@ export default defineConfig([
 			globals: {
 				...globals.browser,
 				jQuery: 'readonly',
-				$: 'readonly',
 			},
 			parserOptions: {
 				projectService: true,
@@ -32,6 +31,13 @@ export default defineConfig([
 			},
 		},
 		rules: {
+			'no-restricted-globals': [
+				'error',
+				{
+					name: '$',
+					message: 'Use the local alias provided by the jQuery ready callback.',
+				},
+			],
 			'@typescript-eslint/no-unused-vars': [
 				'error',
 				{
