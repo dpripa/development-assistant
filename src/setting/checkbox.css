@@ -1,0 +1,14 @@
+.da-setting-checkbox label {
+	display: inline-flex;
+	align-items: center;
+}
+
+.da-setting-checkbox__description {
+	display: inline-block;
+	margin-left: 10px;
+	font-size: 13px;
+}
+
+.da-setting-checkbox_disabled .da-setting-checkbox__description {
+	color: var(--da-gray-text);
+}

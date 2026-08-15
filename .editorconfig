@@ -8,10 +8,10 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
-[*.js]
+[*.{js,mjs,ts}]
 quote_type = single
 
-[*.scss]
+[*.css]
 quote_type = double
 
 [*.json]

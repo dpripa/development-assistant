@@ -1,0 +1,54 @@
+@import url("../shared/variables.css");
+
+.da-debug-log__actions {
+	display: flex;
+	align-items: center;
+	margin: 0;
+}
+
+.da-debug-log__actions > li {
+	margin: 0;
+	padding-right: 10px;
+}
+
+.da-debug-log__actions > li:last-child {
+	padding: 0;
+}
+
+.da-debug-log__status {
+	display: flex;
+	align-items: center;
+	color: var(--da-gray-text);
+	cursor: default;
+}
+
+.da-debug-log__status span:last-child:not(:first-child) {
+	margin-left: 5px;
+}
+
+.da-debug-log__status_success,
+.da-debug-log__status_success a {
+	color: var(--da-success);
+}
+
+.da-debug-log__status_error,
+.da-debug-log__status_error a {
+	color: var(--da-error);
+}
+
+.da-debug-log__container {
+	margin-top: 10px;
+}
+
+.da-debug-log__content {
+	font-family: monospace;
+}
+
+.da-debug-log__content_error {
+	color: #d63638;
+}
+
+.da-debug-log__content_empty {
+	font-style: italic;
+	font-family: inherit;
+}

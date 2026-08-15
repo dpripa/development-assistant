@@ -5,23 +5,23 @@
 
 .da-setting-status__label {
 	padding: 3px 12px;
-	color: $white;
+	color: var(--da-white);
 	border-radius: 50px;
 }
 
 .da-setting-status__label_disabled {
-	background-color: $gray-medium;
+	background-color: var(--da-gray-medium);
 }
 
 .da-setting-status__label_success {
-	background-color: $success;
+	background-color: var(--da-success);
 }
 
 .da-setting-status__label_failure {
-	background-color: $error;
+	background-color: var(--da-error);
 }
 
 .da-setting-status__description {
 	margin-top: 8px;
-	color: $gray-text;
+	color: var(--da-gray-text);
 }

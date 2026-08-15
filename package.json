@@ -5,6 +5,7 @@
   "homepage": "https://github.com/dpripa/development-assistant",
   "license": "GPL-2.0-or-later",
   "private": true,
+  "type": "module",
   "contributors": [
     {
       "name": "Dmitry Pripa",
@@ -15,76 +16,31 @@
   "keywords": [
     "wordpress"
   ],
-  "browserslist": [
-    "last 2 versions",
-    "android 4",
-    "opera 12",
-    "ie 11"
-  ],
-  "entry": {
-    "setting": [
-      "./css/setting.scss"
-    ],
-    "debug-log": [
-      "./css/debug-log.scss"
-    ],
-    "support-user": [
-      "./css/support-user.scss",
-      "./js/support-user.js"
-    ],
-    "assistant": [
-      "./css/assistant.scss",
-      "./js/assistant.js"
-    ],
-    "plugins-screen": [
-      "./css/plugins-screen.scss",
-      "./js/plugins-screen.js"
-    ]
-  },
-  "dependencies": {
-    "jquery": "^3.5.1"
+  "engines": {
+    "node": ">=24"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "autoprefixer": "~9.7.6",
-    "babel-loader": "~8.1.0",
-    "browser-sync": "^2.26.10",
-    "clean-webpack-plugin": "~3.0.0",
-    "copy-webpack-plugin": "~5.1.1",
-    "cross-env": "~7.0.2",
-    "css-loader": "~3.5.3",
-    "dotenv": "^16.0.2",
-    "eslint": "~6.8.0",
-    "eslint-config-wordpress": "^2.0.0",
-    "eslint-loader": "~4.0.2",
-    "file-loader": "~6.0.0",
+    "@eslint/js": "10.0.1",
+    "@types/jquery": "^3.5.33",
+    "@types/node": "^24.10.1",
+    "cross-env": "^7.0.3",
+    "eslint": "10.8.0",
+    "globals": "17.8.0",
     "husky": "^8.0.3",
-    "imagemin-mozjpeg": "~8.0.0",
-    "imagemin-webpack-plugin": "~2.4.2",
-    "mini-css-extract-plugin": "~0.9.0",
-    "node-sass": "^4.14.1",
-    "optimize-css-assets-webpack-plugin": "~5.0.3",
-    "postcss-loader": "~3.0.0",
-    "sass-loader": "~6.0",
-    "stylelint": "~12.0.1",
-    "stylelint-config-wordpress": "^17.0.0",
-    "stylelint-order-htmlacademy": "^1.0.1",
-    "stylelint-webpack-plugin": "~1.2.3",
-    "terser-webpack-plugin": "^2.3.7",
-    "webpack": "~4.43.0",
-    "webpack-cli": "^3.3.12",
-    "webpack-fix-style-only-entries": "~0.4.0",
-    "fs": "~0.0.1-security",
-    "path": "~0.12.7"
+    "stylelint": "^16.23.1",
+    "stylelint-config-standard": "^39.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "8.65.0",
+    "vite": "8.1.4"
   },
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack --watch",
-    "build": "cross-env NODE_ENV=production webpack && cross-env NODE_ENV=production NO_MIN=true webpack",
-    "lint-style": "npx stylelint --allow-empty-input 'src/**/*.{css,scss}'",
-    "lint-script": "npx eslint 'src/**/*.js'",
-    "fix-style": "npx stylelint --allow-empty-input --fix 'src/**/*.{css,scss}'",
-    "fix-script": "npx eslint --fix 'src/**/*.js'",
+    "start": "vite build --watch --mode development",
+    "build": "npm run typecheck && vite build && cross-env NO_MIN=true vite build",
+    "typecheck": "tsc --noEmit",
+    "lint-style": "stylelint 'src/**/*.css'",
+    "lint-script": "eslint eslint.config.mjs stylelint.config.mjs 'src/**/*.ts' vite.config.ts",
+    "fix-style": "stylelint --fix 'src/**/*.css'",
+    "fix-script": "eslint --fix eslint.config.mjs stylelint.config.mjs 'src/**/*.ts' vite.config.ts",
     "prepare": "husky install"
   }
 }

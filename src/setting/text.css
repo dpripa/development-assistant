@@ -1,0 +1,14 @@
+.da-setting-text input {
+	width: 300px;
+}
+
+.da-setting-text input[type="number"] {
+	width: 100px;
+}
+
+.da-setting-text__description {
+	display: block;
+	margin-top: 6px;
+	color: var(--da-gray-text);
+	font-size: 13px;
+}

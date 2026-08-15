@@ -1,20 +1,14 @@
-@import "variables";
-@import "setting/checkbox";
-@import "setting/text";
-@import "setting/status";
+@import url("../shared/variables.css");
+@import url("./checkbox.css");
+@import url("./text.css");
+@import url("./status.css");
 
-.da-setting-page {
+.da-setting-page form {
+	max-width: 760px;
+}
 
-	form {
-		max-width: 760px;
-	}
-
-	.form-table {
-
-		th {
-			vertical-align: middle;
-		}
-	}
+.da-setting-page .form-table th {
+	vertical-align: middle;
 }
 
 .da-setting-list {
@@ -39,5 +33,5 @@ h2 + .da-setting-section__description {
 }
 
 .da-setting__error-text {
-	color: $error;
+	color: var(--da-error);
 }

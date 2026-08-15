@@ -8,7 +8,7 @@ tooling, release workflow, and a complete local WordPress environment.
 
 - Docker with Docker Compose
 - `mkcert`
-- NVM with Node.js 14
+- NVM with Node.js 24
 - Subversion, `rsync`, and `unzip` for publishing to WordPress.org
 
 Composer runs through Docker, so a host PHP or Composer installation is not
@@ -75,6 +75,9 @@ the ignored local `wp/` directory and are not committed. `make wp-core-update`
 updates WordPress Core without replacing `wp-content`, `wp-config.php`, or other
 local runtime configuration.
 
+`make start-watch` keeps Vite running and rebuilds plugin assets when frontend
+source files change.
+
 ## Build And Release
 
 Build production and non-minified assets:
@@ -82,6 +85,10 @@ Build production and non-minified assets:
 ```sh
 make build-src
 ```
+
+Frontend source is organized by WordPress admin feature under `src/`. Vite
+compiles strict TypeScript and plain CSS into the stable classic-script and
+stylesheet filenames expected by the plugin's PHP asset loader.
 
 Create a release archive:
 

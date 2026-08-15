@@ -3,15 +3,13 @@
 .editorconfig
 .env
 .env.*
-.eslintignore
-.eslintrc
+eslint.config.mjs
 .git
 .github
 .gitignore
 .husky
 .nvmrc
-.stylelintignore
-.stylelintrc
+stylelint.config.mjs
 Makefile
 README.md
 backups
@@ -27,6 +25,7 @@ release
 scripts
 src
 tmp
-webpack.config.js
+tsconfig.json
+vite.config.ts
 wp
 wporg

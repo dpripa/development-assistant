@@ -143,9 +143,11 @@ wporg-assets-publish:
 	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish-assets
 
 fix:
-	./scripts/run-composer.sh run fix && npm run fix-style && npm run fix-script
+	./scripts/run-composer.sh run fix
+	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run fix-style && npm run fix-script
 
 lint:
-	./scripts/run-composer.sh run lint && npm run lint-style && npm run lint-script
+	./scripts/run-composer.sh run lint
+	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run lint-style && npm run lint-script && npm run typecheck
 
 prepare-to-release: lint build-src

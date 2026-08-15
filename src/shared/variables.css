@@ -1,0 +1,15 @@
+:root {
+	--da-white: #fff;
+	--da-gray-medium: #a3abb0;
+	--da-gray-text: rgb(29 35 39 / 55%);
+	--da-success: #46b450;
+	--da-warning: #f0ad4e;
+	--da-error: #d9534f;
+	--da-error-hover: #c12e2a;
+	--da-error-active: #8f221f;
+	--da-border-color: #c3c4c7;
+	--da-box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+	--da-success-soft: rgb(70 180 80 / 15%);
+	--da-warning-soft: rgb(240 173 78 / 15%);
+	--da-error-soft: rgb(217 83 79 / 15%);
+}

@@ -24,15 +24,15 @@ jobs:
             - name: Install Composer Dependencies
               run: composer install
 
-            - name: Use Node.js 14.x
+            - name: Use Node.js 24.x
               uses: actions/setup-node@v4
               with:
-                  node-version: 14.x
+                  node-version: 24.x
                   cache: 'npm'
                   cache-dependency-path: "package-lock.json"
 
             - name: Install NPM Dependencies
-              run: npm install
+              run: npm ci
 
             - name: Prepare to Release
               run: make lint && npm run build && composer install --no-dev --optimize-autoloader && make dist-archive

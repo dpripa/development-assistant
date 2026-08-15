@@ -4,8 +4,8 @@
 
 .da-dev-actions-list {
 	margin: 0;
+}
 
-	> li {
-		margin: 0;
-	}
+.da-dev-actions-list > li {
+	margin: 0;
 }
