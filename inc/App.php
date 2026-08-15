@@ -1,6 +1,8 @@
 <?php
 namespace WPDevAssist;
 
+use Exception;
+
 defined( 'ABSPATH' ) || exit;
 
 class App {
@@ -26,6 +28,9 @@ class App {
 		return static::$instance;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function __construct() {
 		$this->action_query = new ActionQuery();
 		$this->admin_notice = new AdminNotice( KEY );
