@@ -100,11 +100,12 @@ be committed to this repository.
 
 ### WordPress.org SVN
 
-The ignored `release/wporg/` directory is the local working copy of the official
-WordPress.org SVN repository. Its top-level `assets/` contains directory banners,
-icons, and screenshots; plugin files are synchronized from the release ZIP into
-`trunk/`. The tracked `release/.gitkeep` reserves this local release workspace,
-while generated archives and the SVN checkout remain ignored.
+The tracked `wporg/assets/` directory is the source of truth for WordPress.org
+directory banners, icons, screenshots, and `blueprint.json`. The ignored
+`release/wporg/` directory is the local working copy of the official
+WordPress.org SVN repository. Plugin files are synchronized from the release ZIP
+into its `trunk/`. The tracked `release/.gitkeep` reserves this local release
+workspace, while generated archives and the SVN checkout remain ignored.
 
 Check out or update the working copy:
 
@@ -136,8 +137,9 @@ Preparation verifies that the plugin header, `readme.txt`, `package.json`,
 syncs the production ZIP into `trunk/` and creates `tags/<version>` from that
 local trunk. Only the explicit publish command commits to WordPress.org.
 
-Directory banners, icons, and screenshots can be edited directly under
-`release/wporg/assets/` and published separately:
+Directory banners, icons, screenshots, and `blueprint.json` are maintained under
+`wporg/assets/`. Copy reviewed changes into `release/wporg/assets/`, inspect the
+SVN diff, and publish them separately:
 
 ```sh
 make wporg-assets-publish confirm=publish
