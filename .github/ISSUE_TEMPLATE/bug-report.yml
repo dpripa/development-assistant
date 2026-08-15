@@ -1,0 +1,108 @@
+name: Bug report
+description: Report reproducible incorrect behavior in Development Assistant.
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting a problem. Do not include credentials, personal data, private logs, or undisclosed security vulnerabilities.
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checks
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I reproduced the problem with the latest stable Development Assistant release.
+          required: true
+        - label: This report does not describe an undisclosed security vulnerability.
+          required: true
+
+  - type: input
+    id: plugin-version
+    attributes:
+      label: Development Assistant version
+      placeholder: 1.2.10
+    validations:
+      required: true
+
+  - type: input
+    id: wordpress-version
+    attributes:
+      label: WordPress version
+      placeholder: 6.8.2
+    validations:
+      required: true
+
+  - type: input
+    id: php-version
+    attributes:
+      label: PHP version
+      placeholder: 8.2.0
+    validations:
+      required: true
+
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and version
+      description: Required for interface problems; enter "Not applicable" otherwise.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: multisite
+    attributes:
+      label: WordPress mode
+      options:
+        - Single site
+        - Multisite
+        - Unknown
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Provide the smallest reliable sequence that demonstrates the problem.
+      placeholder: |
+        1. Go to ...
+        2. Enable ...
+        3. Click ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: conflicts
+    attributes:
+      label: Theme and plugin context
+      description: List relevant active plugins, the active theme, and whether conflict isolation changed the result.
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized diagnostic information
+      description: Paste only the relevant excerpt after removing secrets and personal or production data.
+      render: shell
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional context
+      description: Add screenshots or other information that may help reproduce the problem.

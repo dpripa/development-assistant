@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: WordPress.org support forum
+    url: https://wordpress.org/support/plugin/development-assistant/
+    about: Ask installation, configuration, and usage questions.
+  - name: Private security report
+    url: https://github.com/dpripa/development-assistant/security/advisories/new
+    about: Report suspected vulnerabilities privately instead of opening an issue.

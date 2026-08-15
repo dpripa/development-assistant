@@ -1,0 +1,53 @@
+name: Feature request
+description: Propose a focused improvement to Development Assistant.
+title: "[Feature]: "
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submission checks
+      options:
+        - label: I searched existing issues for a similar proposal.
+          required: true
+        - label: This request describes a user problem rather than only a preferred implementation.
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the workflow or limitation that should be improved.
+    validations:
+      required: true
+
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Desired outcome
+      description: Explain what a successful result would let users do.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed approach
+      description: Optional implementation or interface ideas.
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe existing workarounds or approaches that did not fit.
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Compatibility and safety considerations
+      description: Note possible effects on WordPress versions, PHP versions, stored data, users, files, plugin state, security, or privacy.
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Add examples, screenshots, or related references.

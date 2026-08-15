@@ -9,6 +9,10 @@ eslint.config.mjs
 .gitignore
 .husky
 .nvmrc
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+SECURITY.md
+SUPPORT.md
 stylelint.config.mjs
 Makefile
 README.md
@@ -17,6 +21,7 @@ composer.json
 composer.lock
 docker
 docker-compose.yml
+docs
 node_modules
 package.json
 package-lock.json

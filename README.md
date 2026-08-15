@@ -4,7 +4,19 @@ Development Assistant is an open-source WordPress plugin for debugging and
 customer-support workflows. This repository contains the plugin source, build
 tooling, release workflow, and a complete local WordPress environment.
 
-## Requirements
+[WordPress.org](https://wordpress.org/plugins/development-assistant/) ·
+[Support](SUPPORT.md) · [Contributing](CONTRIBUTING.md) ·
+[Security](SECURITY.md)
+
+## Installation
+
+Install Development Assistant from the WordPress admin plugin directory, or
+download it from the official
+[WordPress.org plugin page](https://wordpress.org/plugins/development-assistant/).
+
+The remaining instructions describe development from a source checkout.
+
+## Development Requirements
 
 - Docker with Docker Compose
 - `mkcert`
@@ -155,3 +167,11 @@ make wporg-assets-publish confirm=publish
 The SVN password is passed to the client through standard input, is not included
 in the process arguments, and is not stored in the SVN authentication cache. In
 CI, use the CI provider's encrypted secrets instead of creating a `.env` file.
+
+## Project Policies
+
+- Read [CONTRIBUTING.md](CONTRIBUTING.md) before proposing a change.
+- Use [SUPPORT.md](SUPPORT.md) to choose between user support and bug reports.
+- Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+- Community participation is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+- See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for repository and runtime boundaries.
