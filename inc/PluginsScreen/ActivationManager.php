@@ -25,7 +25,7 @@ class ActivationManager {
 
 		$action_query->add( static::DEACTIVATION_QUERY_KEY, $this->handle_deactivation() );
 		$action_query->add( static::ACTIVATION_QUERY_KEY, $this->handle_activation(), false );
-		add_action( 'activate_plugin', $this->remove_temporarily_deactivated() );
+		add_action( 'activated_plugin', $this->remove_temporarily_deactivated() );
 		add_filter( 'bulk_actions-plugins', $this->add_bulk_deactivation() );
 		add_filter( 'handle_bulk_actions-plugins', $this->handle_bulk_deactivation(), 10, 3 );
 	}
