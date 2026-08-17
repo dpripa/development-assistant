@@ -63,13 +63,16 @@ function initShare( $: JQueryStatic ): void {
 		const $temporaryForm = $( '<form>' );
 		const $temporaryPasswordInput = $( '<input>' );
 		const $temporaryMessageInput = $( '<textarea>' );
-		const actionUrl = `${ pageUrl }&${ shareQueryKeys.email }=${ email }&_wpnonce=${ shareNonce }`;
+		const actionUrl = new URL( pageUrl );
+
+		actionUrl.searchParams.set( shareQueryKeys.email, email );
+		actionUrl.searchParams.set( '_wpnonce', shareNonce );
 
 		$temporaryForm
 			.appendTo( 'body' )
 			.addClass( 'da-support-user__hidden-element' )
 			.attr( 'method', 'post' )
-			.attr( 'action', actionUrl )
+			.attr( 'action', actionUrl.toString() )
 			.append( $temporaryPasswordInput )
 			.append( $temporaryMessageInput );
 
