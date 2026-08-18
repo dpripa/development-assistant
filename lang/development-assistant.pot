@@ -67,8 +67,9 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: inc/Assistant/SupportUser.php:86 inc/Assistant/WPDebug.php:164
-#: inc/Assistant/WPDebug.php:191
+#: inc/Assistant/MailHog.php:82 inc/Assistant/SupportUser.php:90
+#: inc/Assistant/WPDebug.php:167 inc/Assistant/WPDebug.php:194
+#: inc/Setting/Control.php:122
 msgid "Disabled"
 msgstr ""
 

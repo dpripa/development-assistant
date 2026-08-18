@@ -119,7 +119,7 @@ class Control {
 					if ( isset( $args['disabled_title'] ) ) {
 						echo wp_kses_post( $args['disabled_title'] );
 					} else {
-						echo esc_html__( 'Disabled', 'wp-dev-assist' );
+						echo esc_html__( 'Disabled', 'development-assistant' );
 					}
 				} elseif ( $args['is_success'] ) {
 					echo wp_kses_post( $args['success_title'] );
