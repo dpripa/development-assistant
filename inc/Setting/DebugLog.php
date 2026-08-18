@@ -210,7 +210,7 @@ class DebugLog extends Page {
 
 	public function delete_file_if_originally_not_exists(): void {
 		if (
-			'yes' === get_option( static::ORIGINAL_EXISTENCE_KEY, static::ORIGINAL_EXISTENCE_DEFAULT ) &&
+			'no' === get_option( static::ORIGINAL_EXISTENCE_KEY, static::ORIGINAL_EXISTENCE_DEFAULT ) &&
 			$this->is_file_exists()
 		) {
 			$this->delete_file();
