@@ -112,7 +112,8 @@ build-src:
 
 dist-archive:
 	$(RM) "$(RELEASE_ARCHIVE)"
-	$(COMPOSE) --profile tools run --rm --no-deps --build wp-cli-release \
+	$(COMPOSE) --profile tools run --rm --no-deps --build \
+		--user "$$(id -u):$$(id -g)" wp-cli-release \
 		dist-archive "$(PLUGIN_CONTAINER_DIR)" "$(PLUGIN_CONTAINER_DIR)/$(RELEASE_ARCHIVE)" \
 		--create-target-dir \
 		--force \
