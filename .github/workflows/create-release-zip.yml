@@ -51,5 +51,5 @@ jobs:
             - name: Upload Artifact
               uses: actions/upload-artifact@v7
               with:
-                  name: ${{ env.REPO_NAME }}
                   path: ./release/${{ env.REPO_NAME }}.zip
+                  archive: false
