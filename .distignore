@@ -17,7 +17,6 @@ stylelint.config.mjs
 Makefile
 README.md
 backups
-composer.json
 composer.lock
 docker
 docker-compose.yml
