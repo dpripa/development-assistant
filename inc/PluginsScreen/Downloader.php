@@ -42,8 +42,7 @@ class Downloader {
 	protected function handle_download(): callable {
 		return function ( array $data ): void {
 			$plugin_file = sanitize_text_field( wp_unslash( $data[ static::DOWNLOAD_QUERY_KEY ] ) );
-			$plugin_dir  = WP_PLUGIN_DIR . '/' . dirname( $plugin_file );
-			$zip_file    = sys_get_temp_dir() . '/' . dirname( $plugin_file ) . '.zip';
+			$zip_file    = $this->get_zip_file( $plugin_file );
 			$zip         = new ZipArchive();
 
 			if ( is_int( $zip->open( $zip_file, ZipArchive::CREATE ) ) ) {
@@ -52,21 +51,7 @@ class Downloader {
 				return;
 			}
 
-			$files = new RecursiveIteratorIterator(
-				new RecursiveDirectoryIterator( $plugin_dir ),
-				RecursiveIteratorIterator::LEAVES_ONLY
-			);
-
-			foreach ( $files as $file ) {
-				if ( $file->isDir() ) {
-					continue;
-				}
-
-				$file_path     = $file->getRealPath();
-				$relative_path = substr( $file_path, strlen( $plugin_dir ) + 1 );
-
-				$zip->addFile( $file_path, $relative_path );
-			}
+			$this->add_plugin_files( $zip, $plugin_file );
 
 			$zip->close();
 
@@ -79,5 +64,39 @@ class Downloader {
 
 			exit;
 		};
+	}
+
+	protected function get_zip_file( string $plugin_file ): string {
+		$plugin_dirname = dirname( $plugin_file );
+		$plugin_name    = '.' === $plugin_dirname ? pathinfo( $plugin_file, PATHINFO_FILENAME ) : $plugin_dirname;
+
+		return sys_get_temp_dir() . '/' . $plugin_name . '.zip';
+	}
+
+	protected function add_plugin_files( ZipArchive $zip, string $plugin_file ): void {
+		$plugin_dirname = dirname( $plugin_file );
+
+		if ( '.' === $plugin_dirname ) {
+			$zip->addFile( WP_PLUGIN_DIR . '/' . $plugin_file, basename( $plugin_file ) );
+
+			return;
+		}
+
+		$plugin_dir = WP_PLUGIN_DIR . '/' . $plugin_dirname;
+		$files      = new RecursiveIteratorIterator(
+			new RecursiveDirectoryIterator( $plugin_dir ),
+			RecursiveIteratorIterator::LEAVES_ONLY
+		);
+
+		foreach ( $files as $file ) {
+			if ( $file->isDir() ) {
+				continue;
+			}
+
+			$file_path     = $file->getRealPath();
+			$relative_path = substr( $file_path, strlen( $plugin_dir ) + 1 );
+
+			$zip->addFile( $file_path, $relative_path );
+		}
 	}
 }
