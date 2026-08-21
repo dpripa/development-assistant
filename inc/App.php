@@ -11,11 +11,9 @@ class App {
 	protected ActionQuery $action_query;
 	protected AdminNotice $admin_notice;
 	protected Asset $asset;
-	protected Env $env;
 	protected Fs $fs;
 	protected Assistant $assistant;
 	protected Htaccess $htaccess;
-	protected MailHog $mail_hog;
 	protected PluginsScreen $plugins_screen;
 	protected Setting $setting;
 	protected WPDebug $wp_debug;
@@ -36,10 +34,8 @@ class App {
 		$this->admin_notice = new AdminNotice( KEY );
 		$this->fs           = new Fs();
 		$this->asset        = new Asset( KEY, $this->fs );
-		$this->env          = new Env();
 
 		$this->htaccess       = new Htaccess( $this->fs );
-		$this->mail_hog       = new MailHog( $this->action_query, $this->admin_notice );
 		$this->wp_debug       = new WPDebug( $this->admin_notice, $this->fs, $this->htaccess );
 		$this->setting        = new Setting(
 			$this->action_query,
@@ -47,9 +43,7 @@ class App {
 			$this->fs,
 			$this->admin_notice,
 			$this->htaccess,
-			$this->mail_hog,
-			$this->wp_debug,
-			$this->env
+			$this->wp_debug
 		);
 		$this->plugins_screen = new PluginsScreen(
 			$this->action_query,
@@ -61,8 +55,7 @@ class App {
 			$this->asset,
 			$this->action_query,
 			$this->setting,
-			$this->htaccess,
-			$this->mail_hog
+			$this->htaccess
 		);
 
 		register_activation_hook( ROOT_FILE, $this->activate() );
@@ -80,10 +73,6 @@ class App {
 
 	public function asset(): Asset {
 		return $this->asset;
-	}
-
-	public function env(): Env {
-		return $this->env;
 	}
 
 	public function fs(): Fs {

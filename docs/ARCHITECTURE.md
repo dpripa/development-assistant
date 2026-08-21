@@ -16,7 +16,7 @@ injects it into feature-level objects:
 - `AdminNotice` stores and renders admin feedback.
 - `Fs` resolves plugin and WordPress filesystem paths.
 - `Asset` enqueues generated styles and classic scripts.
-- `Env`, `Htaccess`, `MailHog`, and `WPDebug` own environment-specific services.
+- `Htaccess` and `WPDebug` own debug-safety services.
 - `Setting`, `PluginsScreen`, and `Assistant` compose the visible admin features.
 
 Keep dependency construction in `App`. Feature classes should receive their
@@ -29,21 +29,21 @@ dependencies explicitly instead of creating parallel global service locators.
 `inc/Setting.php` owns the main settings page and coordinates the settings
 features under `inc/Setting/`:
 
-- `DevEnv` manages development-environment and mail-capture settings.
 - `DebugLog` renders, downloads, and deletes the WordPress debug log.
 - `SupportUser` manages the temporary support-user lifecycle and email sharing.
 - `Control`, `Page`, `BasePage`, and `Tab` provide shared settings UI structure.
 
 WordPress options are the persistent source of truth. New options must have an
 explicit key, default, registration path, reset behavior, and compatibility
-story.
+story. The plugin applies one production-safe policy on every host; it does not
+detect or expose a separate development-environment mode.
 
 ### Assistant Panel
 
 `inc/Assistant.php` renders the admin notice panel. Sections under
-`inc/Assistant/` expose status and actions for debug configuration, mail
-capture, and the support user. The panel consumes the same services and options
-as the settings pages; it must not introduce a second state model.
+`inc/Assistant/` expose status and actions for debug configuration and the
+support user. The panel consumes the same services and options as the settings
+pages; it must not introduce a second state model.
 
 ### Plugins Screen
 

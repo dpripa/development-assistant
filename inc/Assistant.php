@@ -14,20 +14,17 @@ class Assistant {
 	protected ActionQuery $action_query;
 	protected Setting $setting;
 	protected Htaccess $htaccess;
-	protected MailHog $mail_hog;
 
 	public function __construct(
 		Asset $asset,
 		ActionQuery $action_query,
 		Setting $setting,
-		Htaccess $htaccess,
-		MailHog $mail_hog
+		Htaccess $htaccess
 	) {
 		$this->asset        = $asset;
 		$this->action_query = $action_query;
 		$this->setting      = $setting;
 		$this->htaccess     = $htaccess;
-		$this->mail_hog     = $mail_hog;
 
 		add_action( 'admin_init', $this->init(), 1 );
 	}
@@ -40,10 +37,6 @@ class Assistant {
 		$sections = array(
 			new Assistant\WPDebug( $this->action_query, $this->setting->debug_log(), $this->htaccess ),
 		);
-
-		if ( 'yes' === get_option( Setting\DevEnv::ENABLE_KEY, Setting\DevEnv::ENABLE_DEFAULT ) ) {
-			$sections[] = new Assistant\MailHog( $this->action_query, $this->mail_hog, $this->setting->dev_env() );
-		}
 
 		if (
 			apply_filters( Setting\SupportUser::ENABLE_HOOK, true ) &&

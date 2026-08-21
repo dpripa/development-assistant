@@ -4,12 +4,10 @@ namespace WPDevAssist;
 use WPDevAssist\ActionQuery;
 use WPDevAssist\AdminNotice;
 use WPDevAssist\Asset;
-use WPDevAssist\Env;
 use WPDevAssist\Fs;
 use WPDevAssist\Setting\Page;
 use WPDevAssist\Setting\Control;
 use WPDevAssist\Setting\DebugLog;
-use WPDevAssist\Setting\DevEnv;
 use WPDevAssist\Setting\SupportUser;
 
 defined( 'ABSPATH' ) || exit;
@@ -47,13 +45,17 @@ class Setting extends Page {
 		self::ASSISTANT_OPENED_ON_WP_DASHBOARD_KEY,
 		self::ACTIVE_PLUGINS_FIRST_KEY,
 		self::RESET_KEY,
+		// Legacy development-environment and MailHog options, kept only so reset removes them.
+		KEY . '_force_dev_env',
+		KEY . '_redirect_to_mail_hog',
+		KEY . '_mail_hog_http_address',
+		KEY . '_mail_hog_smtp_address',
 	);
 
 	protected Control $control;
 	protected Htaccess $htaccess;
 	protected WPDebug $wp_debug;
 	protected DebugLog $debug_log;
-	protected DevEnv $dev_env;
 	protected SupportUser $support_user;
 
 	public function __construct(
@@ -62,9 +64,7 @@ class Setting extends Page {
 		Fs $fs,
 		AdminNotice $admin_notice,
 		Htaccess $htaccess,
-		MailHog $mail_hog,
-		WPDebug $wp_debug,
-		Env $env
+		WPDebug $wp_debug
 	) {
 		$this->control  = new Control();
 		$this->htaccess = $htaccess;
@@ -77,16 +77,11 @@ class Setting extends Page {
 		$action_query->add( static::ENABLE_DEBUG_LOG_QUERY_KEY, $this->handle_enable_debug_log() );
 
 		$this->debug_log    = new DebugLog( $action_query, $asset, $admin_notice, $fs );
-		$this->dev_env      = new DevEnv( $action_query, $admin_notice, $this->control, $mail_hog, $env );
-		$this->support_user = new SupportUser( $action_query, $asset, $admin_notice, $this->control, $env );
+		$this->support_user = new SupportUser( $action_query, $asset, $admin_notice, $this->control );
 	}
 
 	public function debug_log(): DebugLog {
 		return $this->debug_log;
-	}
-
-	public function dev_env(): DevEnv {
-		return $this->dev_env;
 	}
 
 	public function support_user(): SupportUser {
@@ -119,12 +114,6 @@ class Setting extends Page {
 		};
 	}
 
-	protected function get_tabs(): array {
-		return array(
-			$this->dev_env,
-		);
-	}
-
 	protected function add_sections(): callable {
 		return function (): void {
 			$this->add_wp_debug_section( KEY . '_debug' );
@@ -155,11 +144,9 @@ class Setting extends Page {
 			static::ENABLE_WP_DEBUG_LOG_DEFAULT
 		);
 
-		$args = array();
-
-		if ( 'yes' !== get_option( Setting\DevEnv::ENABLE_KEY, Setting\DevEnv::ENABLE_DEFAULT ) ) {
-			$args['description'] = '<b class="da-setting__error-text">' . esc_html__( 'Warning!', 'development-assistant' ) . '</b> ' . wp_kses( __( 'Enabling error display may cause the entire interface blocking due to the display of these error messages, as well as a critical security issues. <b>Highly recommended to keep it disabled in production environment.</b>', 'development-assistant' ), array( 'b' => array() ) );
-		}
+		$args = array(
+			'description' => '<b class="da-setting__error-text">' . esc_html__( 'Warning!', 'development-assistant' ) . '</b> ' . esc_html__( 'Enabling error display may cause the entire interface blocking due to the display of these error messages, as well as a critical security issues.', 'development-assistant' ),
+		);
 
 		$this->add_setting(
 			$section_key,
@@ -289,8 +276,7 @@ class Setting extends Page {
 
 	protected function handle_toggle_debug_mode(): callable {
 		return function ( array $data ): void {
-			$value      = sanitize_text_field( wp_unslash( $data[ static::TOGGLE_DEBUG_MODE_QUERY_KEY ] ) );
-			$is_dev_env = 'yes' === get_option( Setting\DevEnv::ENABLE_KEY, Setting\DevEnv::ENABLE_DEFAULT );
+			$value = sanitize_text_field( wp_unslash( $data[ static::TOGGLE_DEBUG_MODE_QUERY_KEY ] ) );
 
 			if ( 'yes' !== $value && 'no' !== $value ) {
 				return;
@@ -299,11 +285,11 @@ class Setting extends Page {
 			update_option( static::ENABLE_WP_DEBUG_KEY, $value );
 			update_option( static::ENABLE_WP_DEBUG_LOG_KEY, $value );
 
-			if ( $is_dev_env || 'yes' !== $value ) {
+			if ( 'yes' !== $value ) {
 				update_option( static::ENABLE_WP_DEBUG_DISPLAY_KEY, $value );
 			}
 
-			if ( ! $is_dev_env && $this->htaccess->exists() && 'yes' === $value ) {
+			if ( $this->htaccess->exists() && 'yes' === $value ) {
 				update_option( static::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, 'yes' );
 			}
 

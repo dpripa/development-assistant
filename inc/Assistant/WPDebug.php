@@ -12,7 +12,6 @@ class WPDebug extends Section {
 	protected ActionQuery $action_query;
 	protected DebugLog $debug_log;
 	protected array $checked_constants = array();
-	protected bool $is_dev_env;
 	protected bool $is_debug_log_exists;
 	protected bool $is_htaccess_exists;
 	protected bool $is_disabled_direct_access_to_log;
@@ -23,7 +22,6 @@ class WPDebug extends Section {
 	public function __construct( ActionQuery $action_query, DebugLog $debug_log, Htaccess $htaccess ) {
 		$this->action_query                     = $action_query;
 		$this->debug_log                        = $debug_log;
-		$this->is_dev_env                       = 'yes' === get_option( Setting\DevEnv::ENABLE_KEY, Setting\DevEnv::ENABLE_DEFAULT );
 		$this->is_debug_log_exists              = $debug_log->is_file_exists();
 		$this->is_htaccess_exists               = $htaccess->exists();
 		$this->is_disabled_direct_access_to_log = 'yes' === get_option( Setting::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, Setting::DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT );
@@ -47,17 +45,6 @@ class WPDebug extends Section {
 			},
 			''
 		);
-
-		if ( $this->is_dev_env ) {
-			if ( $this->checked_constants ) {
-				$this->content .= sprintf( __( 'Disabled %s was detected in the development environment.', 'development-assistant' ), $checked_constants );
-				$this->content .= '<br><b>' . __( 'Don\'t forget to enable this when you start developing.', 'development-assistant' ) . '</b>';
-			} else {
-				$this->content = __( 'Everything is fine, debug mode is enabled in your development environment.', 'development-assistant' );
-			}
-
-			return;
-		}
 
 		if ( $this->checked_constants ) {
 			$this->content .= sprintf( __( 'Enabled %s was detected in the production environment.', 'development-assistant' ), $checked_constants );
@@ -91,17 +78,15 @@ class WPDebug extends Section {
 
 	protected function check_constants(): void {
 
-		$condition_value = $this->is_dev_env ? 'yes' : 'no';
-
-		if ( $this->debug_enabled !== $condition_value ) {
+		if ( 'no' !== $this->debug_enabled ) {
 			$this->checked_constants[] = 'WP_DEBUG';
 		}
 
-		if ( $this->log_enabled !== $condition_value ) {
+		if ( 'no' !== $this->log_enabled ) {
 			$this->checked_constants[] = 'WP_DEBUG_LOG';
 		}
 
-		if ( $this->display_enabled !== $condition_value ) {
+		if ( 'no' !== $this->display_enabled ) {
 			$this->checked_constants[] = 'WP_DEBUG_DISPLAY';
 		}
 	}
@@ -114,17 +99,14 @@ class WPDebug extends Section {
 			);
 		}
 
-		if ( ! $this->is_dev_env && 'yes' === $this->display_enabled ) {
+		if ( 'yes' === $this->display_enabled ) {
 			$this->controls[] = new Control(
 				__( 'Disable <code>WP_DEBUG_DISPLAY</code>', 'development-assistant' ),
 				$this->action_query->get_url( Setting::DISABLE_DEBUG_DISPLAY_QUERY_KEY ),
 			);
 		}
 
-		if (
-			( $this->is_dev_env && empty( $this->checked_constants ) ) ||
-			( ! $this->is_dev_env && $this->checked_constants )
-		) {
+		if ( $this->checked_constants ) {
 			$this->controls[] = new Control(
 				__( 'Disable debug mode', 'development-assistant' ),
 				$this->action_query->get_url( Setting::TOGGLE_DEBUG_MODE_QUERY_KEY, null, 'no' ),
@@ -140,7 +122,7 @@ class WPDebug extends Section {
 
 		if (
 			( $this->checked_constants || $this->is_debug_log_exists ) &&
-			! $this->is_disabled_direct_access_to_log && ! $this->is_dev_env && $this->is_htaccess_exists
+			! $this->is_disabled_direct_access_to_log && $this->is_htaccess_exists
 		) {
 			$this->controls[] = new Control(
 				__( 'Disable direct access to <code>debug.log</code>', 'development-assistant' ),
@@ -150,7 +132,7 @@ class WPDebug extends Section {
 
 		if (
 			( ! $this->checked_constants || ! $this->is_disabled_direct_access_to_log ) &&
-			$this->is_debug_log_exists && ! $this->is_dev_env
+			$this->is_debug_log_exists
 		) {
 			$this->controls[] = new Control(
 				__( 'Delete log file', 'development-assistant' ),
@@ -161,18 +143,6 @@ class WPDebug extends Section {
 	}
 
 	public function configure_status(): bool {
-		if ( $this->is_dev_env ) {
-			if ( $this->checked_constants ) {
-				$this->status_level       = 'error';
-				$this->status_description = __( 'Disabled', 'development-assistant' );
-			} else {
-				$this->status_level       = 'success';
-				$this->status_description = __( 'Enabled', 'development-assistant' );
-			}
-
-			return true;
-		}
-
 		if ( $this->checked_constants ) {
 			if ( ! $this->is_disabled_direct_access_to_log && $this->is_htaccess_exists ) {
 				$this->status_level       = 'error';

@@ -115,11 +115,9 @@ class DebugLog extends Page {
 				<li>
 					<?php $this->render_file_size( $is_file_exists ); ?>
 				</li>
-				<?php if ( 'yes' !== get_option( Setting\DevEnv::ENABLE_KEY, Setting\DevEnv::ENABLE_DEFAULT ) ) { ?>
-					<li>
-						<?php $this->render_direct_access_status(); ?>
-					</li>
-				<?php } ?>
+				<li>
+					<?php $this->render_direct_access_status(); ?>
+				</li>
 		</ul>
 		<?php
 	}

@@ -67,27 +67,13 @@ msgstr ""
 msgid "Enabled"
 msgstr ""
 
-#: inc/Assistant/MailHog.php:82 inc/Assistant/SupportUser.php:90
-#: inc/Assistant/WPDebug.php:167 inc/Assistant/WPDebug.php:194
+#: inc/Assistant/SupportUser.php:90 inc/Assistant/WPDebug.php:164
 #: inc/Setting/Control.php:122
 msgid "Disabled"
 msgstr ""
 
 #: inc/Assistant/WPDebug.php:36
 msgid "WP Debug"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:50
-#, php-format
-msgid "Disabled %s was detected in the development environment."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:51
-msgid "Don't forget to enable this when you start developing."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:53
-msgid "Everything is fine, debug mode is enabled in your development environment."
 msgstr ""
 
 #: inc/Assistant/WPDebug.php:60
@@ -252,14 +238,6 @@ msgstr ""
 
 #: inc/Setting.php:151
 msgid "These options allow you to safely control the debug constants without the need to manually edit the <code>wp-config.php</code>."
-msgstr ""
-
-#: inc/Setting.php:202
-msgid "What it is?"
-msgstr ""
-
-#: inc/Setting.php:214
-msgid "MailHog isn't available in the production environment."
 msgstr ""
 
 #: inc/Setting.php:291
