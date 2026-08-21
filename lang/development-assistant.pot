@@ -195,8 +195,44 @@ msgstr ""
 msgid "Plugin(s) temporarily deactivated."
 msgstr ""
 
-#: inc/PluginsScreen/Downloader.php:35
-msgid "Failed to download plugin"
+#: inc/PluginsScreen/Downloader.php:210
+msgid "Could not create a temporary plugin archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:69
+msgid "Could not create the plugin archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:88 inc/PluginsScreen/Downloader.php:96
+msgid "Could not finish the plugin archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:104 inc/PluginsScreen/Downloader.php:115
+msgid "Could not read the plugin archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:122
+msgid "Could not create the plugin archive from the selected files."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:144
+msgid "The requested plugin is not installed."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:157 inc/PluginsScreen/Downloader.php:179
+msgid "The requested plugin files are missing, unreadable, or outside the plugins directory."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:228
+msgid "Could not add the selected plugin file to the archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:254
+msgid "A plugin file is missing, unreadable, or outside the selected plugin directory."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:260
+msgid "Could not add a selected plugin file to the archive."
 msgstr ""
 
 #: inc/Setting.php:59
