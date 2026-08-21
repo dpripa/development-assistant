@@ -49,7 +49,7 @@ class ActivationManager {
 		return in_array( $plugin_file, get_option( static::DEACTIVATED_KEY, array() ), true );
 	}
 
-	public function deactivate_plugins( array $plugins ): void {
+	public function deactivate_plugins( array $plugins ): bool {
 		$previous = get_option( static::DEACTIVATED_KEY, array() );
 
 		foreach ( $plugins as $plugin_key => $plugin ) {
@@ -63,8 +63,27 @@ class ActivationManager {
 			unset( $plugins[ $plugin_key ] );
 		}
 
+		if ( empty( $plugins ) ) {
+			return false;
+		}
+
 		deactivate_plugins( $plugins );
-		update_option( static::DEACTIVATED_KEY, array_merge( $previous, $plugins ) );
+
+		foreach ( $plugins as $plugin_key => $plugin ) {
+			if ( ! is_plugin_active( $plugin ) ) {
+				continue;
+			}
+
+			unset( $plugins[ $plugin_key ] );
+		}
+
+		if ( empty( $plugins ) ) {
+			return false;
+		}
+
+		update_option( static::DEACTIVATED_KEY, array_values( array_unique( array_merge( $previous, $plugins ) ) ) );
+
+		return true;
 	}
 
 	public function activate_plugins(): void {
@@ -89,7 +108,7 @@ class ActivationManager {
 
 	protected function handle_deactivation(): callable {
 		return function ( array $data ): void {
-			if ( current_user_can( 'activate_plugins' ) ) {
+			if ( ! current_user_can( 'activate_plugins' ) ) {
 				return;
 			}
 
@@ -99,7 +118,10 @@ class ActivationManager {
 				return;
 			}
 
-			$this->deactivate_plugins( $plugins );
+			if ( ! $this->deactivate_plugins( $plugins ) ) {
+				return;
+			}
+
 			$this->admin_notice->add_transient(
 				__( 'Plugin temporarily deactivated.', 'development-assistant' ),
 				'success'
@@ -191,7 +213,10 @@ class ActivationManager {
 				return $redirect_to;
 			}
 
-			$this->deactivate_plugins( $plugins );
+			if ( ! $this->deactivate_plugins( $plugins ) ) {
+				return $redirect_to;
+			}
+
 			$this->admin_notice->add_transient(
 				__( 'Plugin(s) temporarily deactivated.', 'development-assistant' ),
 				'success'
