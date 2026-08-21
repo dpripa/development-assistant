@@ -372,6 +372,31 @@ class SupportUser extends Page {
 				exit;
 			}
 
+			$user_id      = intval( get_option( static::ID_KEY, static::ID_DEFAULT ) );
+			$support_user = get_userdata( $user_id );
+
+			if ( 0 === $user_id || ! $support_user ) {
+				$this->admin_notice->add_transient( __( 'Support user does not exist. Recreate the user before sharing credentials.', 'development-assistant' ), 'error' );
+				wp_safe_redirect( $redirect_to );
+
+				exit;
+			}
+
+			$update_error = $this->update_user_email( $user_id, $email );
+
+			if ( $update_error instanceof WP_Error ) {
+				$this->admin_notice->add_transient(
+					sprintf(
+						__( 'Credentials were not sent because the support user account email could not be updated: %s', 'development-assistant' ),
+						$update_error->get_error_message()
+					),
+					'error'
+				);
+				wp_safe_redirect( $redirect_to );
+
+				exit;
+			}
+
 			$subject = sprintf(
 				__( 'Support access to %s', 'development-assistant' ),
 				str_replace( array( 'http://', 'https://' ), '', home_url() )
@@ -385,18 +410,25 @@ class SupportUser extends Page {
 			$headers = array( 'Content-Type: text/html; charset=UTF-8', $from );
 
 			if ( ! wp_mail( $email, $subject, $content, $headers ) ) {
-				$this->admin_notice->add_transient( __( 'An error occurred while trying to send the email.', 'development-assistant' ), 'error' );
+				$rollback_error = $this->update_user_email( $user_id, $support_user->user_email );
+
+				if ( $rollback_error instanceof WP_Error ) {
+					$this->admin_notice->add_transient(
+						sprintf(
+							__( 'Credentials could not be sent, and the support user account email could not be restored: %s', 'development-assistant' ),
+							$rollback_error->get_error_message()
+						),
+						'error'
+					);
+				} else {
+					$this->admin_notice->add_transient( __( 'An error occurred while trying to send the email.', 'development-assistant' ), 'error' );
+				}
+
 				wp_safe_redirect( $redirect_to );
 
 				exit;
 			}
 
-			wp_update_user(
-				array(
-					'ID'         => get_option( static::ID_KEY, static::ID_DEFAULT ),
-					'user_email' => $email,
-				)
-			);
 			update_option( static::EMAIL_KEY, $email );
 			$this->admin_notice->add_transient(
 				sprintf(
@@ -409,6 +441,24 @@ class SupportUser extends Page {
 
 			exit;
 		};
+	}
+
+	/**
+	 * @return WP_Error|null
+	 */
+	protected function update_user_email( int $user_id, string $email ): ?WP_Error {
+		$result = wp_update_user(
+			array(
+				'ID'         => $user_id,
+				'user_email' => $email,
+			)
+		);
+
+		if ( $result instanceof WP_Error ) {
+			return $result;
+		}
+
+		return null;
 	}
 
 	protected function get_share_to_email_content( string $password, string $message ): string {

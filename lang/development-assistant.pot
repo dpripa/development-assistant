@@ -332,14 +332,28 @@ msgstr ""
 msgid "An error occurred while trying to send the email."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:342
+#: inc/Setting/SupportUser.php:379
+msgid "Support user does not exist. Recreate the user before sharing credentials."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:401
 #, php-format
 msgid "Support access to %s"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:369
+#: inc/Setting/SupportUser.php:390
 #, php-format
-msgid "Credentials successfully shared this %s."
+msgid "Credentials were not sent because the support user account email could not be updated: %s"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:418
+#, php-format
+msgid "Credentials could not be sent, and the support user account email could not be restored: %s"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:435
+#, php-format
+msgid "Credentials successfully shared with %s."
 msgstr ""
 
 #: inc/Setting/SupportUser.php:439
