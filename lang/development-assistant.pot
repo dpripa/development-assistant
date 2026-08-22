@@ -297,19 +297,43 @@ msgstr ""
 msgid "<code>WP_DEBUG_LOG</code> enabled."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:32
+#: inc/Setting/DebugLog.php:40
 msgid "debug.log"
 msgstr ""
 
-#: inc/Setting/DebugLog.php:143
+#: inc/Setting/DebugLog.php:175
 msgid "Are you sure to delete the debug.log file? This action is irreversible."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:213
+#: inc/Setting/DebugLog.php:188
+msgid "Log file deleted."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:197 inc/Setting/DebugLog.php:206
+msgid "The debug log could not be downloaded because it is missing or unreadable."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:265
+msgid "You are not allowed to delete the debug log."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:272
+msgid "The debug log could not be deleted because it no longer exists."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:279
+msgid "The debug log could not be deleted because it is not readable."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:286
+msgid "The debug log could not be deleted. Check filesystem permissions and try again."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:317
 msgid "Logging is disabled."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:215
+#: inc/Setting/DebugLog.php:319
 msgid "Enable"
 msgstr ""
 

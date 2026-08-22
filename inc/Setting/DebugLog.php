@@ -1,6 +1,7 @@
 <?php
 namespace WPDevAssist\Setting;
 
+use WP_Error;
 use WPDevAssist\Model\ActionLink;
 use WPDevAssist\ActionQuery;
 use WPDevAssist\Asset;
@@ -176,13 +177,37 @@ class DebugLog extends Page {
 
 	protected function handle_delete_file(): callable {
 		return function (): void {
-			$this->delete_file();
-			$this->admin_notice->add_transient( 'Log file deleted.', 'success' );
+			$error = $this->delete_file();
+
+			if ( $error instanceof WP_Error ) {
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
+
+			$this->admin_notice->add_transient( __( 'Log file deleted.', 'development-assistant' ), 'success' );
 		};
 	}
 
 	protected function handle_download_file(): callable {
 		return function (): void {
+			$file = @fopen( $this->get_log_file_path(), 'rb' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.file_system_operations_fopen
+
+			if ( false === $file ) {
+				$this->admin_notice->add_transient( __( 'The debug log could not be downloaded because it is missing or unreadable.', 'development-assistant' ), 'error' );
+
+				return;
+			}
+
+			$file_data = fstat( $file );
+
+			if ( false === $file_data ) {
+				fclose( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
+				$this->admin_notice->add_transient( __( 'The debug log could not be downloaded because it is missing or unreadable.', 'development-assistant' ), 'error' );
+
+				return;
+			}
+
 			$filename = str_replace(
 				'.',
 				'_',
@@ -191,9 +216,10 @@ class DebugLog extends Page {
 
 			header( 'Content-Type: text/plain' );
 			header( 'Content-Disposition: attachment; filename="' . $filename . '"' );
-			header( 'Content-Length: ' . filesize( static::LOG_FILE_PATH ) );
+			header( 'Content-Length: ' . $file_data['size'] );
 			flush();
-			readfile( static::LOG_FILE_PATH ); // phpcs:ignore
+			fpassthru( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fpassthru
+			fclose( $file ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
 
 			exit;
 		};
@@ -211,24 +237,65 @@ class DebugLog extends Page {
 			'no' === get_option( static::ORIGINAL_EXISTENCE_KEY, static::ORIGINAL_EXISTENCE_DEFAULT ) &&
 			$this->is_file_exists()
 		) {
-			$this->delete_file();
+			$error = $this->delete_file();
+
+			if ( $error instanceof WP_Error ) {
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
 		}
 
 		delete_option( static::ORIGINAL_EXISTENCE_KEY );
 	}
 
 	public function is_file_exists(): bool {
-		return file_exists( static::LOG_FILE_PATH );
+		return file_exists( $this->get_log_file_path() );
 	}
 
-	protected function delete_file(): void {
-		if ( ! current_user_can( 'administrator' ) || ! $this->is_file_exists() ) { // phpcs:ignore
-			return;
+	/**
+	 * @return WP_Error|null
+	 */
+	protected function delete_file(): ?WP_Error {
+		$log_file = $this->get_log_file_path();
+
+		if ( ! current_user_can( 'administrator' ) ) { // phpcs:ignore
+			return new WP_Error(
+				'debug_log_delete_forbidden',
+				__( 'You are not allowed to delete the debug log.', 'development-assistant' )
+			);
 		}
 
-		if ( ! unlink( static::LOG_FILE_PATH ) ) { // phpcs:ignore
-			$this->admin_notice->add_transient( 'Can\'t delete the ' . static::LOG_FILE_PATH . '.', 'error' );
+		if ( ! $this->is_file_exists() ) {
+			return new WP_Error(
+				'debug_log_missing',
+				__( 'The debug log could not be deleted because it no longer exists.', 'development-assistant' )
+			);
 		}
+
+		if ( ! is_readable( $log_file ) ) {
+			return new WP_Error(
+				'debug_log_unreadable',
+				__( 'The debug log could not be deleted because it is not readable.', 'development-assistant' )
+			);
+		}
+
+		if ( ! $this->unlink_file( $log_file ) ) {
+			return new WP_Error(
+				'debug_log_delete_failed',
+				__( 'The debug log could not be deleted. Check filesystem permissions and try again.', 'development-assistant' )
+			);
+		}
+
+		return null;
+	}
+
+	protected function get_log_file_path(): string {
+		return static::LOG_FILE_PATH;
+	}
+
+	protected function unlink_file( string $path ): bool {
+		return @unlink( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink
 	}
 
 	public function get_public_url(): string {
