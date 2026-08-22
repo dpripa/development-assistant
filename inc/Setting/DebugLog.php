@@ -6,6 +6,7 @@ use WPDevAssist\Model\ActionLink;
 use WPDevAssist\ActionQuery;
 use WPDevAssist\Asset;
 use WPDevAssist\AdminNotice;
+use WPDevAssist\ExternalFileMutationManager;
 use WPDevAssist\Fs;
 use WPDevAssist\Setting;
 use const WPDevAssist\KEY;
@@ -23,11 +24,13 @@ class DebugLog extends Page {
 	protected const ORIGINAL_EXISTENCE_DEFAULT = 'yes';
 
 	protected ActionQuery $action_query;
+	protected ExternalFileMutationManager $file_mutations;
 	protected Fs $fs;
 
-	public function __construct( ActionQuery $action_query, Asset $asset, AdminNotice $admin_notice, Fs $fs ) {
-		$this->action_query = $action_query;
-		$this->fs           = $fs;
+	public function __construct( ActionQuery $action_query, Asset $asset, AdminNotice $admin_notice, Fs $fs, ExternalFileMutationManager $file_mutations ) {
+		$this->action_query   = $action_query;
+		$this->file_mutations = $file_mutations;
+		$this->fs             = $fs;
 
 		parent::__construct( $asset, $admin_notice );
 		$action_query->add( static::DELETE_LOG_QUERY_KEY, $this->handle_delete_file() );
@@ -257,8 +260,6 @@ class DebugLog extends Page {
 	 * @return WP_Error|null
 	 */
 	protected function delete_file(): ?WP_Error {
-		$log_file = $this->get_log_file_path();
-
 		if ( ! current_user_can( 'administrator' ) ) { // phpcs:ignore
 			return new WP_Error(
 				'debug_log_delete_forbidden',
@@ -266,36 +267,11 @@ class DebugLog extends Page {
 			);
 		}
 
-		if ( ! $this->is_file_exists() ) {
-			return new WP_Error(
-				'debug_log_missing',
-				__( 'The debug log could not be deleted because it no longer exists.', 'development-assistant' )
-			);
-		}
-
-		if ( ! is_readable( $log_file ) ) {
-			return new WP_Error(
-				'debug_log_unreadable',
-				__( 'The debug log could not be deleted because it is not readable.', 'development-assistant' )
-			);
-		}
-
-		if ( ! $this->unlink_file( $log_file ) ) {
-			return new WP_Error(
-				'debug_log_delete_failed',
-				__( 'The debug log could not be deleted. Check filesystem permissions and try again.', 'development-assistant' )
-			);
-		}
-
-		return null;
+		return $this->file_mutations->delete_debug_log();
 	}
 
 	protected function get_log_file_path(): string {
 		return static::LOG_FILE_PATH;
-	}
-
-	protected function unlink_file( string $path ): bool {
-		return @unlink( $path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors.Discouraged, WordPress.WP.AlternativeFunctions.unlink_unlink
 	}
 
 	public function get_public_url(): string {

@@ -25,21 +25,6 @@ class Fs {
 		return $rel ? "$path{$rel}" : rtrim( $path, '/\\' );
 	}
 
-	public function write_text_file( string $path, string $text, int $permissions = 0600 ): bool {
-		$file_exists   = file_exists( $path );
-		$bytes_written = file_put_contents( $path, $text, LOCK_EX ); // phpcs:ignore
-
-		if ( false === $bytes_written ) {
-			return false;
-		}
-
-		if ( ! $file_exists ) {
-			chmod( $path, $permissions ); // phpcs:ignore
-		}
-
-		return true;
-	}
-
 	public function read_text_file_fully( string $path ): string {
 		if ( ! is_file( $path ) || ! is_readable( $path ) ) {
 			return '';

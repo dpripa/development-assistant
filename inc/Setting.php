@@ -1,6 +1,7 @@
 <?php
 namespace WPDevAssist;
 
+use WP_Error;
 use WPDevAssist\ActionQuery;
 use WPDevAssist\AdminNotice;
 use WPDevAssist\Asset;
@@ -62,6 +63,7 @@ class Setting extends Page {
 		ActionQuery $action_query,
 		Asset $asset,
 		Fs $fs,
+		ExternalFileMutationManager $file_mutations,
 		AdminNotice $admin_notice,
 		Htaccess $htaccess,
 		WPDebug $wp_debug
@@ -76,7 +78,7 @@ class Setting extends Page {
 		$action_query->add( static::DISABLE_DEBUG_DISPLAY_QUERY_KEY, $this->handle_disable_debug_display() );
 		$action_query->add( static::ENABLE_DEBUG_LOG_QUERY_KEY, $this->handle_enable_debug_log() );
 
-		$this->debug_log    = new DebugLog( $action_query, $asset, $admin_notice, $fs );
+		$this->debug_log    = new DebugLog( $action_query, $asset, $admin_notice, $fs, $file_mutations );
 		$this->support_user = new SupportUser( $action_query, $asset, $admin_notice, $this->control );
 	}
 
@@ -134,14 +136,18 @@ class Setting extends Page {
 			static::ENABLE_WP_DEBUG_KEY,
 			wp_kses( __( 'Enable <code>WP_DEBUG</code>', 'development-assistant' ), array( 'code' => array() ) ),
 			array( $this->control, 'render_checkbox' ),
-			static::ENABLE_WP_DEBUG_DEFAULT
+			static::ENABLE_WP_DEBUG_DEFAULT,
+			array(),
+			$this->sanitize_debug_option( 'WP_DEBUG', static::ENABLE_WP_DEBUG_KEY )
 		);
 		$this->add_setting(
 			$section_key,
 			static::ENABLE_WP_DEBUG_LOG_KEY,
 			wp_kses( __( 'Enable <code>WP_DEBUG_LOG</code>', 'development-assistant' ), array( 'code' => array() ) ),
 			array( $this->control, 'render_checkbox' ),
-			static::ENABLE_WP_DEBUG_LOG_DEFAULT
+			static::ENABLE_WP_DEBUG_LOG_DEFAULT,
+			array(),
+			$this->sanitize_debug_option( 'WP_DEBUG_LOG', static::ENABLE_WP_DEBUG_LOG_KEY )
 		);
 
 		$args = array(
@@ -154,7 +160,8 @@ class Setting extends Page {
 			wp_kses( __( 'Enable <code>WP_DEBUG_DISPLAY</code>', 'development-assistant' ), array( 'code' => array() ) ),
 			array( $this->control, 'render_checkbox' ),
 			static::ENABLE_WP_DEBUG_DISPLAY_DEFAULT,
-			$args
+			$args,
+			$this->sanitize_debug_option( 'WP_DEBUG_DISPLAY', static::ENABLE_WP_DEBUG_DISPLAY_KEY )
 		);
 
 		$args = array(
@@ -175,7 +182,8 @@ class Setting extends Page {
 			wp_kses( __( 'Disable direct access', 'development-assistant' ), array( 'code' => array() ) ),
 			array( $this->control, 'render_checkbox' ),
 			static::DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT,
-			$args
+			$args,
+			$this->sanitize_htaccess_option()
 		);
 	}
 
@@ -282,14 +290,47 @@ class Setting extends Page {
 				return;
 			}
 
+			$htaccess_added = false;
+
+			if ( 'yes' === $value && $this->htaccess->exists() ) {
+				$error = $this->wp_debug->add_htaccess_directives();
+
+				if ( $error instanceof WP_Error ) {
+					$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+					return;
+				}
+
+				$htaccess_added = 'yes' !== get_option( static::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, static::DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT );
+			}
+
+			$debug_values = array(
+				'WP_DEBUG'     => $value,
+				'WP_DEBUG_LOG' => $value,
+			);
+
+			if ( 'yes' !== $value ) {
+				$debug_values['WP_DEBUG_DISPLAY'] = $value;
+			}
+
+			$error = $this->wp_debug->apply_debug_values( $debug_values );
+
+			if ( $error instanceof WP_Error ) {
+				if ( $htaccess_added ) {
+					$this->wp_debug->remove_htaccess_directives();
+				}
+
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
+
 			update_option( static::ENABLE_WP_DEBUG_KEY, $value );
 			update_option( static::ENABLE_WP_DEBUG_LOG_KEY, $value );
 
 			if ( 'yes' !== $value ) {
 				update_option( static::ENABLE_WP_DEBUG_DISPLAY_KEY, $value );
-			}
-
-			if ( $this->htaccess->exists() && 'yes' === $value ) {
+			} elseif ( $this->htaccess->exists() ) {
 				update_option( static::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, 'yes' );
 			}
 
@@ -309,6 +350,14 @@ class Setting extends Page {
 				return;
 			}
 
+			$error = $this->wp_debug->add_htaccess_directives();
+
+			if ( $error instanceof WP_Error ) {
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
+
 			update_option( static::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, 'yes' );
 			$this->admin_notice->add_transient( __( 'Direct access to the <code>debug.log</code> file disabled.', 'development-assistant' ), 'success' );
 		};
@@ -316,6 +365,14 @@ class Setting extends Page {
 
 	protected function handle_disable_debug_display(): callable {
 		return function (): void {
+			$error = $this->wp_debug->apply_debug_values( array( 'WP_DEBUG_DISPLAY' => 'no' ) );
+
+			if ( $error instanceof WP_Error ) {
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
+
 			update_option( static::ENABLE_WP_DEBUG_DISPLAY_KEY, 'no' );
 			$this->admin_notice->add_transient( __( '<code>WP_DEBUG_DISPLAY</code> disabled.', 'development-assistant' ), 'success' );
 		};
@@ -323,9 +380,87 @@ class Setting extends Page {
 
 	protected function handle_enable_debug_log(): callable {
 		return function (): void {
+			$htaccess_added = false;
+
+			if ( $this->htaccess->exists() ) {
+				$error = $this->wp_debug->add_htaccess_directives();
+
+				if ( $error instanceof WP_Error ) {
+					$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+					return;
+				}
+
+				$htaccess_added = 'yes' !== get_option( static::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, static::DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT );
+			}
+
+			$error = $this->wp_debug->apply_debug_values(
+				array(
+					'WP_DEBUG'     => 'yes',
+					'WP_DEBUG_LOG' => 'yes',
+				)
+			);
+
+			if ( $error instanceof WP_Error ) {
+				if ( $htaccess_added ) {
+					$this->wp_debug->remove_htaccess_directives();
+				}
+
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
+
 			update_option( static::ENABLE_WP_DEBUG_KEY, 'yes' );
 			update_option( static::ENABLE_WP_DEBUG_LOG_KEY, 'yes' );
+
+			if ( $this->htaccess->exists() ) {
+				update_option( static::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, 'yes' );
+			}
+
 			$this->admin_notice->add_transient( __( '<code>WP_DEBUG_LOG</code> enabled.', 'development-assistant' ), 'success' );
+		};
+	}
+
+	protected function sanitize_debug_option( string $constant, string $option ): callable {
+		return function ( $value ) use ( $constant, $option ): string {
+			$value = 'yes' === $value ? 'yes' : 'no';
+			$old   = get_option( $option, 'no' );
+
+			if ( $old === $value ) {
+				return $value;
+			}
+
+			$error = $this->wp_debug->apply_debug_values( array( $constant => $value ) );
+
+			if ( $error instanceof WP_Error ) {
+				add_settings_error( static::KEY, $error->get_error_code(), $error->get_error_message(), 'error' );
+
+				return $old;
+			}
+
+			return $value;
+		};
+	}
+
+	protected function sanitize_htaccess_option(): callable {
+		return function ( $value ): string {
+			$value = 'yes' === $value ? 'yes' : 'no';
+			$old   = get_option( static::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, static::DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT );
+
+			if ( $old === $value ) {
+				return $value;
+			}
+
+			$error = 'yes' === $value ? $this->wp_debug->add_htaccess_directives() : $this->wp_debug->remove_htaccess_directives();
+
+			if ( $error instanceof WP_Error ) {
+				add_settings_error( static::KEY, $error->get_error_code(), $error->get_error_message(), 'error' );
+
+				return $old;
+			}
+
+			return $value;
 		};
 	}
 }

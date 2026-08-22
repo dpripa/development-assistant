@@ -11,6 +11,7 @@ class App {
 	protected ActionQuery $action_query;
 	protected AdminNotice $admin_notice;
 	protected Asset $asset;
+	protected ExternalFileMutationManager $file_mutations;
 	protected Fs $fs;
 	protected Assistant $assistant;
 	protected Htaccess $htaccess;
@@ -30,17 +31,19 @@ class App {
 	 * @throws Exception
 	 */
 	public function __construct() {
-		$this->action_query = new ActionQuery();
-		$this->admin_notice = new AdminNotice( KEY );
-		$this->fs           = new Fs();
-		$this->asset        = new Asset( KEY, $this->fs );
+		$this->action_query   = new ActionQuery();
+		$this->admin_notice   = new AdminNotice( KEY );
+		$this->fs             = new Fs();
+		$this->asset          = new Asset( KEY, $this->fs );
+		$this->file_mutations = new ExternalFileMutationManager();
 
-		$this->htaccess       = new Htaccess( $this->fs );
-		$this->wp_debug       = new WPDebug( $this->admin_notice, $this->fs, $this->htaccess );
+		$this->htaccess       = new Htaccess( $this->file_mutations );
+		$this->wp_debug       = new WPDebug( $this->admin_notice, $this->file_mutations, $this->htaccess, new DebugConfigEditor() );
 		$this->setting        = new Setting(
 			$this->action_query,
 			$this->asset,
 			$this->fs,
+			$this->file_mutations,
 			$this->admin_notice,
 			$this->htaccess,
 			$this->wp_debug
@@ -49,7 +52,8 @@ class App {
 			$this->action_query,
 			$this->asset,
 			$this->admin_notice,
-			$this->setting
+			$this->setting,
+			$this->file_mutations
 		);
 		$this->assistant      = new Assistant(
 			$this->asset,
@@ -97,14 +101,22 @@ class App {
 			$this->wp_debug->store_original_config_const();
 
 			if ( 'yes' === get_option( Setting::DISABLE_DIRECT_ACCESS_TO_LOG_KEY, Setting::DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT ) ) {
-				$this->wp_debug->add_htaccess_directives();
+				$error = $this->wp_debug->add_htaccess_directives();
+
+				if ( $error instanceof \WP_Error ) {
+					$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+				}
 			}
 		};
 	}
 
 	protected function deactivate(): callable {
 		return function (): void {
-			$this->wp_debug->remove_htaccess_directives();
+			$error = $this->wp_debug->remove_htaccess_directives();
+
+			if ( $error instanceof \WP_Error ) {
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+			}
 
 			if ( 'yes' !== get_option( Setting::RESET_KEY, Setting::RESET_DEFAULT ) ) {
 				return;

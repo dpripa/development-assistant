@@ -19,11 +19,11 @@ class PluginsScreen {
 	protected ActivationManager $activation_manager;
 	protected Downloader $downloader;
 
-	public function __construct( ActionQuery $action_query, Asset $asset, AdminNotice $admin_notice, Setting $setting ) {
+	public function __construct( ActionQuery $action_query, Asset $asset, AdminNotice $admin_notice, Setting $setting, ExternalFileMutationManager $file_mutations ) {
 		$this->asset              = $asset;
 		$this->setting            = $setting;
 		$this->activation_manager = new ActivationManager( $action_query, $admin_notice );
-		$this->downloader         = new Downloader( $action_query, $admin_notice );
+		$this->downloader         = new Downloader( $action_query, $admin_notice, $file_mutations );
 
 		if ( 'yes' === get_option( Setting::ACTIVE_PLUGINS_FIRST_KEY, Setting::ACTIVE_PLUGINS_FIRST_DEFAULT ) ) {
 			add_action( 'admin_head-plugins.php', $this->sort_plugins_by_status() );

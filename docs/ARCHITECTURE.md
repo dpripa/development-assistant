@@ -16,7 +16,9 @@ injects it into feature-level objects:
 - `AdminNotice` stores and renders admin feedback.
 - `Fs` resolves plugin and WordPress filesystem paths.
 - `Asset` enqueues generated styles and classic scripts.
-- `Htaccess` and `WPDebug` own debug-safety services.
+- `ExternalFileMutationManager` is the only runtime boundary allowed to mutate
+  files outside the plugin directory. `Htaccess`, `DebugConfigEditor`, and
+  `WPDebug` build debug-safety behavior on that boundary.
 - `Setting`, `PluginsScreen`, and `Assistant` compose the visible admin features.
 
 Keep dependency construction in `App`. Feature classes should receive their
@@ -57,6 +59,17 @@ State-changing admin links are registered through `ActionQuery`. Handlers must
 retain nonce validation, capability checks, input sanitization, output escaping,
 and safe redirects. Features that expose logs, plugin archives, user credentials,
 or configuration changes require particular care.
+
+All runtime writes, replacements, or deletions outside the plugin directory
+must be registered with `ExternalFileMutationManager`; direct filesystem
+mutation from feature classes is rejected by the Composer lint checks. Critical
+`wp-config.php` and `.htaccess` edits are fail-closed: the manager checks the
+WordPress file-modification policy and filesystem permissions, locks the
+target, stores a protected baseline and transaction backup under
+`wp-content/.development-assistant-recovery/`, writes through a same-directory
+temporary file, verifies the result, and rolls back a failed transaction. A
+successful operation may be reported only after readback validation. Recovery
+files are sensitive server state and must never be exposed or packaged.
 
 Do not weaken authentication or authorization for local-development
 convenience. Never persist or log plaintext credentials beyond the feature's

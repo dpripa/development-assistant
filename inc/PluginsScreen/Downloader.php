@@ -7,6 +7,7 @@ use Throwable;
 use WP_Error;
 use WPDevAssist\ActionQuery;
 use WPDevAssist\AdminNotice;
+use WPDevAssist\ExternalFileMutationManager;
 use ZipArchive;
 use const WPDevAssist\KEY;
 
@@ -17,10 +18,12 @@ class Downloader {
 
 	protected ActionQuery $action_query;
 	protected AdminNotice $admin_notice;
+	protected ExternalFileMutationManager $file_mutations;
 
-	public function __construct( ActionQuery $action_query, AdminNotice $admin_notice ) {
-		$this->action_query = $action_query;
-		$this->admin_notice = $admin_notice;
+	public function __construct( ActionQuery $action_query, AdminNotice $admin_notice, ExternalFileMutationManager $file_mutations ) {
+		$this->action_query   = $action_query;
+		$this->admin_notice   = $admin_notice;
+		$this->file_mutations = $file_mutations;
 
 		if ( ! $this->is_available() ) {
 			return;
@@ -205,19 +208,17 @@ class Downloader {
 	 * @return string|WP_Error
 	 */
 	protected function get_temp_zip_file( string $plugin_file ) {
-		$zip_file = wp_tempnam( $this->get_download_filename( $plugin_file ) );
+		$zip_file = $this->file_mutations->create_temporary_archive( $this->get_download_filename( $plugin_file ) );
 
-		if ( ! is_string( $zip_file ) || '' === $zip_file ) {
-			return new WP_Error( 'temp_file_failed', __( 'Could not create a temporary plugin archive.', 'development-assistant' ) );
+		if ( $zip_file instanceof WP_Error ) {
+			return $zip_file;
 		}
 
 		return $zip_file;
 	}
 
 	protected function delete_temp_file( string $zip_file ): void {
-		if ( file_exists( $zip_file ) ) {
-			unlink( $zip_file ); // phpcs:ignore
-		}
+		$this->file_mutations->delete_temporary_archive( $zip_file );
 	}
 
 	/**

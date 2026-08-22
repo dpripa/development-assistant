@@ -36,7 +36,12 @@
     }
   },
   "scripts": {
-    "lint": "phpcs",
+    "lint": [
+      "phpcs",
+      "php scripts/check-runtime-file-mutations.php",
+      "php scripts/check-debug-config-editor.php",
+      "php scripts/check-external-file-mutations.php"
+    ],
     "fix": "phpcbf"
   }
 }

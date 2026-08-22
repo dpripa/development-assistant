@@ -157,16 +157,6 @@ msgstr ""
 msgid "Disabled, but logs exists"
 msgstr ""
 
-#: inc/Fs.php:34
-#, php-format
-msgid "Can't write the %s."
-msgstr ""
-
-#: inc/Fs.php:51 inc/WPDebug.php:52 inc/WPDebug.php:184
-#, php-format
-msgid "Can't read the %s."
-msgstr ""
-
 #: inc/PluginsScreen.php:40
 msgid "Development Assistant"
 msgstr ""
@@ -321,10 +311,6 @@ msgstr ""
 msgid "The debug log could not be deleted because it no longer exists."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:279
-msgid "The debug log could not be deleted because it is not readable."
-msgstr ""
-
 #: inc/Setting/DebugLog.php:286
 msgid "The debug log could not be deleted. Check filesystem permissions and try again."
 msgstr ""
@@ -447,10 +433,174 @@ msgstr ""
 msgid "Support user could not be deleted. The account and stored credentials were preserved; verify the account and try again."
 msgstr ""
 
-#: inc/WPDebug.php:222
-msgid "Can't add the directives to the .htaccess file"
+#: inc/DebugConfigEditor.php:17
+msgid "Development Assistant refused to manage an unsupported configuration constant."
 msgstr ""
 
-#: inc/WPDebug.php:232
-msgid "Can't remove the directives from the .htaccess file"
+#: inc/DebugConfigEditor.php:23 inc/DebugConfigEditor.php:350
+msgid "The wp-config.php file contains invalid PHP syntax. Development Assistant made no changes."
+msgstr ""
+
+#: inc/DebugConfigEditor.php:29
+#, php-format
+msgid "Multiple definitions of %s were found. Development Assistant made no changes."
+msgstr ""
+
+#: inc/DebugConfigEditor.php:57
+#, php-format
+msgid "%s uses an unsupported dynamic or non-boolean expression. Development Assistant made no changes."
+msgstr ""
+
+#: inc/DebugConfigEditor.php:370
+msgid "Development Assistant could not find a safe insertion point in wp-config.php. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:37
+msgid "Development Assistant could not find the active wp-config.php file. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:50
+#: inc/ExternalFileMutationManager.php:78
+msgid "Development Assistant refused an unregistered external file operation."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:85
+msgid "WordPress configuration forbids file modifications. Development Assistant made no changes."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:106
+msgid "Development Assistant could not prepare the requested file change. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:117
+msgid "Development Assistant could not prepare a complete file replacement. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:130
+msgid "Development Assistant could not validate the requested file change. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:141
+msgid "Development Assistant rejected an invalid file change. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:148
+msgid "The server does not allow Development Assistant to safely update this file. No changes were made. Check filesystem permissions or update the configuration manually."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:168
+msgid "Development Assistant could not lock the configuration file. No changes were made. Try again."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:181
+msgid "The configuration file changed while Development Assistant was preparing the update. No changes were made. Review the file and try again."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:219
+msgid "The configuration update could not be verified and automatic recovery failed. Use the protected Development Assistant recovery backup to restore the file manually."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:227
+msgid "The configuration update could not be verified, so Development Assistant restored the original file. No requested change remains."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:242
+msgid "The configuration update failed unexpectedly and automatic recovery also failed. Use the protected Development Assistant recovery backup to restore the file manually."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:249
+msgid "Development Assistant could not complete the configuration update. The original file was preserved or restored."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:264
+msgid "WordPress configuration forbids file modifications. The debug log was not deleted."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:275
+msgid "The debug log could not be deleted because it is not a readable regular file."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:292
+msgid "Could not create a safe temporary plugin archive."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:319
+#: inc/ExternalFileMutationManager.php:328
+msgid "Development Assistant cannot safely read the configuration file. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:344
+msgid "Development Assistant recovery storage is not a safe directory. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:351
+msgid "Development Assistant could not create protected recovery storage. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:360
+msgid "Development Assistant recovery storage is not writable. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:375
+msgid "Development Assistant recovery protection files are invalid. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:401
+msgid "The protected Development Assistant baseline backup is invalid. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:410
+msgid "The protected Development Assistant baseline backup is corrupted. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:438
+msgid "Development Assistant could not verify the recovery backup. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:454
+msgid "Development Assistant could not write a required protected file. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:469
+msgid "Development Assistant could not complete a protected file write. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:484
+msgid "Development Assistant could not safely finish a protected file write. No configuration changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:503
+msgid "Development Assistant could not create a temporary configuration file. No changes were made."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:520
+msgid "Development Assistant could not preserve the configuration file owner. The original file was left unchanged."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:527
+msgid "Development Assistant could not preserve the configuration file group. The original file was left unchanged."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:534
+msgid "Development Assistant could not atomically replace the configuration file. The original file was left unchanged."
+msgstr ""
+
+#: inc/Htaccess.php:28
+msgid "Development Assistant could not find the active .htaccess file. No changes were made."
+msgstr ""
+
+#: inc/Htaccess.php:101
+msgid "The Development Assistant .htaccess markers are duplicated or incomplete. No changes were made."
+msgstr ""
+
+#: inc/Htaccess.php:114
+msgid "The Development Assistant .htaccess marker block is malformed. No changes were made."
+msgstr ""
+
+#: inc/WPDebug.php:44
+msgid "Development Assistant refused an invalid debug setting."
+msgstr ""
+
+#: inc/WPDebug.php:314
+msgid "Development Assistant cannot safely restore an invalid saved debug configuration."
 msgstr ""
