@@ -3,6 +3,7 @@ node_modules
 release/*
 !release/.gitkeep
 vendor
+.phpunit.result.cache
 .DS_Store
 .env
 .env.bak

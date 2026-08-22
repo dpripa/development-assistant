@@ -265,7 +265,7 @@ class ExternalFileMutationManager {
 			);
 		}
 
-		$path = WP_CONTENT_DIR . '/debug.log';
+		$path = $this->get_debug_log_path();
 
 		if ( ! file_exists( $path ) ) {
 			return new WP_Error( 'debug_log_missing', __( 'The debug log could not be deleted because it no longer exists.', 'development-assistant' ) );
@@ -336,7 +336,7 @@ class ExternalFileMutationManager {
 	 * @return string|WP_Error
 	 */
 	protected function ensure_recovery_directory() {
-		$directory = WP_CONTENT_DIR . '/.development-assistant-recovery';
+		$directory = $this->get_recovery_directory_path();
 
 		if ( is_link( $directory ) || ( file_exists( $directory ) && ! is_dir( $directory ) ) ) {
 			return new WP_Error(
@@ -386,6 +386,14 @@ class ExternalFileMutationManager {
 		}
 
 		return $directory;
+	}
+
+	protected function get_recovery_directory_path(): string {
+		return WP_CONTENT_DIR . '/.development-assistant-recovery';
+	}
+
+	protected function get_debug_log_path(): string {
+		return WP_CONTENT_DIR . '/debug.log';
 	}
 
 	/**

@@ -110,6 +110,12 @@ location.
 Local runtime state, credentials, database backups, uploads, logs, and generated
 certificates must never be committed.
 
+PHP integration tests use the official WordPress PHPUnit bootstrap and run in
+the same PHP 8.2 image as the local WordPress service. The test profile owns a
+separate fixed-name MariaDB database backed only by tmpfs; it does not connect
+to `db`, mount `db_data`, or retain a test database after the run. Architecture
+tests in the same PHPUnit suite enforce the external-file mutation boundary.
+
 ## Release Boundary
 
 `.distignore` defines the production package boundary. `make

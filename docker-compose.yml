@@ -57,6 +57,23 @@ services:
     volumes:
       - db_data:/var/lib/mysql
 
+  test-db:
+    image: mariadb:11.4
+    profiles:
+      - test
+    environment:
+      MARIADB_DATABASE: wordpress_tests
+      MARIADB_USER: wordpress_tests
+      MARIADB_PASSWORD: wordpress_tests
+      MARIADB_ROOT_PASSWORD: root
+    tmpfs:
+      - /var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+
   mailpit:
     image: axllent/mailpit:latest
     restart: unless-stopped
@@ -113,6 +130,35 @@ services:
     working_dir: /app
     volumes:
       - ./:/app
+
+  phpunit:
+    build:
+      context: ./docker/wordpress
+    image: development-assistant-wordpress:php8.2-apache-xdebug
+    profiles:
+      - test
+    depends_on:
+      test-db:
+        condition: service_healthy
+    working_dir: /app
+    entrypoint:
+      - /app/vendor/bin/phpunit
+    command:
+      - --configuration
+      - /app/phpunit.xml.dist
+    environment:
+      WP_PHPUNIT__TESTS_CONFIG: /app/tests/wp-tests-config.php
+      WP_PHPUNIT__TABLE_PREFIX: wptests_
+      WP_TESTS_DB_HOST: test-db
+      WP_TESTS_DB_NAME: wordpress_tests
+      WP_TESTS_DB_USER: wordpress_tests
+      WP_TESTS_DB_PASSWORD: wordpress_tests
+      WP_TESTS_CORE_DIR: /app/wp
+      XDEBUG_MODE: "off"
+    volumes:
+      - ./:/app
+    tmpfs:
+      - /var/www/html
 
   adminer:
     image: adminer:latest

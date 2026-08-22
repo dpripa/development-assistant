@@ -75,6 +75,18 @@ jobs:
       - name: Build assets
         run: npm run build
 
+  integration:
+    name: WordPress integration tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Run isolated WordPress tests
+        env:
+          WP_CORE_DOWNLOAD_URL: https://wordpress.org/wordpress-7.1.tar.gz
+        run: make test
+
   docker-compose:
     name: Docker Compose
     runs-on: ubuntu-latest

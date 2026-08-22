@@ -28,20 +28,24 @@
     "ext-mbstring": "*"
   },
   "require-dev": {
-    "wp-coding-standards/wpcs": "^3.4.1"
+    "phpunit/phpunit": "^9.6.23",
+    "wp-coding-standards/wpcs": "^3.4.1",
+    "wp-phpunit/wp-phpunit": "7.1.0",
+    "yoast/phpunit-polyfills": "^3.1.2"
   },
   "autoload": {
     "psr-4": {
       "WPDevAssist\\": "inc/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "WPDevAssist\\Tests\\Support\\": "tests/Support/"
+    }
+  },
   "scripts": {
-    "lint": [
-      "phpcs",
-      "php scripts/check-runtime-file-mutations.php",
-      "php scripts/check-debug-config-editor.php",
-      "php scripts/check-external-file-mutations.php"
-    ],
-    "fix": "phpcbf"
+    "lint": "phpcs",
+    "fix": "phpcbf",
+    "test": "phpunit"
   }
 }

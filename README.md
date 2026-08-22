@@ -78,6 +78,7 @@ make xdebug-off
 make start-watch
 make wp-core-update
 make lint
+make test
 make fix
 ```
 
@@ -89,6 +90,13 @@ local runtime configuration.
 
 `make start-watch` keeps Vite running and rebuilds plugin assets when frontend
 source files change.
+
+`make test` runs the PHPUnit integration and architecture suites against the
+local WordPress core in an isolated one-shot container. It never uses the live
+development database. Compose creates one fixed `wordpress_tests` database in
+a `test-db` tmpfs, then removes both the test runner and test database container
+after every run, including failed runs. No test database volume is created or
+retained.
 
 ## Build And Release
 
