@@ -23,7 +23,7 @@ class Htaccess {
 			return false;
 		}
 
-		$file_content = $this->fs->read_text_file( static::PATH );
+		$file_content = $this->fs->read_text_file_fully( static::PATH );
 
 		if ( ! $file_content ) {
 			return false;

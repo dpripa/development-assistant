@@ -145,7 +145,7 @@ class WPDebug {
 	}
 
 	protected function read_config_content(): string {
-		return $this->fs->read_text_file( static::CONFIG_FILE_PATH );
+		return $this->fs->read_text_file_fully( static::CONFIG_FILE_PATH );
 	}
 
 	protected function write_config_content( string $content ): bool {
