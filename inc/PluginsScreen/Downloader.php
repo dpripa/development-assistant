@@ -182,6 +182,7 @@ class Downloader {
 		return array(
 			'path'           => $plugin_dir,
 			'plugins_root'   => $plugins_root,
+			'archive_root'   => basename( wp_normalize_path( $plugin_dirname ) ),
 			'is_single_file' => false,
 		);
 	}
@@ -254,9 +255,10 @@ class Downloader {
 				return new WP_Error( 'plugin_file_invalid', __( 'A plugin file is missing, unreadable, or outside the selected plugin directory.', 'development-assistant' ) );
 			}
 
-			$relative_path = substr( $file_path, strlen( $plugin_dir ) + 1 );
+			$relative_path = wp_normalize_path( substr( $file_path, strlen( $plugin_dir ) + 1 ) );
+			$archive_path  = $source['archive_root'] . '/' . $relative_path;
 
-			if ( ! $zip->addFile( $file_path, $relative_path ) ) {
+			if ( ! $zip->addFile( $file_path, $archive_path ) ) {
 				return new WP_Error( 'archive_add_failed', __( 'Could not add a selected plugin file to the archive.', 'development-assistant' ) );
 			}
 		}
