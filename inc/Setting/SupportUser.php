@@ -332,22 +332,76 @@ class SupportUser extends Page {
 
 	protected function handle_create_user(): callable {
 		return function (): void {
-			$this->create_user();
+			$error = $this->create_user();
+
+			if ( $error instanceof WP_Error ) {
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
+
 			$this->admin_notice->add_transient( __( 'Support user created.', 'development-assistant' ), 'success' );
 		};
 	}
 
 	protected function handle_delete_user(): callable {
 		return function (): void {
-			$this->delete_user();
+			$error = $this->delete_user();
+
+			if ( $error instanceof WP_Error ) {
+				$this->admin_notice->add_transient( $error->get_error_message(), 'error' );
+
+				return;
+			}
+
 			$this->admin_notice->add_transient( __( 'Support user deleted.', 'development-assistant' ), 'success' );
 		};
 	}
 
 	protected function handle_recreate_user(): callable {
 		return function (): void {
-			$this->delete_user();
-			$this->create_user();
+			$old_user_id = intval( get_option( static::ID_KEY, static::ID_DEFAULT ) );
+
+			if ( 0 >= $old_user_id || ! get_userdata( $old_user_id ) ) {
+				$this->delete_user_data();
+				$this->admin_notice->add_transient( __( 'Support user does not exist. Stale stored credentials were removed; create a new support user.', 'development-assistant' ), 'error' );
+
+				return;
+			}
+
+			$user_data = $this->insert_user();
+
+			if ( $user_data instanceof WP_Error ) {
+				$this->admin_notice->add_transient(
+					sprintf(
+						__( 'Support user could not be recreated: %s The existing support user remains active.', 'development-assistant' ),
+						$user_data->get_error_message()
+					),
+					'error'
+				);
+
+				return;
+			}
+
+			$delete_error = $this->delete_user();
+
+			if ( $delete_error instanceof WP_Error ) {
+				if ( wp_delete_user( $user_data['id'] ) ) {
+					$this->admin_notice->add_transient( __( 'Support user could not be recreated because the existing account could not be deleted. The replacement account was removed; verify the existing account and try again.', 'development-assistant' ), 'error' );
+				} else {
+					$this->admin_notice->add_transient(
+						sprintf(
+							__( 'Support user could not be recreated, and the replacement account "%s" could not be removed. Delete that account manually before trying again.', 'development-assistant' ),
+							$user_data['login']
+						),
+						'error'
+					);
+				}
+
+				return;
+			}
+
+			$this->store_user_data( $user_data );
 			$this->admin_notice->add_transient( __( 'Support user recreated.', 'development-assistant' ), 'success' );
 		};
 	}
@@ -494,9 +548,27 @@ class SupportUser extends Page {
 		return ob_get_clean();
 	}
 
-	protected function create_user(): void {
+	/**
+	 * @return WP_Error|null
+	 */
+	protected function create_user(): ?WP_Error {
+		$user_data = $this->insert_user();
+
+		if ( $user_data instanceof WP_Error ) {
+			return $user_data;
+		}
+
+		$this->store_user_data( $user_data );
+
+		return null;
+	}
+
+	/**
+	 * @return array<string, int|string>|WP_Error
+	 */
+	protected function insert_user() {
 		$time     = time();
-		$login    = 'support_' . $time;
+		$login    = $this->get_available_login( 'support_' . $time );
 		$password = wp_generate_password();
 
 		$user_id = wp_insert_user(
@@ -508,15 +580,38 @@ class SupportUser extends Page {
 		);
 
 		if ( $user_id instanceof WP_Error ) {
-			$this->admin_notice->add_transient( $user_id->get_error_message(), 'error' );
-
-			return;
+			return $user_id;
 		}
 
-		update_option( static::ID_KEY, $user_id );
-		update_option( static::LOGIN_KEY, $login );
-		update_option( static::PASSWORD_KEY, $password );
-		update_option( static::CREATED_AT_KEY, $time );
+		return array(
+			'id'         => $user_id,
+			'login'      => $login,
+			'password'   => $password,
+			'created_at' => $time,
+		);
+	}
+
+	protected function get_available_login( string $base_login ): string {
+		$login  = $base_login;
+		$suffix = 2;
+
+		while ( username_exists( $login ) ) {
+			$login = $base_login . '_' . $suffix;
+			++$suffix;
+		}
+
+		return $login;
+	}
+
+	/**
+	 * @param array<string, int|string> $user_data Support-user account data.
+	 */
+	protected function store_user_data( array $user_data ): void {
+		update_option( static::ID_KEY, $user_data['id'] );
+		update_option( static::LOGIN_KEY, $user_data['login'] );
+		update_option( static::PASSWORD_KEY, $user_data['password'] );
+		update_option( static::CREATED_AT_KEY, $user_data['created_at'] );
+		delete_option( static::EMAIL_KEY );
 	}
 
 	protected function handle_update_create_at(): callable {
@@ -526,14 +621,31 @@ class SupportUser extends Page {
 		};
 	}
 
-	protected function delete_user(): void {
-		$user_id = get_option( static::ID_KEY, static::ID_DEFAULT );
+	/**
+	 * @return WP_Error|null
+	 */
+	protected function delete_user(): ?WP_Error {
+		$user_id = intval( get_option( static::ID_KEY, static::ID_DEFAULT ) );
 
-		if ( 0 === $user_id ) {
-			return;
+		if ( 0 >= $user_id || ! get_userdata( $user_id ) ) {
+			$this->delete_user_data();
+
+			return new WP_Error(
+				'support_user_missing',
+				__( 'Support user does not exist. Stale stored credentials were removed.', 'development-assistant' )
+			);
 		}
 
-		wp_delete_user( $user_id );
+		if ( ! wp_delete_user( $user_id ) ) {
+			return new WP_Error(
+				'support_user_delete_failed',
+				__( 'Support user could not be deleted. The account and stored credentials were preserved; verify the account and try again.', 'development-assistant' )
+			);
+		}
+
+		$this->delete_user_data();
+
+		return null;
 	}
 
 	protected function delete_user_if_disabled(): callable {

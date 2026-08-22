@@ -340,60 +340,86 @@ msgstr ""
 msgid "User Credentials"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:263
+#: inc/Setting/SupportUser.php:290
 msgid "Are you sure to recreate the support user? This will cause loss of access for those providing support, you will need to reshare this to keep their access."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:267
+#: inc/Setting/SupportUser.php:294
 msgid "Are you sure to delete the support user? This will cause loss of access for those providing support."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:308
+#: inc/Setting/SupportUser.php:343
 msgid "Support user created."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:313
+#: inc/Setting/SupportUser.php:357
 msgid "Support user deleted."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:319
+#: inc/Setting/SupportUser.php:367
+msgid "Support user does not exist. Stale stored credentials were removed; create a new support user."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:377
+#, php-format
+msgid "Support user could not be recreated: %s The existing support user remains active."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:390
+msgid "Support user could not be recreated because the existing account could not be deleted. The replacement account was removed; verify the existing account and try again."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:394
+#, php-format
+msgid "Support user could not be recreated, and the replacement account \"%s\" could not be removed. Delete that account manually before trying again."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:405
 msgid "Support user recreated."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:328
+#: inc/Setting/SupportUser.php:416
 msgid "Invalid email. Please recreate the user and try sharing again."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:335 inc/Setting/SupportUser.php:354
+#: inc/Setting/SupportUser.php:423 inc/Setting/SupportUser.php:478
 msgid "An error occurred while trying to send the email."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:379
+#: inc/Setting/SupportUser.php:433
 msgid "Support user does not exist. Recreate the user before sharing credentials."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:401
+#: inc/Setting/SupportUser.php:455
 #, php-format
 msgid "Support access to %s"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:390
+#: inc/Setting/SupportUser.php:444
 #, php-format
 msgid "Credentials were not sent because the support user account email could not be updated: %s"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:418
+#: inc/Setting/SupportUser.php:472
 #, php-format
 msgid "Credentials could not be sent, and the support user account email could not be restored: %s"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:435
+#: inc/Setting/SupportUser.php:489
 #, php-format
 msgid "Credentials successfully shared with %s."
 msgstr ""
 
-#: inc/Setting/SupportUser.php:439
+#: inc/Setting/SupportUser.php:620
 msgid "Support user existence extended."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:635
+msgid "Support user does not exist. Stale stored credentials were removed."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:642
+msgid "Support user could not be deleted. The account and stored credentials were preserved; verify the account and try again."
 msgstr ""
 
 #: inc/WPDebug.php:222
