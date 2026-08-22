@@ -175,23 +175,24 @@ msgstr ""
 msgid "Activate temporarily deactivated plugins"
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:71
-msgid "Can't activate the plugin(s)."
+#: inc/PluginsScreen/ActivationManager.php:120
+#, php-format
+msgid "Could not reactivate the following plugin(s): %s. They remain tracked; restore missing plugin files or resolve activation errors, then try again."
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:86
+#: inc/PluginsScreen/ActivationManager.php:149
 msgid "Plugin temporarily deactivated."
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:101
+#: inc/PluginsScreen/ActivationManager.php:177
 msgid "Plugin(s) activated."
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:139
+#: inc/PluginsScreen/ActivationManager.php:249
 msgid "Temporarily deactivate"
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:150
+#: inc/PluginsScreen/ActivationManager.php:269
 msgid "Plugin(s) temporarily deactivated."
 msgstr ""
 

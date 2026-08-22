@@ -1,6 +1,7 @@
 <?php
 namespace WPDevAssist\PluginsScreen;
 
+use WP_Error;
 use WPDevAssist\ActionQuery;
 use WPDevAssist\AdminNotice;
 use const WPDevAssist\KEY;
@@ -86,24 +87,46 @@ class ActivationManager {
 		return true;
 	}
 
-	public function activate_plugins(): void {
+	public function activate_plugins(): bool {
 		$plugins = get_option( static::DEACTIVATED_KEY, array() );
 
 		if ( empty( $plugins ) ) {
 			delete_option( static::DEACTIVATED_KEY );
 
-			return;
+			return true;
 		}
 
-		if ( ! activate_plugins( $plugins ) ) {
+		$result              = activate_plugins( $plugins );
+		$unrestored_plugins  = array_values(
+			array_filter(
+				$plugins,
+				function ( string $plugin ): bool {
+					return ! is_plugin_active( $plugin );
+				}
+			)
+		);
+		$activation_failures = $this->get_activation_failures( $plugins, $result );
+		$unrestored_plugins  = array_values( array_unique( array_merge( $unrestored_plugins, $activation_failures ) ) );
+
+		if ( empty( $unrestored_plugins ) ) {
+			delete_option( static::DEACTIVATED_KEY );
+		} else {
+			update_option( static::DEACTIVATED_KEY, $unrestored_plugins );
+		}
+
+		if ( $result instanceof WP_Error || ! empty( $unrestored_plugins ) ) {
 			$this->admin_notice->add_transient(
-				__( 'Can\'t activate the plugin(s).', 'development-assistant' ),
+				sprintf(
+					__( 'Could not reactivate the following plugin(s): %s. They remain tracked; restore missing plugin files or resolve activation errors, then try again.', 'development-assistant' ),
+					esc_html( implode( ', ', $unrestored_plugins ) )
+				),
 				'error'
 			);
 
-		} else {
-			delete_option( static::DEACTIVATED_KEY );
+			return false;
 		}
+
+		return true;
 	}
 
 	protected function handle_deactivation(): callable {
@@ -135,7 +158,11 @@ class ActivationManager {
 				return;
 			}
 
-			$this->activate_plugins();
+			if ( ! $this->activate_plugins() ) {
+				wp_safe_redirect( get_admin_url( null, 'plugins.php' ) );
+
+				exit;
+			}
 
 			$redirect_to = get_admin_url( null, 'plugins.php' );
 
@@ -156,6 +183,27 @@ class ActivationManager {
 
 			exit;
 		};
+	}
+
+	/**
+	 * @param array<string> $plugins Saved plugin basenames.
+	 * @param bool|WP_Error $result  WordPress bulk-activation result.
+	 * @return array<string>
+	 */
+	protected function get_activation_failures( array $plugins, $result ): array {
+		if ( ! $result instanceof WP_Error ) {
+			return array();
+		}
+
+		$errors = $result->get_error_data( 'plugins_invalid' );
+
+		if ( ! is_array( $errors ) ) {
+			return $plugins;
+		}
+
+		$failed_plugins = array_intersect( $plugins, array_keys( $errors ) );
+
+		return empty( $failed_plugins ) ? $plugins : array_values( $failed_plugins );
 	}
 
 	protected function handle_dev_assist_deactivation( string $redirect_to ): string {
