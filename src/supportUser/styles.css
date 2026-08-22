@@ -74,6 +74,7 @@
 	width: 20px;
 	height: 20px;
 	margin-right: 2px;
+	line-height: 1 !important;
 	opacity: 0.6;
 }
 
