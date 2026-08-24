@@ -229,3 +229,4 @@ CI, use the CI provider's encrypted secrets instead of creating a `.env` file.
 - Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 - Community participation is governed by [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 - See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for repository and runtime boundaries.
+- Verified release maintainers must follow [docs/RELEASE_POLICY.md](docs/RELEASE_POLICY.md).
