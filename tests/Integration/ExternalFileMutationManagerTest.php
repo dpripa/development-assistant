@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 use WPDevAssist\ExternalFileMutationManager;
 use WPDevAssist\Htaccess;
+use WPDevAssist\AdminNotice;
+use WPDevAssist\DebugConfigEditor;
+use WPDevAssist\WPDebug;
 use WPDevAssist\Tests\Support\TestableExternalFileMutationManager;
 
 class ExternalFileMutationManagerTest extends WP_UnitTestCase {
@@ -153,6 +156,37 @@ class ExternalFileMutationManagerTest extends WP_UnitTestCase {
 		$result = $htaccess->replace( 'broken', 'new' );
 		$this->assertWPError( $result );
 		$this->assertSame( $malformed, file_get_contents( $path ) ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+	}
+
+	public function test_debug_log_access_directives_are_written_as_valid_separate_lines(): void {
+		$path     = $this->fixture_root . '/.htaccess';
+		$original = "# BEGIN WordPress\n# END WordPress\n";
+		file_put_contents( $path, $original ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+
+		$wp_debug = new WPDebug(
+			$this->createMock( AdminNotice::class ),
+			$this->manager,
+			new Htaccess( $this->manager ),
+			new DebugConfigEditor()
+		);
+
+		$this->assertNull( $wp_debug->add_htaccess_directives() );
+
+		$content = (string) file_get_contents( $path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents
+		$this->assertStringNotContainsString( '\\n', $content );
+		$this->assertStringNotContainsString( '\\t', $content );
+		$this->assertStringContainsString(
+			"<If \"%{REQUEST_URI} =~ m#^/wp-content/debug.log#\">\n"
+			. "\t<IfModule mod_authz_core.c>\n"
+			. "\t\tRequire all denied\n"
+			. "\t</IfModule>\n"
+			. "\t<IfModule !mod_authz_core.c>\n"
+			. "\t\tOrder deny,allow\n"
+			. "\t\tDeny from all\n"
+			. "\t</IfModule>\n"
+			. '</If>',
+			$content
+		);
 	}
 
 	public function test_registered_debug_log_and_temporary_archive_cleanup(): void {

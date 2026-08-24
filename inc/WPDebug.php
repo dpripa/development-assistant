@@ -183,7 +183,15 @@ class WPDebug {
 	public function add_htaccess_directives(): ?WP_Error {
 		$result = $this->htaccess->replace(
 			static::HTACCESS_MARKER,
-			'<If "%{REQUEST_URI} =~ m#^/wp-content/debug.log#">\n\t<IfModule mod_authz_core.c>\n\t\tRequire all denied\n\t</IfModule>\n\t<IfModule !mod_authz_core.c>\n\t\tOrder deny,allow\n\t\tDeny from all\n\t</IfModule>\n</If>'
+			"<If \"%{REQUEST_URI} =~ m#^/wp-content/debug.log#\">\n"
+			. "\t<IfModule mod_authz_core.c>\n"
+			. "\t\tRequire all denied\n"
+			. "\t</IfModule>\n"
+			. "\t<IfModule !mod_authz_core.c>\n"
+			. "\t\tOrder deny,allow\n"
+			. "\t\tDeny from all\n"
+			. "\t</IfModule>\n"
+			. '</If>'
 		);
 
 		return $result instanceof WP_Error ? $result : null;
