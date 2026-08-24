@@ -47,6 +47,18 @@ load_version() {
   esac
 }
 
+classify_version() {
+  if printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$'; then
+    release_channel="stable"
+    is_prerelease="false"
+  elif printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*$'; then
+    release_channel="prerelease"
+    is_prerelease="true"
+  else
+    fail "Release version must be stable SemVer (for example 2.0.0) or prerelease SemVer (for example 2.0.0-beta.1)."
+  fi
+}
+
 require_clean_git() {
   changes="$(git -C "$project_root" status --porcelain --untracked-files=normal)"
   [ -z "$changes" ] || fail "The Git working tree must be clean before creating a GitHub release."
@@ -56,11 +68,16 @@ verify_branch_is_pushed() {
   branch="$(git -C "$project_root" symbolic-ref --quiet --short HEAD)" || fail "GitHub releases must be created from a branch, not detached HEAD."
   default_remote_ref="$(git -C "$project_root" symbolic-ref --quiet --short "refs/remotes/$remote_name/HEAD")" || fail "Could not determine the default branch for $remote_name."
   default_branch="${default_remote_ref#${remote_name}/}"
-  [ "$branch" = "$default_branch" ] || fail "GitHub releases must be created from the default branch '$default_branch'; current branch is '$branch'."
+
+  if [ "$is_prerelease" = "false" ]; then
+    [ "$branch" = "$default_branch" ] || fail "Stable GitHub releases must be created from the default branch '$default_branch'; current branch is '$branch'."
+  fi
 
   commit="$(git -C "$project_root" rev-parse HEAD)"
-  remote_commit="$(git -C "$project_root" rev-parse "$remote_name/$default_branch")"
-  [ "$commit" = "$remote_commit" ] || fail "HEAD is not the commit currently published at $remote_name/$default_branch. Push the release commit first."
+  remote_branch_ref="$remote_name/$branch"
+  git -C "$project_root" rev-parse --verify --quiet "$remote_branch_ref" >/dev/null || fail "Branch '$branch' is not published at $remote_branch_ref. Push it first."
+  remote_commit="$(git -C "$project_root" rev-parse "$remote_branch_ref")"
+  [ "$commit" = "$remote_commit" ] || fail "HEAD is not the commit currently published at $remote_branch_ref. Push the release commit first."
 }
 
 verify_archive() {
@@ -130,12 +147,14 @@ inspect_existing_state() {
   release_exists=false
   release_draft=false
   release_error="$temp_dir/release-view-error"
-  if gh release view "$version" --repo "$repository" --json isDraft,tagName > "$temp_dir/release.json" 2> "$release_error"; then
+  if gh release view "$version" --repo "$repository" --json isDraft,isPrerelease,tagName > "$temp_dir/release.json" 2> "$release_error"; then
     release_exists=true
     release_tag="$(gh release view "$version" --repo "$repository" --json tagName --jq .tagName)"
     [ "$release_tag" = "$version" ] || fail "GitHub Release tag is '$release_tag'; expected '$version'."
     release_draft="$(gh release view "$version" --repo "$repository" --json isDraft --jq .isDraft)"
     [ "$release_draft" = "true" ] || fail "GitHub Release $version is already published."
+    release_prerelease="$(gh release view "$version" --repo "$repository" --json isPrerelease --jq .isPrerelease)"
+    [ "$release_prerelease" = "$is_prerelease" ] || fail "Draft GitHub Release $version has the wrong prerelease state."
     [ "$remote_tag_exists" = "true" ] || fail "Draft GitHub Release $version exists without the expected remote Git tag."
   elif ! grep -Fq 'release not found' "$release_error"; then
     cat "$release_error" >&2
@@ -151,6 +170,8 @@ show_release_plan() {
   echo "GitHub release plan"
   echo "  Repository: $repository"
   echo "  Version:    $version"
+  echo "  Channel:    $release_channel"
+  echo "  Branch:     $branch"
   echo "  Commit:     $commit"
   echo "  Subject:    $(git -C "$project_root" --no-pager log -1 --format=%s "$commit")"
   echo "  Asset:      $asset_name ($archive_size bytes)"
@@ -197,26 +218,51 @@ ensure_remote_tag() {
 
 ensure_draft_release() {
   if [ "$release_exists" = "false" ]; then
-    gh release create "$version" \
-      --repo "$repository" \
-      --verify-tag \
-      --draft \
-      --title "$version" \
-      --notes-file "$notes_file"
+    if [ "$is_prerelease" = "true" ]; then
+      gh release create "$version" \
+        --repo "$repository" \
+        --verify-tag \
+        --draft \
+        --prerelease \
+        --latest=false \
+        --title "$version" \
+        --notes-file "$notes_file"
+    else
+      gh release create "$version" \
+        --repo "$repository" \
+        --verify-tag \
+        --draft \
+        --title "$version" \
+        --notes-file "$notes_file"
+    fi
     release_exists=true
   else
-    gh release edit "$version" \
-      --repo "$repository" \
-      --verify-tag \
-      --draft \
-      --title "$version" \
-      --notes-file "$notes_file" >/dev/null
+    if [ "$is_prerelease" = "true" ]; then
+      gh release edit "$version" \
+        --repo "$repository" \
+        --verify-tag \
+        --draft \
+        --prerelease \
+        --title "$version" \
+        --notes-file "$notes_file" >/dev/null
+    else
+      gh release edit "$version" \
+        --repo "$repository" \
+        --verify-tag \
+        --draft \
+        --prerelease=false \
+        --title "$version" \
+        --notes-file "$notes_file" >/dev/null
+    fi
   fi
 }
 
 verify_draft_release() {
   draft_state="$(gh release view "$version" --repo "$repository" --json isDraft --jq .isDraft)"
   [ "$draft_state" = "true" ] || fail "GitHub Release $version is not a draft."
+
+  prerelease_state="$(gh release view "$version" --repo "$repository" --json isPrerelease --jq .isPrerelease)"
+  [ "$prerelease_state" = "$is_prerelease" ] || fail "Draft GitHub Release $version has the wrong prerelease state."
 
   release_name="$(gh release view "$version" --repo "$repository" --json name --jq .name)"
   [ "$release_name" = "$version" ] || fail "Draft GitHub Release title is '$release_name'; expected '$version'."
@@ -240,9 +286,15 @@ upload_and_verify_asset() {
 }
 
 publish_release() {
-  gh release edit "$version" --repo "$repository" --draft=false --latest >/dev/null
+  if [ "$is_prerelease" = "true" ]; then
+    gh release edit "$version" --repo "$repository" --draft=false --prerelease --latest=false >/dev/null
+  else
+    gh release edit "$version" --repo "$repository" --draft=false --prerelease=false --latest >/dev/null
+  fi
   published_state="$(gh release view "$version" --repo "$repository" --json isDraft --jq .isDraft)"
   [ "$published_state" = "false" ] || fail "GitHub Release $version was not published successfully."
+  published_prerelease="$(gh release view "$version" --repo "$repository" --json isPrerelease --jq .isPrerelease)"
+  [ "$published_prerelease" = "$is_prerelease" ] || fail "Published GitHub Release $version has the wrong prerelease state."
   gh release view "$version" --repo "$repository" --json url --jq .url
 }
 
@@ -260,6 +312,7 @@ temp_dir="$(mktemp -d "${TMPDIR:-/tmp}/development-assistant-github-release.XXXX
 trap 'rm -rf "$temp_dir"' EXIT INT TERM
 
 load_version
+classify_version
 require_clean_git
 node "$project_root/scripts/sync-version.mjs" --check
 verify_archive

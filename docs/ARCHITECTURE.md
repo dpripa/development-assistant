@@ -128,10 +128,13 @@ The tracked `.version` file is the release-version source of truth. `make
 version-sync` verifies that the number was not released before, synchronizes the
 plugin header, `readme.txt`, Composer and npm metadata plus lock files, and adds
 a changelog template. The interactive `make github-release` command verifies the
-pushed default-branch commit, creates a recoverable draft release, verifies its
-uploaded ZIP by digest, and publishes it only after exact version-specific
-confirmation. The interactive `make wporg-release` command reads
+pushed branch commit, creates a recoverable draft release, verifies its uploaded
+ZIP by digest, and publishes it only after exact version-specific confirmation.
+SemVer prereleases may originate from any pushed branch and remain GitHub
+prereleases; stable GitHub releases require the default branch. The interactive
+`make wporg-release` command reads
 `.version`, rejects inconsistent metadata or an unfinished changelog, prepares
 the local SVN trunk and tag, prints their complete diff, and requires an exact
-version-specific confirmation before publishing. Publishing is a maintainer
-operation and is not part of a normal contribution.
+version-specific confirmation before publishing. It rejects prerelease versions
+and non-default branches. Publishing is a maintainer operation and is not part of
+a normal contribution.

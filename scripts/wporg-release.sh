@@ -57,6 +57,20 @@ require_clean_git() {
   [ -z "$changes" ] || fail "The Git working tree must be clean before preparing a WordPress.org release."
 }
 
+require_stable_default_branch() {
+  printf '%s\n' "$version" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+$' || fail "WordPress.org releases require a stable SemVer version such as 2.0.0; prerelease versions are GitHub-only."
+
+  git -C "$project_root" fetch --quiet --no-tags origin
+  branch="$(git -C "$project_root" symbolic-ref --quiet --short HEAD)" || fail "WordPress.org releases must be created from a branch, not detached HEAD."
+  default_remote_ref="$(git -C "$project_root" symbolic-ref --quiet --short refs/remotes/origin/HEAD)" || fail "Could not determine the default branch for origin."
+  default_branch="${default_remote_ref#origin/}"
+  [ "$branch" = "$default_branch" ] || fail "WordPress.org releases must be created from the default branch '$default_branch'; current branch is '$branch'."
+
+  commit="$(git -C "$project_root" rev-parse HEAD)"
+  remote_commit="$(git -C "$project_root" rev-parse "origin/$default_branch")"
+  [ "$commit" = "$remote_commit" ] || fail "HEAD is not the commit currently published at origin/$default_branch. Push the stable release commit first."
+}
+
 load_version() {
   version_file="$project_root/.version"
   [ -f "$version_file" ] || fail ".version is missing. Run 'make version-sync' before preparing a release."
@@ -302,6 +316,7 @@ release_wporg() {
   load_version
   require_working_copy
   require_clean_git
+  require_stable_default_branch
   require_auth
 
   [ -t 0 ] && [ -t 1 ] || fail "WordPress.org publishing requires an interactive terminal to review and confirm the SVN diff."

@@ -135,7 +135,7 @@ make github-release
 ```
 
 The command builds the production ZIP, verifies that the clean local commit is
-exactly the commit published on the remote default branch, and displays the
+exactly the commit published on its corresponding remote branch, and displays the
 commit range, changelog-derived release notes, asset size, and SHA-256 digest.
 It continues only after the maintainer types the exact `publish <version>`
 confirmation. It then creates and pushes an annotated version tag, prepares a
@@ -146,6 +146,12 @@ If publishing is interrupted after the tag or draft was created, rerun `make
 github-release`. The command continues only when the existing tag points to the
 expected release commit and the existing Release is still a draft. It refuses
 an inconsistent tag or an already published version.
+
+Versions with a SemVer prerelease suffix, such as `2.0.0-beta.1` or
+`2.0.0-rc.1`, may be released from any pushed branch. They are published as
+GitHub prereleases and never marked as the latest release. Stable versions such
+as `2.0.0` can be released only from the pushed default branch and are marked as
+latest.
 
 ### WordPress.org SVN
 
@@ -199,6 +205,10 @@ The command prints the complete SVN diff and commits only after the maintainer
 types the exact `publish <version>` confirmation. Cancelling leaves the prepared
 changes available for `make wporg-status` and `make wporg-diff`; rerunning `make
 wporg-release` verifies and reuses that prepared state.
+
+WordPress.org publishing accepts only stable SemVer versions from the pushed
+default branch. Beta, release-candidate, and other prerelease versions remain
+GitHub-only.
 
 Directory banners, icons, screenshots, and `blueprint.json` are maintained under
 `wporg/assets/`. Copy reviewed changes into `release/wporg/assets/`, inspect the
