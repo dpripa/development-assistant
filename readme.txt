@@ -1,7 +1,7 @@
 === Development Assistant ===
 
 Stable tag: 1.2.11
-Contributors: Dmitry Pripa
+Contributors: dpripa
 Requires PHP: 7.4.0
 Requires at least: 5.0.0
 Tested up to: 7.1.0
