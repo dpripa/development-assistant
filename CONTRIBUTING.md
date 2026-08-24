@@ -16,17 +16,10 @@ proposals.
 
 ## Development Setup
 
-The supported local workflow requires Docker with Docker Compose, `mkcert`, NVM,
-Node.js 24, Subversion, `rsync`, and `unzip`.
-
-```sh
-git clone https://github.com/dpripa/development-assistant.git
-cd development-assistant
-make setup
-make up
-```
-
-See [README.md](README.md) for service URLs and the complete command reference.
+Follow [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for prerequisites, local setup,
+service URLs, repository-owned commands, and test-environment behavior. Read
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) before changing runtime ownership or
+safety boundaries.
 
 ## Repository Ownership
 
@@ -53,8 +46,9 @@ contents.
 - Preserve the classic WordPress script and stable asset filename contracts.
 - Prefer WordPress APIs and bundled libraries over custom platform replacements.
 - Keep changes focused. Do not mix unrelated refactors with behavior changes.
-- Update `README.md`, `readme.txt`, translations, or architecture documentation
-  when a change affects those contracts.
+- Update user-facing documentation, `readme.txt`, translations, development
+  documentation, or architecture documentation when a change affects those
+  contracts.
 - Do not change versions, tags, credentials, or publish releases unless the
   maintainer explicitly requests release work.
 
