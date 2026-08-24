@@ -125,6 +125,28 @@ GitHub Actions can create the release ZIP. If WordPress.org publishing is later
 run in CI, its credentials must be stored as encrypted CI secrets and must never
 be committed to this repository.
 
+### GitHub Release
+
+After synchronizing the version, completing the changelog, committing, and
+pushing the release commit to the default branch, create the GitHub Release:
+
+```sh
+make github-release
+```
+
+The command builds the production ZIP, verifies that the clean local commit is
+exactly the commit published on the remote default branch, and displays the
+commit range, changelog-derived release notes, asset size, and SHA-256 digest.
+It continues only after the maintainer types the exact `publish <version>`
+confirmation. It then creates and pushes an annotated version tag, prepares a
+draft GitHub Release, uploads the ZIP, downloads it again to verify its digest,
+and finally publishes the verified draft as the latest release.
+
+If publishing is interrupted after the tag or draft was created, rerun `make
+github-release`. The command continues only when the existing tag points to the
+expected release commit and the existing Release is still a draft. It refuses
+an inconsistent tag or an already published version.
+
 ### WordPress.org SVN
 
 The tracked `wporg/assets/` directory is the source of truth for WordPress.org

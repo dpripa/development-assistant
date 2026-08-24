@@ -42,6 +42,6 @@
     "lint-script": "eslint eslint.config.mjs stylelint.config.mjs scripts/sync-version.mjs 'src/**/*.ts' vite.config.ts",
     "fix-style": "stylelint --fix 'src/**/*.css'",
     "fix-script": "eslint --fix eslint.config.mjs stylelint.config.mjs 'src/**/*.ts' vite.config.ts",
-    "prepare": "husky install"
+    "prepare": "husky"
   }
 }

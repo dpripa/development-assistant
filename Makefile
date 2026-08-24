@@ -2,8 +2,9 @@ COMPOSE ?= docker compose
 PLUGIN_CONTAINER_DIR := /plugin-source
 RELEASE_ARCHIVE := release/development-assistant.zip
 WPORG_RELEASE_SCRIPT := ./scripts/wporg-release.sh
+GITHUB_RELEASE_SCRIPT := ./scripts/github-release.sh
 
-.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip version-sync version-check wporg-checkout wporg-update wporg-release wporg-status wporg-diff wporg-assets-publish fix lint test
+.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip version-sync version-check github-release wporg-checkout wporg-update wporg-release wporg-status wporg-diff wporg-assets-publish fix lint test
 
 init: setup
 
@@ -128,6 +129,9 @@ version-sync:
 version-check:
 	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run version:check
 
+github-release: create-release-zip
+	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && $(GITHUB_RELEASE_SCRIPT)
+
 wporg-checkout:
 	$(WPORG_RELEASE_SCRIPT) checkout
 
@@ -146,11 +150,11 @@ wporg-diff:
 wporg-assets-publish:
 	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish-assets
 
-fix:
+fix: composer-install
 	./scripts/run-composer.sh run fix
 	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run fix-style && npm run fix-script
 
-lint:
+lint: composer-install
 	./scripts/run-composer.sh run lint
 	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run version:check && npm run lint-style && npm run lint-script && npm run typecheck
 

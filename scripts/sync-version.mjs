@@ -251,7 +251,7 @@ function synchronize() {
 	}
 
 	console.log( `Synchronized release version ${ version }.` );
-	console.log( 'Complete the new readme.txt changelog entry before wporg-release.' );
+	console.log( 'Complete and commit the new readme.txt changelog entry before publishing the release.' );
 }
 
 try {
