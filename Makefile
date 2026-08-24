@@ -3,7 +3,7 @@ PLUGIN_CONTAINER_DIR := /plugin-source
 RELEASE_ARCHIVE := release/development-assistant.zip
 WPORG_RELEASE_SCRIPT := ./scripts/wporg-release.sh
 
-.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip wporg-checkout wporg-update wporg-prepare wporg-status wporg-diff wporg-publish wporg-assets-publish fix lint test prepare-to-release
+.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip wporg-checkout wporg-update wporg-prepare wporg-status wporg-diff wporg-publish wporg-assets-publish fix lint test
 
 init: setup
 
@@ -153,5 +153,3 @@ lint:
 
 test: wp-core composer-install
 	COMPOSE="$(COMPOSE)" ./scripts/run-phpunit.sh
-
-prepare-to-release: lint build-src
