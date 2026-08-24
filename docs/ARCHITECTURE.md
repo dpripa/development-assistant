@@ -127,6 +127,8 @@ from `wporg/assets/`.
 The tracked `.version` file is the release-version source of truth. `make
 version-sync` verifies that the number was not released before, synchronizes the
 plugin header, `readme.txt`, Composer and npm metadata plus lock files, and adds
-a changelog template. WordPress.org preparation and publishing read `.version`
-directly and reject inconsistent metadata or an unfinished changelog template.
-Publishing is a maintainer operation and is not part of a normal contribution.
+a changelog template. The interactive `make wporg-release` command reads
+`.version`, rejects inconsistent metadata or an unfinished changelog, prepares
+the local SVN trunk and tag, prints their complete diff, and requires an exact
+version-specific confirmation before publishing. Publishing is a maintainer
+operation and is not part of a normal contribution.

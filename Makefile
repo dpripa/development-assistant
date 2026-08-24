@@ -3,7 +3,7 @@ PLUGIN_CONTAINER_DIR := /plugin-source
 RELEASE_ARCHIVE := release/development-assistant.zip
 WPORG_RELEASE_SCRIPT := ./scripts/wporg-release.sh
 
-.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip version-sync version-check wporg-checkout wporg-update wporg-prepare wporg-status wporg-diff wporg-publish wporg-assets-publish fix lint test
+.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip version-sync version-check wporg-checkout wporg-update wporg-release wporg-status wporg-diff wporg-assets-publish fix lint test
 
 init: setup
 
@@ -134,17 +134,14 @@ wporg-checkout:
 wporg-update:
 	$(WPORG_RELEASE_SCRIPT) update
 
-wporg-prepare: create-release-zip
-	$(WPORG_RELEASE_SCRIPT) prepare
+wporg-release: create-release-zip
+	$(WPORG_RELEASE_SCRIPT) release
 
 wporg-status:
 	$(WPORG_RELEASE_SCRIPT) status
 
 wporg-diff:
 	$(WPORG_RELEASE_SCRIPT) diff
-
-wporg-publish:
-	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish
 
 wporg-assets-publish:
 	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish-assets

@@ -24,10 +24,9 @@ Usage: scripts/wporg-release.sh COMMAND
 Commands:
   checkout          Check out the WordPress.org SVN repository.
   update            Update a clean local SVN working copy.
-  prepare           Sync the release ZIP to trunk and create a local tag.
+  release           Prepare, review, confirm, and publish a release.
   status            Show local WordPress.org SVN changes.
   diff              Show the local WordPress.org SVN diff.
-  publish           Commit the prepared trunk and tag to WordPress.org.
   publish-assets    Commit changes from the top-level SVN assets directory.
 EOF
 }
@@ -157,8 +156,8 @@ require_auth() {
   svn help commit -v | grep -q -- '--password-from-stdin' || fail "This SVN client does not support --password-from-stdin."
 }
 
-require_publish_confirmation() {
-  [ "${WPORG_CONFIRM:-}" = "publish" ] || fail "Publishing is live. Re-run with confirm=publish after reviewing 'make wporg-diff'."
+require_assets_publish_confirmation() {
+  [ "${WPORG_CONFIRM:-}" = "publish" ] || fail "Publishing assets is live. Re-run with confirm=publish after reviewing 'make wporg-diff'."
 }
 
 svn_commit() {
@@ -231,7 +230,7 @@ prepare_release() {
 
   echo "Prepared WordPress.org release $version."
   echo "Review it with 'make wporg-status' and 'make wporg-diff'."
-  echo "Publish it with 'make wporg-publish confirm=publish'."
+  echo "The release is prepared locally and ready for diff review."
   svn status "$wporg_dir"
 }
 
@@ -247,18 +246,17 @@ show_diff() {
   svn diff "$wporg_dir"
 }
 
-publish_release() {
+validate_prepared_release() {
   require_command svn
   load_version
   require_working_copy
-  require_publish_confirmation
-  require_auth
   require_clean_git
   verify_source_versions "$version"
+  [ -f "$archive" ] || fail "Release archive not found: $archive"
 
   tag_dir="$wporg_dir/tags/$version"
   [ -d "$tag_dir" ] || fail "Prepared tag not found: $tag_dir"
-  [ "$(svn status "$tag_dir" | sed -n '1s/^\(.\).*/\1/p')" = "A" ] || fail "Tag $version is not scheduled for addition. Run 'make wporg-prepare' first."
+  [ "$(svn status "$tag_dir" | sed -n '1s/^\(.\).*/\1/p')" = "A" ] || fail "Tag $version is not scheduled for addition. Run 'make wporg-release' to prepare it."
   verify_plugin_versions "$wporg_dir/trunk" "$version" "SVN trunk"
   verify_plugin_versions "$tag_dir" "$version" "SVN tag"
 
@@ -268,14 +266,78 @@ publish_release() {
   unexpected="$(svn status "$wporg_dir" | awk -v trunk="$wporg_dir/trunk" -v tag="$tag_dir" '{ path = substr($0, 9); in_trunk = (path == trunk || index(path, trunk "/") == 1); in_tag = (path == tag || index(path, tag "/") == 1); if (!in_trunk && !in_tag) print $0 }')"
   [ -z "$unexpected" ] || fail "The SVN working copy contains changes outside trunk and tags/$version."
 
+  require_command diff
+  require_command unzip
+  verification_dir="$(mktemp -d "${TMPDIR:-/tmp}/development-assistant-wporg-verify.XXXXXX")"
+  unzip -q "$archive" -d "$verification_dir"
+  payload_dir="$verification_dir/$plugin_slug"
+  [ -f "$payload_dir/development-assistant.php" ] || {
+    rm -rf "$verification_dir"
+    fail "The release archive does not contain the expected plugin root."
+  }
+
+  if ! diff -qr "$payload_dir" "$wporg_dir/trunk" >/dev/null; then
+    rm -rf "$verification_dir"
+    fail "Prepared SVN trunk does not exactly match the current release archive."
+  fi
+
+  if ! diff -qr "$wporg_dir/trunk" "$tag_dir" >/dev/null; then
+    rm -rf "$verification_dir"
+    fail "Prepared SVN tag $version does not exactly match trunk."
+  fi
+
+  rm -rf "$verification_dir"
+}
+
+publish_release() {
+  require_auth
+  validate_prepared_release
+
   svn_commit "Release $plugin_slug $version" "$wporg_dir/trunk" "$tag_dir"
   svn update "$wporg_dir"
+}
+
+release_wporg() {
+  require_command svn
+  load_version
+  require_working_copy
+  require_clean_git
+  require_auth
+
+  [ -t 0 ] && [ -t 1 ] || fail "WordPress.org publishing requires an interactive terminal to review and confirm the SVN diff."
+
+  existing_changes="$(svn status "$wporg_dir")"
+  if [ -z "$existing_changes" ]; then
+    prepare_release
+  else
+    validate_prepared_release
+    echo "Reusing the already prepared WordPress.org release $version."
+  fi
+
+  echo
+  echo "WordPress.org SVN diff for release $version:"
+  echo
+  svn diff "$wporg_dir"
+  echo
+  printf 'Type "publish %s" to publish this exact diff: ' "$version"
+
+  confirmation=""
+  if ! IFS= read -r confirmation; then
+    confirmation=""
+  fi
+
+  if [ "$confirmation" != "publish $version" ]; then
+    echo "Publishing cancelled. Prepared SVN changes remain available through 'make wporg-status' and 'make wporg-diff'."
+    return 1
+  fi
+
+  publish_release
 }
 
 publish_assets() {
   require_command svn
   require_working_copy
-  require_publish_confirmation
+  require_assets_publish_confirmation
   require_auth
 
   assets_dir="$wporg_dir/assets"
@@ -298,19 +360,15 @@ case "$command_name" in
   update)
     update_wporg
     ;;
-  prepare)
-    [ "$#" -eq 1 ] || fail "prepare reads the release version from .version and does not accept a VERSION argument."
-    prepare_release
+  release)
+    [ "$#" -eq 1 ] || fail "release reads the release version from .version and does not accept arguments."
+    release_wporg
     ;;
   status)
     show_status
     ;;
   diff)
     show_diff
-    ;;
-  publish)
-    [ "$#" -eq 1 ] || fail "publish reads the release version from .version and does not accept a VERSION argument."
-    publish_release
     ;;
   publish-assets)
     publish_assets

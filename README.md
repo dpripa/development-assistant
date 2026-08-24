@@ -164,20 +164,19 @@ and Composer lock metadata. It also inserts a new `readme.txt` changelog
 template. Replace its `TODO` text, review the synchronized files, and commit the
 release version before preparing the WordPress.org working copy.
 
-Prepare the release locally, inspect the exact SVN changes, and publish only
-after reviewing them:
+Build, prepare, review, and publish the release through one interactive command:
 
 ```sh
-make wporg-prepare
-make wporg-status
-make wporg-diff
-make wporg-publish confirm=publish
+make wporg-release
 ```
 
 Preparation reads the version from `.version`, verifies that every synchronized
 file contains it, and rejects an unfilled changelog template. It then syncs the
 production ZIP into `trunk/` and creates `tags/<version>` from that local trunk.
-Only the explicit publish command commits to WordPress.org.
+The command prints the complete SVN diff and commits only after the maintainer
+types the exact `publish <version>` confirmation. Cancelling leaves the prepared
+changes available for `make wporg-status` and `make wporg-diff`; rerunning `make
+wporg-release` verifies and reuses that prepared state.
 
 Directory banners, icons, screenshots, and `blueprint.json` are maintained under
 `wporg/assets/`. Copy reviewed changes into `release/wporg/assets/`, inspect the
