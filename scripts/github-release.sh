@@ -152,7 +152,7 @@ show_release_plan() {
   echo "  Repository: $repository"
   echo "  Version:    $version"
   echo "  Commit:     $commit"
-  echo "  Subject:    $(git -C "$project_root" log -1 --format=%s "$commit")"
+  echo "  Subject:    $(git -C "$project_root" --no-pager log -1 --format=%s "$commit")"
   echo "  Asset:      $asset_name ($archive_size bytes)"
   echo "  SHA-256:    $archive_sha256"
   if [ "$remote_tag_exists" = "true" ]; then
@@ -171,10 +171,10 @@ show_release_plan() {
   echo
   if [ -n "$previous_tag" ]; then
     echo "Commits since $previous_tag:"
-    git -C "$project_root" log --oneline "$previous_tag..$commit"
+    git -C "$project_root" --no-pager log --oneline "$previous_tag..$commit"
   else
     echo "Release commit:"
-    git -C "$project_root" log -1 --oneline "$commit"
+    git -C "$project_root" --no-pager log -1 --oneline "$commit"
   fi
 
   echo
