@@ -9,6 +9,7 @@ eslint.config.mjs
 .gitignore
 .husky
 .nvmrc
+.version
 CODE_OF_CONDUCT.md
 CONTRIBUTING.md
 SECURITY.md

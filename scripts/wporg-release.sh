@@ -19,15 +19,15 @@ unset WPORG_SVN_USERNAME WPORG_SVN_PASSWORD
 
 usage() {
   cat <<'EOF'
-Usage: scripts/wporg-release.sh COMMAND [VERSION]
+Usage: scripts/wporg-release.sh COMMAND
 
 Commands:
   checkout          Check out the WordPress.org SVN repository.
   update            Update a clean local SVN working copy.
-  prepare VERSION   Sync the release ZIP to trunk and create a local tag.
+  prepare           Sync the release ZIP to trunk and create a local tag.
   status            Show local WordPress.org SVN changes.
   diff              Show the local WordPress.org SVN diff.
-  publish VERSION   Commit the prepared trunk and tag to WordPress.org.
+  publish           Commit the prepared trunk and tag to WordPress.org.
   publish-assets    Commit changes from the top-level SVN assets directory.
 EOF
 }
@@ -58,9 +58,11 @@ require_clean_git() {
   [ -z "$changes" ] || fail "The Git working tree must be clean before preparing a WordPress.org release."
 }
 
-require_version() {
-  version="${1:-}"
-  [ -n "$version" ] || fail "A release version is required."
+load_version() {
+  version_file="$project_root/.version"
+  [ -f "$version_file" ] || fail ".version is missing. Run 'make version-sync' before preparing a release."
+  version="$(cat "$version_file")"
+  [ -n "$version" ] || fail ".version is empty."
 
   case "$version" in
     [0-9]*)
@@ -75,6 +77,22 @@ require_version() {
       fail "Invalid release version: $version"
       ;;
   esac
+}
+
+verify_changelog() {
+  plugin_root="$1"
+  expected="$2"
+  label="$3"
+  changelog_entry="$(awk -v heading="= $expected =" '
+    $0 == heading { found = 1; next }
+    found && /^= .* =$/ { exit }
+    found { print }
+  ' "$plugin_root/readme.txt")"
+
+  [ -n "$changelog_entry" ] || fail "$label readme.txt does not contain a changelog entry for $expected."
+  if printf '%s\n' "$changelog_entry" | grep -Fq 'TODO:'; then
+    fail "$label readme.txt changelog for $expected still contains the generated TODO placeholder."
+  fi
 }
 
 validate_configuration() {
@@ -116,6 +134,7 @@ verify_plugin_versions() {
 
   assert_version_file "$label plugin header" "$plugin_version" "$expected"
   assert_version_file "$label readme.txt Stable tag" "$stable_tag" "$expected"
+  verify_changelog "$plugin_root" "$expected" "$label"
 }
 
 schedule_changes() {
@@ -182,7 +201,7 @@ prepare_release() {
   require_command rsync
   require_command svn
   require_command unzip
-  require_version "${1:-}"
+  load_version
   require_working_copy
   require_clean_git
   require_clean_svn
@@ -212,7 +231,7 @@ prepare_release() {
 
   echo "Prepared WordPress.org release $version."
   echo "Review it with 'make wporg-status' and 'make wporg-diff'."
-  echo "Publish it with 'make wporg-publish version=$version confirm=publish'."
+  echo "Publish it with 'make wporg-publish confirm=publish'."
   svn status "$wporg_dir"
 }
 
@@ -230,7 +249,7 @@ show_diff() {
 
 publish_release() {
   require_command svn
-  require_version "${1:-}"
+  load_version
   require_working_copy
   require_publish_confirmation
   require_auth
@@ -239,7 +258,7 @@ publish_release() {
 
   tag_dir="$wporg_dir/tags/$version"
   [ -d "$tag_dir" ] || fail "Prepared tag not found: $tag_dir"
-  [ "$(svn status "$tag_dir" | sed -n '1s/^\(.\).*/\1/p')" = "A" ] || fail "Tag $version is not scheduled for addition. Run 'make wporg-prepare version=$version' first."
+  [ "$(svn status "$tag_dir" | sed -n '1s/^\(.\).*/\1/p')" = "A" ] || fail "Tag $version is not scheduled for addition. Run 'make wporg-prepare' first."
   verify_plugin_versions "$wporg_dir/trunk" "$version" "SVN trunk"
   verify_plugin_versions "$tag_dir" "$version" "SVN tag"
 
@@ -280,7 +299,8 @@ case "$command_name" in
     update_wporg
     ;;
   prepare)
-    prepare_release "${2:-}"
+    [ "$#" -eq 1 ] || fail "prepare reads the release version from .version and does not accept a VERSION argument."
+    prepare_release
     ;;
   status)
     show_status
@@ -289,7 +309,8 @@ case "$command_name" in
     show_diff
     ;;
   publish)
-    publish_release "${2:-}"
+    [ "$#" -eq 1 ] || fail "publish reads the release version from .version and does not accept a VERSION argument."
+    publish_release
     ;;
   publish-assets)
     publish_assets

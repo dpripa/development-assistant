@@ -3,7 +3,7 @@ PLUGIN_CONTAINER_DIR := /plugin-source
 RELEASE_ARCHIVE := release/development-assistant.zip
 WPORG_RELEASE_SCRIPT := ./scripts/wporg-release.sh
 
-.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip wporg-checkout wporg-update wporg-prepare wporg-status wporg-diff wporg-publish wporg-assets-publish fix lint test
+.PHONY: init setup env dependencies composer-install node-install assets up down restart reinit cert trust-cert wp-core wp-core-update logs ps shell wp db-shell db-backup db-restore db-backups sync-env xdebug-on xdebug-off xdebug-status composer-update start-watch build-src dist-archive create-release-zip version-sync version-check wporg-checkout wporg-update wporg-prepare wporg-status wporg-diff wporg-publish wporg-assets-publish fix lint test
 
 init: setup
 
@@ -122,6 +122,12 @@ dist-archive:
 create-release-zip: composer-install lint build-src
 	./scripts/with-production-dependencies.sh $(MAKE) dist-archive
 
+version-sync:
+	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && node ./scripts/sync-version.mjs
+
+version-check:
+	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run version:check
+
 wporg-checkout:
 	$(WPORG_RELEASE_SCRIPT) checkout
 
@@ -129,7 +135,7 @@ wporg-update:
 	$(WPORG_RELEASE_SCRIPT) update
 
 wporg-prepare: create-release-zip
-	$(WPORG_RELEASE_SCRIPT) prepare "$(version)"
+	$(WPORG_RELEASE_SCRIPT) prepare
 
 wporg-status:
 	$(WPORG_RELEASE_SCRIPT) status
@@ -138,7 +144,7 @@ wporg-diff:
 	$(WPORG_RELEASE_SCRIPT) diff
 
 wporg-publish:
-	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish "$(version)"
+	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish
 
 wporg-assets-publish:
 	WPORG_CONFIRM="$(confirm)" $(WPORG_RELEASE_SCRIPT) publish-assets
@@ -149,7 +155,7 @@ fix:
 
 lint:
 	./scripts/run-composer.sh run lint
-	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run lint-style && npm run lint-script && npm run typecheck
+	NVM_DIR="$${HOME}/.nvm" && . "$${NVM_DIR}/nvm.sh" && nvm use && npm run version:check && npm run lint-style && npm run lint-script && npm run typecheck
 
 test: wp-core composer-install
 	COMPOSE="$(COMPOSE)" ./scripts/run-phpunit.sh

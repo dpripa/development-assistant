@@ -36,9 +36,10 @@
   "scripts": {
     "start": "vite build --watch --mode development",
     "build": "npm run typecheck && vite build && cross-env NO_MIN=true vite build",
+    "version:check": "node scripts/sync-version.mjs --check",
     "typecheck": "tsc --noEmit",
     "lint-style": "stylelint 'src/**/*.css'",
-    "lint-script": "eslint eslint.config.mjs stylelint.config.mjs 'src/**/*.ts' vite.config.ts",
+    "lint-script": "eslint eslint.config.mjs stylelint.config.mjs scripts/sync-version.mjs 'src/**/*.ts' vite.config.ts",
     "fix-style": "stylelint --fix 'src/**/*.css'",
     "fix-script": "eslint --fix eslint.config.mjs stylelint.config.mjs 'src/**/*.ts' vite.config.ts",
     "prepare": "husky install"

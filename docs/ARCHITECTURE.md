@@ -124,6 +124,9 @@ builds assets, and creates the WordPress plugin archive. WordPress.org SVN state
 under `release/wporg/` is local and ignored; reviewed directory media originates
 from `wporg/assets/`.
 
-Release versions must stay aligned across the plugin header, `readme.txt`,
-`composer.json`, `package.json`, and their lock files. Publishing is a maintainer
-operation and is not part of a normal contribution.
+The tracked `.version` file is the release-version source of truth. `make
+version-sync` verifies that the number was not released before, synchronizes the
+plugin header, `readme.txt`, Composer and npm metadata plus lock files, and adds
+a changelog template. WordPress.org preparation and publishing read `.version`
+directly and reject inconsistent metadata or an unfinished changelog template.
+Publishing is a maintainer operation and is not part of a normal contribution.

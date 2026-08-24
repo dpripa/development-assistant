@@ -63,6 +63,9 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Check release version metadata
+        run: npm run version:check
+
       - name: Lint CSS
         run: npm run lint-style
 

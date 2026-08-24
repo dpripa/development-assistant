@@ -149,20 +149,35 @@ WPORG_SVN_USERNAME='your-wordpress-org-username'
 WPORG_SVN_PASSWORD='your-dedicated-svn-password'
 ```
 
-Prepare a release locally, inspect the exact SVN changes, and publish only after
-reviewing them:
+Set the next unused release version in the tracked `.version` file, then
+synchronize every version-bearing source file:
 
 ```sh
-make wporg-prepare version=1.2.11
-make wporg-status
-make wporg-diff
-make wporg-publish version=1.2.11 confirm=publish
+make version-sync
 ```
 
-Preparation verifies that the plugin header, `readme.txt`, `package.json`,
-`package-lock.json`, and `composer.json` contain the requested version. It then
-syncs the production ZIP into `trunk/` and creates `tags/<version>` from that
-local trunk. Only the explicit publish command commits to WordPress.org.
+The synchronization command refuses versions that already exist as a Git tag,
+in the local WordPress.org tags working copy, in the published WordPress.org
+SVN tags, or as an older changelog entry. It updates the plugin header,
+`readme.txt` Stable tag, `package.json`, `package-lock.json`, `composer.json`,
+and Composer lock metadata. It also inserts a new `readme.txt` changelog
+template. Replace its `TODO` text, review the synchronized files, and commit the
+release version before preparing the WordPress.org working copy.
+
+Prepare the release locally, inspect the exact SVN changes, and publish only
+after reviewing them:
+
+```sh
+make wporg-prepare
+make wporg-status
+make wporg-diff
+make wporg-publish confirm=publish
+```
+
+Preparation reads the version from `.version`, verifies that every synchronized
+file contains it, and rejects an unfilled changelog template. It then syncs the
+production ZIP into `trunk/` and creates `tags/<version>` from that local trunk.
+Only the explicit publish command commits to WordPress.org.
 
 Directory banners, icons, screenshots, and `blueprint.json` are maintained under
 `wporg/assets/`. Copy reviewed changes into `release/wporg/assets/`, inspect the
