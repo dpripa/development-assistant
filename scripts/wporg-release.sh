@@ -5,6 +5,7 @@ project_root="$(CDPATH= cd -- "$(dirname "$0")/.." && pwd)"
 release_dir="$project_root/release"
 wporg_dir="$release_dir/wporg"
 archive="$release_dir/development-assistant.zip"
+asset_source_dir="$project_root/wporg/assets"
 
 if [ -f "$project_root/.env" ]; then
   # shellcheck disable=SC1091
@@ -350,13 +351,17 @@ release_wporg() {
 }
 
 publish_assets() {
+  require_command rsync
   require_command svn
   require_working_copy
   require_assets_publish_confirmation
   require_auth
 
   assets_dir="$wporg_dir/assets"
+  [ -d "$asset_source_dir" ] || fail "WordPress.org asset source directory not found: $asset_source_dir"
   [ -d "$assets_dir" ] || fail "WordPress.org assets directory not found: $assets_dir"
+
+  rsync -a --delete --delete-excluded --exclude=.DS_Store "$asset_source_dir/" "$assets_dir/"
   schedule_changes "$assets_dir"
   changes="$(svn status "$assets_dir")"
   [ -n "$changes" ] || fail "There are no WordPress.org asset changes to publish."

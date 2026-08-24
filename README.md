@@ -211,12 +211,16 @@ default branch. Beta, release-candidate, and other prerelease versions remain
 GitHub-only.
 
 Directory banners, icons, screenshots, and `blueprint.json` are maintained under
-`wporg/assets/`. Copy reviewed changes into `release/wporg/assets/`, inspect the
-SVN diff, and publish them separately:
+`wporg/assets/`. Publish reviewed changes separately:
 
 ```sh
 make wporg-assets-publish confirm=publish
 ```
+
+The command synchronizes the tracked source directory into the local SVN
+`assets/` directory, removes stale SVN assets, excludes `.DS_Store`, and commits
+the resulting asset-only changes. No manual copy into `release/wporg/assets/` is
+required.
 
 The SVN password is passed to the client through standard input, is not included
 in the process arguments, and is not stored in the SVN authentication cache. In
