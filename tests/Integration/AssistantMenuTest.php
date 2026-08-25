@@ -36,6 +36,7 @@ class AssistantMenuTest extends WP_UnitTestCase {
 		$this->assertFalse( $root->href );
 		$this->assertNotNull( $summary );
 		$this->assertStringContainsString( 'WP Debug', $summary->title );
+		$this->assertStringNotContainsString( 'production', strtolower( $summary->title ) );
 
 		$action_urls = array();
 

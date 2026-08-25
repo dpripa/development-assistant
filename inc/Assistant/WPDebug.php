@@ -49,7 +49,7 @@ class WPDebug extends Section {
 		);
 
 		if ( $this->checked_constants ) {
-			$this->content .= sprintf( __( 'Enabled %s was detected in the production environment.', 'development-assistant' ), $checked_constants );
+			$this->content .= sprintf( __( 'The following constants are enabled: %s.', 'development-assistant' ), $checked_constants );
 			$this->content .= '<br><b>' . __( 'Don\'t leave it enabled unless you are debugging to avoid the performance issues.', 'development-assistant' ) . '</b>';
 
 			if ( ! $this->is_disabled_direct_access_to_log && $this->is_htaccess_exists ) {
@@ -59,7 +59,7 @@ class WPDebug extends Section {
 			}
 
 			if ( 'yes' === $this->display_enabled ) {
-				$this->content .= '<br><span class="da-assistant__error-message"><b>' . __( 'Warning!', 'development-assistant' ) . '</b> ' . __( 'Enabled <code>WP_DEBUG_DISPLAY</code> may cause the entire interface blocking due to the display of error messages, as well as a critical security issues. <b>Highly recommended to disable it in production environment.</b>', 'development-assistant' ) . '</span>';
+				$this->content .= '<br><span class="da-assistant__error-message"><b>' . __( 'Warning!', 'development-assistant' ) . '</b> ' . __( 'Enabled <code>WP_DEBUG_DISPLAY</code> may cause the entire interface blocking due to the display of error messages, as well as a critical security issues. <b>It is highly recommended to disable it.</b>', 'development-assistant' ) . '</span>';
 			}
 		} else {
 			$this->content .= __( 'Everything is fine, debug mode is disabled, error information isn\'t displayed or logged.', 'development-assistant' );

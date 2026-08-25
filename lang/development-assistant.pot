@@ -78,7 +78,7 @@ msgstr ""
 
 #: inc/Assistant/WPDebug.php:60
 #, php-format
-msgid "Enabled %s was detected in the production environment."
+msgid "The following constants are enabled: %s."
 msgstr ""
 
 #: inc/Assistant/WPDebug.php:61
@@ -98,7 +98,7 @@ msgid "Warning!"
 msgstr ""
 
 #: inc/Assistant/WPDebug.php:70
-msgid "Enabled <code>WP_DEBUG_DISPLAY</code> may cause the entire interface blocking due to the display of error messages, as well as a critical security issues. <b>Highly recommended to disable it in production environment.</b>"
+msgid "Enabled <code>WP_DEBUG_DISPLAY</code> may cause the entire interface blocking due to the display of error messages, as well as a critical security issues. <b>It is highly recommended to disable it.</b>"
 msgstr ""
 
 #: inc/Assistant/WPDebug.php:73
@@ -243,7 +243,7 @@ msgid "Enable <code>WP_DEBUG_LOG</code>"
 msgstr ""
 
 #: inc/Setting.php:113
-msgid "Enabling error display may cause the entire interface blocking due to the display of these error messages, as well as a critical security issues. <b>Highly recommended to keep it disabled in production environment.</b>"
+msgid "Enabling error display may cause the entire interface blocking due to the display of these error messages, as well as a critical security issues."
 msgstr ""
 
 #: inc/Setting.php:119
