@@ -11,12 +11,14 @@ class SupportUser extends Section {
 	protected Setting\SupportUser $support_user;
 	protected bool $is_created;
 	protected bool $is_current_user_support;
+	protected string $action_base_url;
 
-	public function __construct( ActionQuery $action_query, Setting\SupportUser $support_user ) {
+	public function __construct( ActionQuery $action_query, Setting\SupportUser $support_user, string $action_base_url ) {
 		$this->action_query            = $action_query;
 		$this->support_user            = $support_user;
 		$this->is_created              = 0 < get_option( Setting\SupportUser::ID_KEY, Setting\SupportUser::ID_DEFAULT );
 		$this->is_current_user_support = $support_user->is_current_user();
+		$this->action_base_url         = $action_base_url;
 
 		parent::__construct();
 	}
@@ -47,7 +49,7 @@ class SupportUser extends Section {
 			if ( $this->support_user->is_allowed_continue_existence() ) {
 				$this->controls[] = new Control(
 					__( 'Continue existence', 'development-assistant' ),
-					$this->action_query->get_url( Setting\SupportUser::UPDATE_CREATE_AT_QUERY_KEY ),
+					$this->action_query->get_url( Setting\SupportUser::UPDATE_CREATE_AT_QUERY_KEY, $this->action_base_url ),
 				);
 			}
 
@@ -59,7 +61,7 @@ class SupportUser extends Section {
 				);
 				$this->controls[] = new Control(
 					__( 'Delete user', 'development-assistant' ),
-					$this->action_query->get_url( Setting\SupportUser::DELETE_QUERY_KEY ),
+					$this->action_query->get_url( Setting\SupportUser::DELETE_QUERY_KEY, $this->action_base_url ),
 					$this->support_user->get_deletion_confirmation_massage()
 				);
 			}

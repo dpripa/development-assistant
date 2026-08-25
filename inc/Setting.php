@@ -14,28 +14,26 @@ use WPDevAssist\Setting\SupportUser;
 defined( 'ABSPATH' ) || exit;
 
 class Setting extends Page {
-	public const KEY                                      = KEY;
-	public const ENABLE_WP_DEBUG_KEY                      = KEY . '_enable_wp_debug';
-	public const ENABLE_WP_DEBUG_DEFAULT                  = 'no';
-	public const ENABLE_WP_DEBUG_LOG_KEY                  = KEY . '_enable_wp_debug_log';
-	public const ENABLE_WP_DEBUG_LOG_DEFAULT              = 'no';
-	public const ENABLE_WP_DEBUG_DISPLAY_KEY              = KEY . '_enable_wp_debug_display';
-	public const ENABLE_WP_DEBUG_DISPLAY_DEFAULT          = 'no';
-	public const DISABLE_DIRECT_ACCESS_TO_LOG_KEY         = KEY . '_disable_direct_access_to_log';
-	public const DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT     = 'no';
-	public const ENABLE_ASSISTANT_KEY                     = KEY . '_enable_assistant';
-	public const ENABLE_ASSISTANT_DEFAULT                 = 'yes';
-	public const ASSISTANT_OPENED_ON_WP_DASHBOARD_KEY     = KEY . '_expanded_on_wp_dashboard';
-	public const ASSISTANT_OPENED_ON_WP_DASHBOARD_DEFAULT = 'yes';
-	public const ACTIVE_PLUGINS_FIRST_KEY                 = KEY . '_active_plugins_first';
-	public const ACTIVE_PLUGINS_FIRST_DEFAULT             = 'yes';
-	public const RESET_KEY                                = KEY . '_reset';
-	public const RESET_DEFAULT                            = 'yes';
-	public const TOGGLE_DEBUG_MODE_QUERY_KEY              = KEY . '_toggle_debug_mode';
-	public const DISABLE_DIRECT_ACCESS_TO_LOG_QUERY_KEY   = KEY . '_disable_direct_access_to_log';
-	public const ENABLE_DEBUG_LOG_QUERY_KEY               = KEY . '_enable_log';
-	public const DISABLE_DEBUG_DISPLAY_QUERY_KEY          = KEY . '_disable_debug_display';
-	public const PAGE_TITLE_HOOK                          = KEY . '_settings_page_title';
+	public const KEY                                    = KEY;
+	public const ENABLE_WP_DEBUG_KEY                    = KEY . '_enable_wp_debug';
+	public const ENABLE_WP_DEBUG_DEFAULT                = 'no';
+	public const ENABLE_WP_DEBUG_LOG_KEY                = KEY . '_enable_wp_debug_log';
+	public const ENABLE_WP_DEBUG_LOG_DEFAULT            = 'no';
+	public const ENABLE_WP_DEBUG_DISPLAY_KEY            = KEY . '_enable_wp_debug_display';
+	public const ENABLE_WP_DEBUG_DISPLAY_DEFAULT        = 'no';
+	public const DISABLE_DIRECT_ACCESS_TO_LOG_KEY       = KEY . '_disable_direct_access_to_log';
+	public const DISABLE_DIRECT_ACCESS_TO_LOG_DEFAULT   = 'no';
+	public const ENABLE_ASSISTANT_KEY                   = KEY . '_enable_assistant';
+	public const ENABLE_ASSISTANT_DEFAULT               = 'yes';
+	public const ACTIVE_PLUGINS_FIRST_KEY               = KEY . '_active_plugins_first';
+	public const ACTIVE_PLUGINS_FIRST_DEFAULT           = 'yes';
+	public const RESET_KEY                              = KEY . '_reset';
+	public const RESET_DEFAULT                          = 'yes';
+	public const TOGGLE_DEBUG_MODE_QUERY_KEY            = KEY . '_toggle_debug_mode';
+	public const DISABLE_DIRECT_ACCESS_TO_LOG_QUERY_KEY = KEY . '_disable_direct_access_to_log';
+	public const ENABLE_DEBUG_LOG_QUERY_KEY             = KEY . '_enable_log';
+	public const DISABLE_DEBUG_DISPLAY_QUERY_KEY        = KEY . '_disable_debug_display';
+	public const PAGE_TITLE_HOOK                        = KEY . '_settings_page_title';
 
 	protected const SETTING_KEYS = array(
 		self::ENABLE_WP_DEBUG_KEY,
@@ -43,7 +41,8 @@ class Setting extends Page {
 		self::ENABLE_WP_DEBUG_DISPLAY_KEY,
 		self::DISABLE_DIRECT_ACCESS_TO_LOG_KEY,
 		self::ENABLE_ASSISTANT_KEY,
-		self::ASSISTANT_OPENED_ON_WP_DASHBOARD_KEY,
+		// Legacy Assistant Panel option, kept only so reset removes it.
+		KEY . '_expanded_on_wp_dashboard',
 		self::ACTIVE_PLUGINS_FIRST_KEY,
 		self::RESET_KEY,
 		// Legacy development-environment and MailHog options, kept only so reset removes them.
@@ -205,21 +204,14 @@ class Setting extends Page {
 	protected function add_assistant_section( string $section_key ): void {
 		$this->add_section(
 			$section_key,
-			esc_html__( 'Assistant Panel', 'development-assistant' )
+			esc_html__( 'Assistant Menu', 'development-assistant' )
 		);
 		$this->add_setting(
 			$section_key,
 			static::ENABLE_ASSISTANT_KEY,
-			esc_html__( 'Enable Assistant Panel', 'development-assistant' ),
+			esc_html__( 'Show Development Assistant in the admin bar', 'development-assistant' ),
 			array( $this->control, 'render_checkbox' ),
 			static::ENABLE_ASSISTANT_DEFAULT
-		);
-		$this->add_setting(
-			$section_key,
-			static::ASSISTANT_OPENED_ON_WP_DASHBOARD_KEY,
-			esc_html__( 'Opened by default on the WordPress Dashboard', 'development-assistant' ),
-			array( $this->control, 'render_checkbox' ),
-			static::ASSISTANT_OPENED_ON_WP_DASHBOARD_DEFAULT
 		);
 	}
 

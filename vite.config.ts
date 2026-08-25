@@ -39,7 +39,7 @@ export default defineConfig( ( { mode } ) => {
 			outDir: 'assets',
 			rolldownOptions: {
 				input: {
-					assistant: resolve( import.meta.dirname, 'src/assistant/index.ts' ),
+					assistant: resolve( import.meta.dirname, 'src/assistant/styles.css' ),
 					'debug-log': resolve( import.meta.dirname, 'src/debugLog/styles.css' ),
 					'plugins-screen': resolve( import.meta.dirname, 'src/pluginsScreen/index.ts' ),
 					setting: resolve( import.meta.dirname, 'src/setting/styles.css' ),

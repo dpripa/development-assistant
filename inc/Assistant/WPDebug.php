@@ -18,8 +18,9 @@ class WPDebug extends Section {
 	protected string $debug_enabled;
 	protected string $log_enabled;
 	protected string $display_enabled;
+	protected string $action_base_url;
 
-	public function __construct( ActionQuery $action_query, DebugLog $debug_log, Htaccess $htaccess ) {
+	public function __construct( ActionQuery $action_query, DebugLog $debug_log, Htaccess $htaccess, string $action_base_url ) {
 		$this->action_query                     = $action_query;
 		$this->debug_log                        = $debug_log;
 		$this->is_debug_log_exists              = $debug_log->is_file_exists();
@@ -28,6 +29,7 @@ class WPDebug extends Section {
 		$this->debug_enabled                    = get_option( Setting::ENABLE_WP_DEBUG_KEY, Setting::ENABLE_WP_DEBUG_DEFAULT );
 		$this->log_enabled                      = get_option( Setting::ENABLE_WP_DEBUG_LOG_KEY, Setting::ENABLE_WP_DEBUG_LOG_DEFAULT );
 		$this->display_enabled                  = get_option( Setting::ENABLE_WP_DEBUG_DISPLAY_KEY, Setting::ENABLE_WP_DEBUG_DISPLAY_DEFAULT );
+		$this->action_base_url                  = $action_base_url;
 
 		$this->check_constants();
 		parent::__construct();
@@ -102,20 +104,20 @@ class WPDebug extends Section {
 		if ( 'yes' === $this->display_enabled ) {
 			$this->controls[] = new Control(
 				__( 'Disable <code>WP_DEBUG_DISPLAY</code>', 'development-assistant' ),
-				$this->action_query->get_url( Setting::DISABLE_DEBUG_DISPLAY_QUERY_KEY ),
+				$this->action_query->get_url( Setting::DISABLE_DEBUG_DISPLAY_QUERY_KEY, $this->action_base_url ),
 			);
 		}
 
 		if ( $this->checked_constants ) {
 			$this->controls[] = new Control(
 				__( 'Disable debug mode', 'development-assistant' ),
-				$this->action_query->get_url( Setting::TOGGLE_DEBUG_MODE_QUERY_KEY, null, 'no' ),
+				$this->action_query->get_url( Setting::TOGGLE_DEBUG_MODE_QUERY_KEY, $this->action_base_url, 'no' ),
 				__( 'Are you sure to disable debug mode?', 'development-assistant' )
 			);
 		} else {
 			$this->controls[] = new Control(
 				__( 'Enable debug mode', 'development-assistant' ),
-				$this->action_query->get_url( Setting::TOGGLE_DEBUG_MODE_QUERY_KEY ),
+				$this->action_query->get_url( Setting::TOGGLE_DEBUG_MODE_QUERY_KEY, $this->action_base_url ),
 				__( 'Are you sure to enable debug mode?', 'development-assistant' )
 			);
 		}
@@ -126,7 +128,7 @@ class WPDebug extends Section {
 		) {
 			$this->controls[] = new Control(
 				__( 'Disable direct access to <code>debug.log</code>', 'development-assistant' ),
-				$this->action_query->get_url( Setting::DISABLE_DIRECT_ACCESS_TO_LOG_QUERY_KEY ),
+				$this->action_query->get_url( Setting::DISABLE_DIRECT_ACCESS_TO_LOG_QUERY_KEY, $this->action_base_url ),
 			);
 		}
 
@@ -136,7 +138,7 @@ class WPDebug extends Section {
 		) {
 			$this->controls[] = new Control(
 				__( 'Delete log file', 'development-assistant' ),
-				$this->action_query->get_url( DebugLog::DELETE_LOG_QUERY_KEY ),
+				$this->action_query->get_url( DebugLog::DELETE_LOG_QUERY_KEY, $this->action_base_url ),
 				$this->debug_log->get_deletion_confirmation_massage()
 			);
 		}

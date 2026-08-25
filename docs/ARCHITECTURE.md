@@ -43,12 +43,15 @@ explicit key, default, registration path, reset behavior, and compatibility
 story. The plugin applies one production-safe policy on every host; it does not
 detect or expose a separate development-environment mode.
 
-### Assistant Panel
+### Assistant Menu
 
-`inc/Assistant.php` renders the admin notice panel. Sections under
-`inc/Assistant/` expose status and actions for debug configuration and the
-support user. The panel consumes the same services and options as the settings
-pages; it must not introduce a second state model.
+`inc/Assistant.php` renders a custom menu in the WordPress admin bar for
+authorized users, both in wp-admin and on the front end when the toolbar is
+visible. Sections under `inc/Assistant/` expose status and actions for debug
+configuration and the support user. The menu consumes the same services and
+options as the settings pages; it must not introduce a second state model.
+State-changing menu actions use wp-admin URLs so the existing `admin_init`
+handlers, nonce validation, and capability checks apply from either context.
 
 ### Plugins Screen
 

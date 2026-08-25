@@ -327,6 +327,14 @@ msgstr ""
 msgid "DevAssistant"
 msgstr ""
 
+#: inc/Setting.php:207
+msgid "Assistant Menu"
+msgstr ""
+
+#: inc/Setting.php:212
+msgid "Show Development Assistant in the admin bar"
+msgstr ""
+
 #: inc/Setting/Page.php:62
 msgid "Settings saved."
 msgstr ""

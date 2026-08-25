@@ -1,185 +1,201 @@
 @import url("../shared/variables.css");
 
-.da-assistant {
-	margin: 20px 20px 0 2px;
-	box-shadow: var(--da-box-shadow);
-}
-
-.da-assistant_open .da-assistant__arrow-down {
-	transform: rotate(0deg);
-}
-
-.da-assistant_open .da-assistant__arrow-down::before {
-	position: relative;
-	left: -2px;
-}
-
-.da-assistant_open .da-assistant__section {
-	display: block;
-}
-
-.da-assistant_after-screen-meta-links {
-	margin-top: 40px;
-}
-
-.da-assistant__header {
-	display: flex;
-	align-items: center;
-	width: 100%;
-	padding: 10px 8px 10px 12px;
-	background: var(--da-white);
-	border: 1px solid var(--da-border-color);
-	cursor: pointer;
-}
-
-.da-assistant__header-content {
-	display: flex;
-	flex-grow: 1;
-	align-items: center;
-}
-
-.da-assistant__icon::before {
-	color: #646970;
-}
-
-.da-assistant__title {
-	margin-left: 6px;
-	color: #000;
-	font-weight: 600;
-	font-size: 14px;
-}
-
-.da-assistant__statuses {
-	display: flex;
-	align-items: center;
-	margin-left: 12px;
-}
-
-.da-assistant__status {
-	position: relative;
-	display: flex;
-	align-items: center;
-	padding: 3px 8px;
-	color: var(--da-white);
-	font-size: 0.9em;
-	border-radius: 50px;
-	cursor: help;
-}
-
-.da-assistant__status:hover .da-assistant__status-description {
-	display: block;
-}
-
-.da-assistant__status:not(:last-child) {
-	margin-right: 6px;
-}
-
-.da-assistant__status_success {
-	background: var(--da-success);
-}
-
-.da-assistant__status_warning {
-	background: var(--da-warning);
-}
-
-.da-assistant__status_error {
-	background: var(--da-error);
-}
-
-.da-assistant__status-description {
-	position: absolute;
-	top: calc(100% + 2px);
-	left: 0;
-	display: none;
-	padding: 3px 6px;
-	color: var(--da-white);
-	white-space: nowrap;
-	background: rgb(0 0 0 / 75%);
-	border-radius: 4px;
-	cursor: text;
-}
-
-.da-assistant__arrow-down {
-	float: right;
-	width: 20px;
-	height: 20px;
-	color: #787c82;
-	transform: rotate(180deg);
-}
-
-.da-assistant__arrow-down::before {
-	content: "\f142";
-	font: normal 20px / 1 dashicons, sans-serif;
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant > .ab-item .ab-icon::before {
+	top: 2px;
+	content: "\f191";
+	font: normal 20px/1 dashicons, sans-serif;
 	speak: never;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
 
-.da-assistant__section {
-	display: none;
-	padding: 8px 12px;
-	border: 1px solid var(--da-border-color);
-	border-top: none;
+#wpadminbar > #wp-toolbar > #wp-admin-bar-root-default #wp-admin-bar-wp_dev_assist_assistant > .ab-item .ab-icon {
+	margin-right: 0;
 }
 
-.da-assistant__section_success {
-	background: var(--da-success-soft);
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant.da-assistant_success > .ab-item .ab-icon::before {
+	color: var(--da-success);
 }
 
-.da-assistant__section_warning {
-	background: var(--da-warning-soft);
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant.da-assistant_warning > .ab-item .ab-icon::before {
+	color: var(--da-warning);
 }
 
-.da-assistant__section_error {
-	background: var(--da-error-soft);
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant.da-assistant_error > .ab-item .ab-icon::before {
+	color: var(--da-error);
 }
 
-.da-assistant__section-title {
-	margin-bottom: 6px;
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant > .ab-sub-wrapper {
+	width: 420px;
+	max-height: calc(100vh - 32px);
+	overflow-y: auto;
+	background: var(--da-white);
+	box-shadow: 0 3px 8px rgb(0 0 0 / 20%);
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .ab-submenu {
+	padding: 0;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__group {
+	box-sizing: border-box;
+	border-top: 1px solid var(--da-border-color);
+	border-left: 4px solid var(--da-success);
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__group:first-child {
+	border-top: 0;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__group_warning {
+	border-left-color: var(--da-warning);
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__group_error {
+	border-left-color: var(--da-error);
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__summary > .ab-item {
+	height: auto;
+	min-height: 0;
+	padding: 11px 12px 6px;
+	color: #1d2327;
+	line-height: 1.45;
+	white-space: normal;
+	cursor: default;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__summary:hover > .ab-item,
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__summary:focus > .ab-item {
+	color: #1d2327;
+	background: transparent;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__section-heading {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	margin-bottom: 5px;
+	line-height: 1.35;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__section-title {
 	font-weight: 600;
 	font-size: 14px;
 }
 
-.da-assistant__section-title,
-.da-assistant__section-content {
-	max-width: 760px;
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__status {
+	color: #646970;
+	font-size: 12px;
+	line-height: 1.35;
+	text-align: right;
 }
 
-.da-assistant__controls {
-	display: flex;
-	align-items: center;
-	margin: 6px 0 0;
-	padding: 0;
-	list-style: none;
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__content {
+	display: block;
+	color: #50575e;
+	line-height: 1.45;
 }
 
-.da-assistant__controls li {
-	margin: 0;
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__content *,
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__section-heading * {
+	line-height: inherit;
 }
 
-.da-assistant__controls li:not(:last-child) {
-	margin-right: 10px;
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__content code,
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__action code {
+	padding: 1px 3px;
+	color: inherit;
+	font-size: inherit;
+	line-height: inherit;
+	background: rgb(0 0 0 / 6%);
 }
 
-.da-assistant__error-message {
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__error-message {
 	display: inline-block;
-	margin: 6px 0 2px;
-	padding: 2px 6px;
+	margin-top: 5px;
+	padding: 3px 5px;
 	color: var(--da-error);
 	background: var(--da-error-soft);
-	border-radius: 4px;
+	border-radius: 3px;
 }
 
-.da-assistant__error-message code {
-	background: var(--da-error-soft);
-}
-
-.da-assistant__simple-list {
-	margin: 0;
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__simple-list {
+	display: block;
+	margin: 5px 0 0;
 	padding: 0;
 	list-style: none;
 }
 
-.da-assistant__simple-list li {
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__simple-list li {
 	margin: 0;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__action > .ab-item {
+	height: auto;
+	min-height: 0;
+	padding: 3px 12px;
+	color: #2271b1;
+	line-height: 1.45;
+	white-space: normal;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__action:last-child > .ab-item {
+	padding-bottom: 10px;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__action > .ab-item:hover,
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__action > .ab-item:focus {
+	color: #135e96;
+	background: #f0f0f1;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__settings > .ab-item {
+	height: auto;
+	padding: 8px 12px;
+	color: #2271b1;
+	line-height: 1.45;
+	background: #f6f7f7;
+	border-top: 1px solid var(--da-border-color);
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__settings > .ab-item:hover,
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__settings > .ab-item:focus {
+	color: #135e96;
+	background: #f0f0f1;
+}
+
+@media screen and (width <= 782px) {
+	#wpadminbar li#wp-admin-bar-wp_dev_assist_assistant {
+		display: block;
+	}
+
+	#wpadminbar #wp-admin-bar-wp_dev_assist_assistant > .ab-item {
+		width: 48px;
+		padding: 0;
+		text-align: center;
+	}
+
+	#wpadminbar #wp-admin-bar-wp_dev_assist_assistant > .ab-item .ab-icon {
+		width: 48px;
+		margin: 0;
+	}
+
+	#wpadminbar > #wp-toolbar > #wp-admin-bar-root-default #wp-admin-bar-wp_dev_assist_assistant > .ab-item .ab-icon::before {
+		top: -2px;
+		font-size: 36px;
+		line-height: 46px;
+	}
+
+	#wpadminbar #wp-admin-bar-wp_dev_assist_assistant > .ab-sub-wrapper {
+		position: fixed;
+		top: 46px;
+		right: 0;
+		left: 0;
+		box-sizing: border-box;
+		width: 100vw;
+		max-width: none;
+		max-height: calc(100vh - 46px);
+	}
 }

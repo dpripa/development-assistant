@@ -39,4 +39,28 @@ class ActionLink {
 		</a>
 		<?php
 	}
+
+	public function get_title(): string {
+		return $this->title;
+	}
+
+	public function get_url(): string {
+		return $this->url;
+	}
+
+	public function get_confirm(): string {
+		return $this->confirm;
+	}
+
+	public function is_target_blank(): bool {
+		return $this->target_blank;
+	}
+
+	public function get_class_names(): string {
+		return $this->class_names;
+	}
+
+	public function is_disabled(): bool {
+		return $this->is_disabled;
+	}
 }
