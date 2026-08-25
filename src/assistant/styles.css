@@ -88,10 +88,27 @@
 }
 
 #wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__status {
-	color: #a7aaad;
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
+	padding: 2px 7px;
+	color: var(--da-white);
+	font-weight: normal;
 	font-size: 12px;
 	line-height: 1.35;
-	text-align: right;
+	text-align: center;
+	white-space: nowrap;
+	background: var(--da-success);
+	border-radius: 999px;
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__group_warning .da-assistant__status {
+	color: #1d2327;
+	background: var(--da-warning);
+}
+
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__group_error .da-assistant__status {
+	background: var(--da-error);
 }
 
 #wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__content {
