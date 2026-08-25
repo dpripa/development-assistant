@@ -87,6 +87,7 @@ class Assistant {
 					'meta'  => array(
 						'class'      => 'da-assistant da-assistant_' . $status_level,
 						'menu_title' => esc_attr__( 'Development Assistant', 'development-assistant' ),
+						'tabindex'   => 0,
 					),
 				)
 			);
@@ -186,7 +187,9 @@ class Assistant {
 	protected function enqueue_assets(): callable {
 		return function (): void {
 			if ( $this->is_available() && is_admin_bar_showing() ) {
-				$this->asset->enqueue_style( 'assistant' );
+				$this->asset
+					->enqueue_style( 'assistant' )
+					->enqueue_script( 'assistant' );
 			}
 		};
 	}

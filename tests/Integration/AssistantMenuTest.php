@@ -33,6 +33,7 @@ class AssistantMenuTest extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( 'ab-label', $root->title );
 		$this->assertStringNotContainsString( 'da-assistant__indicator', $root->title );
 		$this->assertStringContainsString( 'da-assistant_', $root->meta['class'] );
+		$this->assertSame( 0, $root->meta['tabindex'] );
 		$this->assertFalse( $root->href );
 		$this->assertNotNull( $summary );
 		$this->assertStringContainsString( 'WP Debug', $summary->title );
