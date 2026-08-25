@@ -1,5 +1,9 @@
 @import url("../shared/variables.css");
 
+#wpadminbar #wp-admin-bar-wp_dev_assist_assistant > .ab-item {
+	cursor: pointer;
+}
+
 #wpadminbar #wp-admin-bar-wp_dev_assist_assistant > .ab-item .ab-icon::before {
 	top: 2px;
 	content: "\f191";

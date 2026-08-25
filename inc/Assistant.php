@@ -135,7 +135,7 @@ class Assistant {
 			);
 
 			if ( $control->get_confirm() && ! $control->is_disabled() ) {
-				$meta['onclick'] = "return confirm('" . $control->get_confirm() . "')";
+				$meta['onclick'] = 'return confirm("' . $control->get_confirm() . '")';
 			}
 
 			if ( $control->is_target_blank() ) {

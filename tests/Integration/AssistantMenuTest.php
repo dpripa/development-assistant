@@ -73,6 +73,40 @@ class AssistantMenuTest extends WP_UnitTestCase {
 		$this->assertNull( $this->build_admin_bar()->get_node( 'wp_dev_assist_assistant' ) );
 	}
 
+	public function test_delete_log_action_always_requires_confirmation(): void {
+		$debug_log_path = WP_CONTENT_DIR . '/debug.log';
+		file_put_contents( $debug_log_path, 'test log' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+
+		try {
+			$delete_action = null;
+
+			foreach ( $this->build_admin_bar()->get_nodes() as $node ) {
+				if ( 'Delete log file' === wp_strip_all_tags( $node->title ) ) {
+					$delete_action = $node;
+					break;
+				}
+			}
+
+			$this->assertNotNull( $delete_action );
+			$this->assertArrayHasKey( 'onclick', $delete_action->meta );
+			$this->assertStringStartsWith( 'return confirm("', $delete_action->meta['onclick'] );
+			$this->assertStringContainsString( 'irreversible', $delete_action->meta['onclick'] );
+
+			ob_start();
+			$this->build_admin_bar()->render();
+			$rendered_admin_bar = ob_get_clean();
+
+			$this->assertStringContainsString(
+				'onclick=\'return confirm(&quot;Are you sure to delete the debug.log file? This action is irreversible.&quot;)\'',
+				$rendered_admin_bar
+			);
+		} finally {
+			if ( file_exists( $debug_log_path ) ) {
+				unlink( $debug_log_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
+			}
+		}
+	}
+
 	public function test_menu_is_hidden_from_users_without_administrator_capability(): void {
 		$subscriber_id = self::factory()->user->create( array( 'role' => 'subscriber' ) );
 		wp_set_current_user( $subscriber_id );
