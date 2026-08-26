@@ -1,7 +1,7 @@
 services:
   wordpress:
     build:
-      context: ./docker/wordpress
+      context: ./docker/wp
     image: development-assistant-wordpress:php8.2-apache-xdebug
     restart: unless-stopped
     working_dir: /app/wp
@@ -133,7 +133,7 @@ services:
 
   phpunit:
     build:
-      context: ./docker/wordpress
+      context: ./docker/wp
     image: development-assistant-wordpress:php8.2-apache-xdebug
     profiles:
       - test
