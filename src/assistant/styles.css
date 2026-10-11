@@ -96,7 +96,7 @@
 	flex-shrink: 0;
 	align-items: center;
 	padding: 2px 7px;
-	color: var(--da-white);
+	color: #1d2327;
 	font-weight: normal;
 	font-size: 12px;
 	line-height: 1.35;
@@ -112,7 +112,8 @@
 }
 
 #wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__group_error .da-assistant__status {
-	background: var(--da-error);
+	color: var(--da-white);
+	background: #b32d2e;
 }
 
 #wpadminbar #wp-admin-bar-wp_dev_assist_assistant .da-assistant__content {

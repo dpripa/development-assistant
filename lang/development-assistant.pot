@@ -98,7 +98,7 @@ msgid "Warning!"
 msgstr ""
 
 #: inc/Assistant/WPDebug.php:70
-msgid "Enabled <code>WP_DEBUG_DISPLAY</code> may cause the entire interface blocking due to the display of error messages, as well as a critical security issues. <b>It is highly recommended to disable it.</b>"
+msgid "Enabling <code>WP_DEBUG_DISPLAY</code> may block the entire interface with error messages and introduce critical security issues. <b>It is highly recommended to disable it.</b>"
 msgstr ""
 
 #: inc/Assistant/WPDebug.php:73
@@ -243,7 +243,7 @@ msgid "Enable <code>WP_DEBUG_LOG</code>"
 msgstr ""
 
 #: inc/Setting.php:113
-msgid "Enabling error display may cause the entire interface blocking due to the display of these error messages, as well as a critical security issues."
+msgid "Enabling error display may block the entire interface with error messages and introduce critical security issues."
 msgstr ""
 
 #: inc/Setting.php:119

@@ -136,7 +136,8 @@ class Assistant {
 			);
 
 			if ( $control->get_confirm() && ! $control->is_disabled() ) {
-				$meta['onclick'] = 'return confirm("' . $control->get_confirm() . '")';
+				// Preserve quotes and backslashes through WP_Admin_Bar's esc_js() handling.
+				$meta['onclick'] = 'return confirm(decodeURIComponent("' . rawurlencode( $control->get_confirm() ) . '"))';
 			}
 
 			if ( $control->is_target_blank() ) {

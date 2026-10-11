@@ -150,7 +150,7 @@ class Setting extends Page {
 		);
 
 		$args = array(
-			'description' => '<b class="da-setting__error-text">' . esc_html__( 'Warning!', 'development-assistant' ) . '</b> ' . esc_html__( 'Enabling error display may cause the entire interface blocking due to the display of these error messages, as well as a critical security issues.', 'development-assistant' ),
+			'description' => '<b class="da-setting__error-text">' . esc_html__( 'Warning!', 'development-assistant' ) . '</b> ' . esc_html__( 'Enabling error display may block the entire interface with error messages and introduce critical security issues.', 'development-assistant' ),
 		);
 
 		$this->add_setting(

@@ -59,7 +59,7 @@ class WPDebug extends Section {
 			}
 
 			if ( 'yes' === $this->display_enabled ) {
-				$this->content .= '<br><span class="da-assistant__error-message"><b>' . __( 'Warning!', 'development-assistant' ) . '</b> ' . __( 'Enabled <code>WP_DEBUG_DISPLAY</code> may cause the entire interface blocking due to the display of error messages, as well as a critical security issues. <b>It is highly recommended to disable it.</b>', 'development-assistant' ) . '</span>';
+				$this->content .= '<br><span class="da-assistant__error-message"><b>' . __( 'Warning!', 'development-assistant' ) . '</b> ' . __( 'Enabling <code>WP_DEBUG_DISPLAY</code> may block the entire interface with error messages and introduce critical security issues. <b>It is highly recommended to disable it.</b>', 'development-assistant' ) . '</span>';
 			}
 		} else {
 			$this->content .= __( 'Everything is fine, debug mode is disabled, error information isn\'t displayed or logged.', 'development-assistant' );
