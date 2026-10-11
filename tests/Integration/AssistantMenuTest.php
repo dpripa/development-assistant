@@ -98,10 +98,16 @@ class AssistantMenuTest extends WP_UnitTestCase {
 	}
 
 	private function assert_delete_log_confirmation( string $confirmation ): void {
-		$debug_log_path = WP_CONTENT_DIR . '/debug.log';
-		file_put_contents( $debug_log_path, 'test log' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		$debug_log_path    = WP_CONTENT_DIR . '/debug.log';
+		$created_test_log  = false;
+		$existing_log_file = file_exists( $debug_log_path );
 
 		try {
+			if ( ! $existing_log_file ) {
+				$created_test_log = false !== file_put_contents( $debug_log_path, 'test log' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+				$this->assertTrue( $created_test_log, 'Could not create the test debug log.' );
+			}
+
 			$delete_action = null;
 
 			foreach ( $this->build_admin_bar()->get_nodes() as $node ) {
@@ -126,7 +132,7 @@ class AssistantMenuTest extends WP_UnitTestCase {
 			preg_match_all( '/onclick=\'return confirm\(decodeURIComponent\(&quot;([A-Za-z0-9_.~%\-]*)&quot;\)\)\'/', $rendered_admin_bar, $rendered_matches );
 			$this->assertContains( $confirmation, array_map( 'rawurldecode', $rendered_matches[1] ) );
 		} finally {
-			if ( file_exists( $debug_log_path ) ) {
+			if ( $created_test_log && file_exists( $debug_log_path ) ) {
 				unlink( $debug_log_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
 			}
 		}
