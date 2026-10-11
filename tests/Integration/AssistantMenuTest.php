@@ -75,10 +75,39 @@ class AssistantMenuTest extends WP_UnitTestCase {
 	}
 
 	public function test_delete_log_action_always_requires_confirmation(): void {
-		$debug_log_path = WP_CONTENT_DIR . '/debug.log';
-		file_put_contents( $debug_log_path, 'test log' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+		$this->assert_delete_log_confirmation( 'Are you sure to delete the debug.log file? This action is irreversible.' );
+	}
+
+	public function test_delete_log_confirmation_preserves_translated_special_characters(): void {
+		$confirmation = "Видалити \"debug.log\"? It's irreversible.\nC:\\logs\\debug.log\r\n<script>alert('test')</script> &quot; % 😊";
+		$translate    = static function ( string $translation, string $text, string $domain ) use ( $confirmation ): string {
+			if ( 'development-assistant' === $domain && 'Are you sure to delete the debug.log file? This action is irreversible.' === $text ) {
+				return $confirmation;
+			}
+
+			return $translation;
+		};
+
+		add_filter( 'gettext', $translate, 10, 3 );
 
 		try {
+			$this->assert_delete_log_confirmation( $confirmation );
+		} finally {
+			remove_filter( 'gettext', $translate, 10 );
+		}
+	}
+
+	private function assert_delete_log_confirmation( string $confirmation ): void {
+		$debug_log_path    = WP_CONTENT_DIR . '/debug.log';
+		$created_test_log  = false;
+		$existing_log_file = file_exists( $debug_log_path );
+
+		try {
+			if ( ! $existing_log_file ) {
+				$created_test_log = false !== file_put_contents( $debug_log_path, 'test log' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_file_put_contents
+				$this->assertTrue( $created_test_log, 'Could not create the test debug log.' );
+			}
+
 			$delete_action = null;
 
 			foreach ( $this->build_admin_bar()->get_nodes() as $node ) {
@@ -90,19 +119,20 @@ class AssistantMenuTest extends WP_UnitTestCase {
 
 			$this->assertNotNull( $delete_action );
 			$this->assertArrayHasKey( 'onclick', $delete_action->meta );
-			$this->assertStringStartsWith( 'return confirm("', $delete_action->meta['onclick'] );
-			$this->assertStringContainsString( 'irreversible', $delete_action->meta['onclick'] );
+			$this->assertSame(
+				1,
+				preg_match( '/^return confirm\(decodeURIComponent\("([A-Za-z0-9_.~%\-]*)"\)\)$/', $delete_action->meta['onclick'], $matches )
+			);
+			$this->assertSame( $confirmation, rawurldecode( $matches[1] ) );
 
 			ob_start();
 			$this->build_admin_bar()->render();
 			$rendered_admin_bar = ob_get_clean();
 
-			$this->assertStringContainsString(
-				'onclick=\'return confirm(&quot;Are you sure to delete the debug.log file? This action is irreversible.&quot;)\'',
-				$rendered_admin_bar
-			);
+			preg_match_all( '/onclick=\'return confirm\(decodeURIComponent\(&quot;([A-Za-z0-9_.~%\-]*)&quot;\)\)\'/', $rendered_admin_bar, $rendered_matches );
+			$this->assertContains( $confirmation, array_map( 'rawurldecode', $rendered_matches[1] ) );
 		} finally {
-			if ( file_exists( $debug_log_path ) ) {
+			if ( $created_test_log && file_exists( $debug_log_path ) ) {
 				unlink( $debug_log_path ); // phpcs:ignore WordPress.WP.AlternativeFunctions.unlink_unlink
 			}
 		}
