@@ -6,6 +6,7 @@ use WPDevAssist\ActionQuery;
 use WPDevAssist\AdminNotice;
 use WPDevAssist\Asset;
 use WPDevAssist\Fs;
+use WPDevAssist\PluginsScreen\DownloadExclusions;
 use WPDevAssist\Setting\Page;
 use WPDevAssist\Setting\Control;
 use WPDevAssist\Setting\DebugLog;
@@ -44,6 +45,7 @@ class Setting extends Page {
 		// Legacy Assistant Panel option, kept only so reset removes it.
 		KEY . '_expanded_on_wp_dashboard',
 		self::ACTIVE_PLUGINS_FIRST_KEY,
+		DownloadExclusions::OPTION,
 		self::RESET_KEY,
 		// Legacy development-environment and MailHog options, kept only so reset removes them.
 		KEY . '_force_dev_env',
@@ -226,6 +228,17 @@ class Setting extends Page {
 			esc_html__( 'Show active plugins first', 'development-assistant' ),
 			array( $this->control, 'render_checkbox' ),
 			static::ACTIVE_PLUGINS_FIRST_DEFAULT
+		);
+		$this->add_setting(
+			$section_key,
+			DownloadExclusions::OPTION,
+			esc_html__( 'Exclude from plugin downloads', 'development-assistant' ),
+			array( $this->control, 'render_textarea' ),
+			DownloadExclusions::DEFAULT_VALUE,
+			array(
+				'description' => __( 'One literal file or folder name or plugin-relative path per line. Names such as node_modules or .DS_Store match at any depth; paths such as assets/source match from the plugin root. A trailing slash matches folders only. Matching is case-sensitive; wildcards are not supported. Leave empty to include all files. The selected plugin main PHP file cannot be excluded.', 'development-assistant' ),
+			),
+			array( DownloadExclusions::class, 'sanitize' )
 		);
 	}
 

@@ -612,3 +612,19 @@ msgstr ""
 #: inc/WPDebug.php:314
 msgid "Development Assistant cannot safely restore an invalid saved debug configuration."
 msgstr ""
+
+#: inc/Setting.php:235 inc/Setting/Control.php:64
+msgid "Exclude from plugin downloads"
+msgstr ""
+
+#: inc/Setting.php:239
+msgid "One literal file or folder name or plugin-relative path per line. Names such as node_modules or .DS_Store match at any depth; paths such as assets/source match from the plugin root. A trailing slash matches folders only. Matching is case-sensitive; wildcards are not supported. Leave empty to include all files. The selected plugin main PHP file cannot be excluded."
+msgstr ""
+
+#: inc/PluginsScreen/DownloadExclusions.php:27
+msgid "Enter literal file or folder names or plugin-relative paths, one per line. Absolute paths, dot path segments, and control characters are not allowed. The previous exclusion list was kept."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:236
+msgid "The exclusion list would omit the selected plugin main PHP file. Update the Plugins Screen settings and try again."
+msgstr ""

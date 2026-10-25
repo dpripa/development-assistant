@@ -29,6 +29,33 @@ by hand.
 - **Restore the original state:** Reset Development Assistant data and restore
   the debug configuration and temporary plugin state managed by the plugin.
 
+## Plugin Download Exclusions
+
+In Development Assistant settings, **Plugins Screen → Exclude from plugin
+downloads** controls which files and folders are omitted from installed-plugin
+ZIP downloads. Enter one literal name or plugin-relative path per line:
+
+```text
+node_modules
+.DS_Store
+assets/source/
+config/local.json
+```
+
+`node_modules` is the initial default. Bare names match complete names at any
+depth; paths containing a slash match from the plugin root. A trailing slash
+matches folders only, including their contents. Matching is case-sensitive and
+supports literal entries, without wildcards or regular expressions. Blank lines
+and duplicates are ignored, and backslashes are normalized to forward slashes.
+Absolute paths and `.` or `..` path segments are rejected; the previous list is
+kept if the input is invalid.
+
+The saved list applies to all plugin downloads. Remove entries or save an empty
+list to include everything. Installed files are unchanged. If a rule would omit
+the selected plugin's main PHP file, the download fails with an explanatory
+notice. Runtime dependencies and compiled assets are included unless you exclude
+them explicitly.
+
 ## Designed for Safer Troubleshooting
 
 Development Assistant treats changes to `wp-config.php` and `.htaccess` as

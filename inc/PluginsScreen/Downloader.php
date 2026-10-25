@@ -1,6 +1,7 @@
 <?php
 namespace WPDevAssist\PluginsScreen;
 
+use RecursiveCallbackFilterIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Throwable;
@@ -167,6 +168,8 @@ class Downloader {
 				'path'           => $plugin_path,
 				'plugins_root'   => $plugins_root,
 				'is_single_file' => true,
+				'main_file'      => basename( $plugin_path ),
+				'requested_file' => basename( $plugin_file ),
 			);
 		}
 
@@ -187,6 +190,8 @@ class Downloader {
 			'plugins_root'   => $plugins_root,
 			'archive_root'   => basename( wp_normalize_path( $plugin_dirname ) ),
 			'is_single_file' => false,
+			'main_file'      => wp_normalize_path( substr( $plugin_path, strlen( $plugin_dir ) + 1 ) ),
+			'requested_file' => wp_normalize_path( substr( $plugin_file, strlen( $plugin_dirname ) + 1 ) ),
 		);
 	}
 
@@ -225,6 +230,12 @@ class Downloader {
 	 * @param array<string, string|bool> $source
 	 */
 	protected function add_plugin_files( ZipArchive $zip, array $source ): ?WP_Error {
+		$exclusions = new DownloadExclusions();
+
+		if ( $exclusions->matches( $source['main_file'] ) || $exclusions->matches( $source['requested_file'] ) ) {
+			return new WP_Error( 'plugin_main_file_excluded', __( 'The exclusion list would omit the selected plugin main PHP file. Update the Plugins Screen settings and try again.', 'development-assistant' ) );
+		}
+
 		if ( true === $source['is_single_file'] ) {
 			if ( ! $zip->addFile( $source['path'], basename( $source['path'] ) ) ) {
 				return new WP_Error( 'archive_add_failed', __( 'Could not add the selected plugin file to the archive.', 'development-assistant' ) );
@@ -235,7 +246,14 @@ class Downloader {
 
 		$plugin_dir = $source['path'];
 		$files      = new RecursiveIteratorIterator(
-			new RecursiveDirectoryIterator( $plugin_dir, RecursiveDirectoryIterator::SKIP_DOTS ),
+			new RecursiveCallbackFilterIterator(
+				new RecursiveDirectoryIterator( $plugin_dir, RecursiveDirectoryIterator::SKIP_DOTS ),
+				static function ( $file ) use ( $plugin_dir, $exclusions ): bool {
+					$relative_path = wp_normalize_path( substr( $file->getPathname(), strlen( $plugin_dir ) + 1 ) );
+
+					return ! $exclusions->matches( $relative_path, $file->isDir() );
+				}
+			),
 			RecursiveIteratorIterator::LEAVES_ONLY
 		);
 
@@ -257,7 +275,11 @@ class Downloader {
 			}
 
 			$relative_path = wp_normalize_path( substr( $file_path, strlen( $plugin_dir ) + 1 ) );
-			$archive_path  = $source['archive_root'] . '/' . $relative_path;
+			if ( $exclusions->matches( $relative_path ) ) {
+				continue;
+			}
+
+			$archive_path = $source['archive_root'] . '/' . $relative_path;
 
 			if ( ! $zip->addFile( $file_path, $archive_path ) ) {
 				return new WP_Error( 'archive_add_failed', __( 'Could not add a selected plugin file to the archive.', 'development-assistant' ) );

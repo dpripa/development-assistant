@@ -51,6 +51,22 @@ class Control {
 		<?php
 	}
 
+	public function render_textarea( array $args ): void {
+		$this->validate_required_args( static::TEXT_INPUT_REQUIRED_ARGS, $args );
+		$value = get_option( $args['name'], $args['default'] );
+		?>
+		<textarea
+			id="<?php echo esc_attr( $args['name'] ); ?>"
+			name="<?php echo esc_attr( $args['name'] ); ?>"
+			class="large-text code"
+			rows="6"
+			aria-label="<?php echo esc_attr__( 'Exclude from plugin downloads', 'development-assistant' ); ?>"
+			aria-describedby="<?php echo esc_attr( $args['name'] . '_description' ); ?>"
+		><?php echo esc_textarea( $value ); ?></textarea>
+		<p class="description" id="<?php echo esc_attr( $args['name'] . '_description' ); ?>"><?php echo wp_kses_post( $args['description'] ?? '' ); ?></p>
+		<?php
+	}
+
 	/**
 	 * @throws Exception
 	 */
