@@ -154,6 +154,73 @@ class PluginDownloadExclusionsTest extends WP_UnitTestCase {
 		}
 	}
 
+	public function test_expanded_defaults_exclude_development_junk_and_preserve_saved_lists(): void {
+		$junk_files = array(
+			'node_modules/index.js',
+			'.git/config',
+			'.svn/entries',
+			'.hg/store/data',
+			'.idea/workspace.xml',
+			'.vscode/settings.json',
+			'.DS_Store',
+			'Thumbs.db',
+			'desktop.ini',
+			'__MACOSX/metadata',
+			'.phpunit.cache/test-results',
+			'.phpunit.result.cache',
+			'.eslintcache',
+			'.stylelintcache',
+			'.sass-cache/cache',
+			'npm-debug.log',
+			'yarn-debug.log',
+			'yarn-error.log',
+			'.pnpm-debug.log',
+		);
+		$junk_files = array_merge(
+			$junk_files,
+			array_map(
+				static function ( string $file ): string {
+					return 'nested/' . $file;
+				},
+				$junk_files
+			)
+		);
+		$keep_files = array(
+			'main.php',
+			'vendor/autoload.php',
+			'dist/plugin.js',
+			'build/plugin.js',
+			'assets/bundle.js',
+			'cache/runtime.php',
+			'logs/runtime.log',
+			'node_modules-extra/index.js',
+			'Thumbs.db.backup',
+		);
+		$source     = $this->create_plugin( 'defaults', array_merge( $junk_files, $keep_files ) );
+		$expected   = array_map(
+			static function ( string $file ): string {
+				return 'defaults/' . $file;
+			},
+			$keep_files
+		);
+		sort( $expected );
+		$this->assertSame( $expected, $this->archive( $source ) );
+		$this->assertTrue( ( new DownloadExclusions() )->matches( '.git' ) );
+		$this->assertFalse( ( new DownloadExclusions() )->matches( '.idea' ) );
+
+		update_option( DownloadExclusions::OPTION, 'node_modules' );
+		$this->assertContains( 'defaults/.git/config', $this->archive( $source ) );
+		$this->assertNotContains( 'defaults/node_modules/index.js', $this->archive( $source ) );
+		$this->assertSame( 'node_modules', get_option( DownloadExclusions::OPTION ) );
+		update_option( DownloadExclusions::OPTION, '.DS_Store' );
+		$this->assertContains( 'defaults/node_modules/index.js', $this->archive( $source ) );
+		$this->assertNotContains( 'defaults/.DS_Store', $this->archive( $source ) );
+		$this->assertSame( '.DS_Store', get_option( DownloadExclusions::OPTION ) );
+		update_option( DownloadExclusions::OPTION, '' );
+		$this->assertCount( count( $junk_files ) + count( $keep_files ), $this->archive( $source ) );
+		$this->assertSame( '', get_option( DownloadExclusions::OPTION ) );
+	}
+
 	public function test_excluded_tree_is_not_traversed_and_other_invalid_files_still_fail(): void {
 		$source = $this->create_plugin( 'pruning', array( 'main.php', 'node_modules/keep.js' ) );
 		symlink( $this->fixture_root . '/missing', $source['path'] . '/node_modules/broken' ); // phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.system_calls_symlink

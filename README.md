@@ -42,9 +42,37 @@ assets/source/
 config/local.json
 ```
 
-`node_modules` is the initial default. Bare names match complete names at any
-depth; paths containing a slash match from the plugin root. A trailing slash
-matches folders only, including their contents. Matching is case-sensitive and
+The initial default list is:
+
+```text
+node_modules
+.git
+.svn/
+.hg/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+__MACOSX/
+.phpunit.cache/
+.phpunit.result.cache
+.eslintcache
+.stylelintcache
+.sass-cache/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+.pnpm-debug.log
+```
+
+These entries cover development dependencies, version-control metadata, editor
+settings, operating-system metadata, and development-tool caches and logs.
+Existing saved lists, including an empty list or the previous `node_modules`
+list, are preserved; the expanded default applies when no list has been saved.
+
+Bare names match complete names at any depth; paths containing a slash match
+from the plugin root. A trailing slash matches folders only, including their contents. Matching is case-sensitive and
 supports literal entries, without wildcards or regular expressions. Blank lines
 and duplicates are ignored, and backslashes are normalized to forward slashes.
 Absolute paths and `.` or `..` path segments are rejected; the previous list is

@@ -5,7 +5,25 @@ defined( 'ABSPATH' ) || exit;
 
 class DownloadExclusions {
 	public const OPTION        = 'wp_dev_assist_download_exclusions';
-	public const DEFAULT_VALUE = 'node_modules';
+	public const DEFAULT_VALUE = "node_modules\n"
+		. ".git\n"
+		. ".svn/\n"
+		. ".hg/\n"
+		. ".idea/\n"
+		. ".vscode/\n"
+		. ".DS_Store\n"
+		. "Thumbs.db\n"
+		. "desktop.ini\n"
+		. "__MACOSX/\n"
+		. ".phpunit.cache/\n"
+		. ".phpunit.result.cache\n"
+		. ".eslintcache\n"
+		. ".stylelintcache\n"
+		. ".sass-cache/\n"
+		. "npm-debug.log\n"
+		. "yarn-debug.log\n"
+		. "yarn-error.log\n"
+		. '.pnpm-debug.log';
 
 	protected array $entries;
 
