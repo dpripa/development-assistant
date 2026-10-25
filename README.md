@@ -114,6 +114,17 @@ Plugin** in WordPress and upload the ZIP file.
 After activation, open the Development Assistant settings in the WordPress admin
 area and enable only the tools needed for the current troubleshooting session.
 
+With JavaScript enabled, **Save Changes** is rendered disabled from the start
+and becomes available only when the form differs from its initial values.
+Reverting all changes disables it again. The button
+also stays disabled while submitting to prevent duplicate requests. Returning
+with the browser's Back button re-evaluates whether the form has changes.
+WordPress displays settings validation errors on
+the returned page. If the browser reports that it is offline, the form displays
+a connection error and remains available to retry. Other navigation failures
+use the browser's error page; return with Back to retry. Saving also works
+without JavaScript, with the browser's standard submission behavior.
+
 ## Help and Feedback
 
 - Use the [WordPress.org support forum](https://wordpress.org/support/plugin/development-assistant/)

@@ -45,6 +45,7 @@ abstract class Page extends BasePage {
 				<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
 				<?php
 				$this->render_tabs();
+				settings_errors();
 				$this->render_content();
 				?>
 			</div>
@@ -96,12 +97,27 @@ abstract class Page extends BasePage {
 					''
 			);
 		?>
-		<form method="post" action="<?php echo esc_url( get_admin_url( null, 'options.php' ) ); ?>">
+		<form class="da-setting-form" method="post" action="<?php echo esc_url( get_admin_url( null, 'options.php' ) ); ?>">
+			<div class="notice notice-error da-setting-form__error" role="alert" hidden>
+				<p><?php esc_html_e( 'Settings could not be submitted. Check your connection and try again.', 'development-assistant' ); ?></p>
+			</div>
 			<?php
 			settings_fields( $option_group );
 			do_settings_sections( $option_group );
-			submit_button();
+			submit_button(
+				'',
+				'primary hide-if-no-js',
+				'submit',
+				true,
+				array(
+					'disabled'               => 'disabled',
+					'data-da-setting-submit' => 'true',
+				)
+			);
 			?>
+			<noscript>
+				<?php submit_button( '', 'primary', 'submit', true, array( 'id' => 'da-setting-submit-no-js' ) ); ?>
+			</noscript>
 		</form>
 		<?php
 	}
@@ -124,6 +140,7 @@ abstract class Page extends BasePage {
 			}
 
 			$this->asset->enqueue_style( 'setting' );
+			$this->asset->enqueue_script( 'setting' );
 		};
 	}
 

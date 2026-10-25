@@ -42,7 +42,7 @@ export default defineConfig( ( { mode } ) => {
 					assistant: resolve( import.meta.dirname, 'src/assistant/index.ts' ),
 					'debug-log': resolve( import.meta.dirname, 'src/debugLog/styles.css' ),
 					'plugins-screen': resolve( import.meta.dirname, 'src/pluginsScreen/index.ts' ),
-					setting: resolve( import.meta.dirname, 'src/setting/styles.css' ),
+					setting: resolve( import.meta.dirname, 'src/setting/index.ts' ),
 					'support-user': resolve( import.meta.dirname, 'src/supportUser/index.ts' ),
 				},
 				output: {
