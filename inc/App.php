@@ -18,6 +18,7 @@ class App {
 	protected PluginsScreen $plugins_screen;
 	protected Setting $setting;
 	protected WPDebug $wp_debug;
+	protected MailHealth\Scheduler $mail_health_scheduler;
 
 	public static function get_instance(): self {
 		if ( ! static::$instance instanceof self ) {
@@ -36,6 +37,12 @@ class App {
 		$this->fs             = new Fs();
 		$this->asset          = new Asset( KEY, $this->fs );
 		$this->file_mutations = new ExternalFileMutationManager();
+
+		$mail_store                  = new MailHealth\Store();
+		$mail_monitor                = new MailHealth\Monitor( $mail_store );
+		$mail_probe                  = new MailHealth\Probe( $mail_store, $mail_monitor );
+		$this->mail_health_scheduler = new MailHealth\Scheduler( $mail_store, $mail_probe );
+		new Setting\MailHealth( $mail_store, $this->mail_health_scheduler, $this->asset );
 
 		$this->htaccess       = new Htaccess( $this->file_mutations );
 		$this->wp_debug       = new WPDebug( $this->admin_notice, $this->file_mutations, $this->htaccess, new DebugConfigEditor() );
@@ -111,7 +118,8 @@ class App {
 	}
 
 	protected function deactivate(): callable {
-		return function (): void {
+		return function ( bool $network_wide = false ): void {
+			$this->mail_health_scheduler->deactivate( 'yes' === get_option( Setting::RESET_KEY, Setting::RESET_DEFAULT ), $network_wide );
 			$error = $this->wp_debug->remove_htaccess_directives();
 
 			if ( $error instanceof \WP_Error ) {

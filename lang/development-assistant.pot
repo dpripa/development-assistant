@@ -1,461 +1,207 @@
-#, fuzzy
+# Copyright (C) 2026 Dmitry Pripa
+# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: development-assistant\n"
-"POT-Creation-Date: 2025-01-20 04:30+0200\n"
-"PO-Revision-Date: 2021-04-25 23:55+0300\n"
-"Last-Translator: Dmitry Pripa\n"
-"Language-Team: Dmitry Pripa\n"
-"Language: en\n"
+"Project-Id-Version: Development Assistant 1.2.12\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/development-assistant\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.5\n"
-"X-Poedit-Basepath: ..\n"
-"X-Poedit-SourceCharset: UTF-8\n"
-"X-Poedit-KeywordsList: __;_n;_x\n"
-"X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: vendor\n"
-"X-Poedit-SearchPathExcluded-1: lang\n"
-"X-Poedit-SearchPathExcluded-2: src\n"
-"X-Poedit-SearchPathExcluded-3: assets\n"
-"X-Poedit-SearchPathExcluded-4: node_modules\n"
-"X-Poedit-SearchPathExcluded-5: release\n"
-"X-Poedit-SearchPathExcluded-6: test\n"
-"X-Poedit-SearchPathExcluded-7: lib\n"
-"X-Poedit-SearchPathExcluded-8: tmp\n"
+"POT-Creation-Date: 2026-10-25T21:57:03+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: development-assistant\n"
 
-#: inc/Assistant/SupportUser.php:21 inc/Setting/SupportUser.php:57
-msgid "Support User"
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:27
-msgid "You are logged in as a support user."
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:29
-msgid "The support user exists."
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:37
-msgid "Support user not created. You don't share administrative access with third-parties."
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:45
-msgid "Continue existence"
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:52
-msgid "Recreate user"
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:57
-msgid "Delete user"
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:64
-msgid "Create user in one click"
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:79
-msgid "Will lose access soon"
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:82 inc/Assistant/WPDebug.php:167
-#: inc/Assistant/WPDebug.php:183
-msgid "Enabled"
-msgstr ""
-
-#: inc/Assistant/SupportUser.php:90 inc/Assistant/WPDebug.php:164
-#: inc/Setting/Control.php:122
-msgid "Disabled"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:36
-msgid "WP Debug"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:60
-#, php-format
-msgid "The following constants are enabled: %s."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:61
-msgid "Don't leave it enabled unless you are debugging to avoid the performance issues."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:64
-msgid "Also, for security reasons, it's highly recommended to disable direct access to the <code>debug.log</code> file."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:66
-msgid "Direct access to the <code>debug.log</code> file is disabled."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:70
-msgid "Warning!"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:70
-msgid "Enabling <code>WP_DEBUG_DISPLAY</code> may block the entire interface with error messages and introduce critical security issues. <b>It is highly recommended to disable it.</b>"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:73
-msgid "Everything is fine, debug mode is disabled, error information isn't displayed or logged."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:77
-msgid "The <code>debug.log</code> file still exists, but it is protected from direct access, so don't worry."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:80
-msgid "But <code>debug.log</code> file still exists, it's important to delete it or disable direct access."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:82
-msgid "But <code>debug.log</code> file still exists, it's important to delete it."
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:109 inc/Setting.php:156
-msgid "Go to <code>debug.log</code>"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:116
-msgid "Disable <code>WP_DEBUG_DISPLAY</code>"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:126
-msgid "Disable debug mode"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:128
-msgid "Are you sure to disable debug mode?"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:132
-msgid "Enable debug mode"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:134
-msgid "Are you sure to enable debug mode?"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:143
-msgid "Disable direct access to <code>debug.log</code>"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:153
-msgid "Delete log file"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:176
-msgid "Enabled with direct access to logs"
-msgstr ""
-
-#: inc/Assistant/WPDebug.php:188
-msgid "Disabled, but logs exists"
-msgstr ""
-
-#: inc/PluginsScreen.php:40
+#. Plugin Name of the plugin
+#: development-assistant.php
+#: inc/Assistant.php:80
+#: inc/Assistant.php:89
+#: inc/PluginsScreen.php:60
+#: inc/Setting.php:98
 msgid "Development Assistant"
 msgstr ""
 
-#: inc/PluginsScreen.php:91
-msgid "Activate temporarily deactivated plugins"
+#. Plugin URI of the plugin
+#: development-assistant.php
+msgid "https://github.com/dpripa/development-assistant"
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:120
-#, php-format
-msgid "Could not reactivate the following plugin(s): %s. They remain tracked; restore missing plugin files or resolve activation errors, then try again."
+#. Description of the plugin
+#: development-assistant.php
+msgid "Toolkit for debugging and customer support."
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:149
-msgid "Plugin temporarily deactivated."
+#. Author of the plugin
+#: development-assistant.php
+msgid "Dmitry Pripa"
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:177
-msgid "Plugin(s) activated."
+#. Author URI of the plugin
+#: development-assistant.php
+msgid "https://github.com/dpripa"
 msgstr ""
 
-#: inc/PluginsScreen/ActivationManager.php:249
-msgid "Temporarily deactivate"
-msgstr ""
-
-#: inc/PluginsScreen/ActivationManager.php:269
-msgid "Plugin(s) temporarily deactivated."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:210
-msgid "Could not create a temporary plugin archive."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:69
-msgid "Could not create the plugin archive."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:88 inc/PluginsScreen/Downloader.php:96
-msgid "Could not finish the plugin archive."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:104 inc/PluginsScreen/Downloader.php:115
-msgid "Could not read the plugin archive."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:122
-msgid "Could not create the plugin archive from the selected files."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:144
-msgid "The requested plugin is not installed."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:157 inc/PluginsScreen/Downloader.php:179
-msgid "The requested plugin files are missing, unreadable, or outside the plugins directory."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:228
-msgid "Could not add the selected plugin file to the archive."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:254
-msgid "A plugin file is missing, unreadable, or outside the selected plugin directory."
-msgstr ""
-
-#: inc/PluginsScreen/Downloader.php:260
-msgid "Could not add a selected plugin file to the archive."
-msgstr ""
-
-#: inc/Setting.php:59
-msgid "Development Assistant Settings"
-msgstr ""
-
-#: inc/Setting.php:74
+#: inc/Assistant.php:103
+#: inc/PluginsScreen.php:47
+#: inc/Setting.php:113
 msgid "Settings"
 msgstr ""
 
-#: inc/Setting.php:98
-msgid "Enable <code>WP_DEBUG</code>"
+#: inc/Assistant/SupportUser.php:27
+#: inc/Setting/SupportUser.php:75
+msgid "Support User"
 msgstr ""
 
-#: inc/Setting.php:105
-msgid "Enable <code>WP_DEBUG_LOG</code>"
+#: inc/Assistant/SupportUser.php:33
+msgid "You are logged in as a support user."
 msgstr ""
 
-#: inc/Setting.php:113
-msgid "Enabling error display may block the entire interface with error messages and introduce critical security issues."
+#: inc/Assistant/SupportUser.php:35
+msgid "The support user exists."
 msgstr ""
 
-#: inc/Setting.php:119
-msgid "Enable <code>WP_DEBUG_DISPLAY</code>"
+#: inc/Assistant/SupportUser.php:43
+msgid "Support user not created. You don't share administrative access with third-parties."
 msgstr ""
 
-#: inc/Setting.php:127
-#, php-format
-msgid "Public access via %s to the <code>debug.log</code> file will be disabled."
+#: inc/Assistant/SupportUser.php:51
+#: inc/Setting/SupportUser.php:197
+msgid "Continue existence"
 msgstr ""
 
-#: inc/Setting.php:134
-msgid "<code>.htaccess</code> file is required (only supported on Apache HTTP Server)."
+#: inc/Assistant/SupportUser.php:58
+#: inc/Setting/SupportUser.php:204
+msgid "Recreate user"
 msgstr ""
 
-#: inc/Setting.php:140
-msgid "Disable direct access"
+#: inc/Assistant/SupportUser.php:63
+#: inc/Setting/SupportUser.php:213
+msgid "Delete user"
 msgstr ""
 
-#: inc/Setting.php:151
-msgid "These options allow you to safely control the debug constants without the need to manually edit the <code>wp-config.php</code>."
+#: inc/Assistant/SupportUser.php:70
+#: inc/Setting/SupportUser.php:305
+msgid "Create user in one click"
 msgstr ""
 
-#: inc/Setting.php:291
-msgid "Debug mode enabled."
+#: inc/Assistant/SupportUser.php:85
+msgid "Will lose access soon"
 msgstr ""
 
-#: inc/Setting.php:293
-msgid "Debug mode disabled."
+#: inc/Assistant/SupportUser.php:88
+#: inc/Assistant/WPDebug.php:158
+msgid "Enabled"
 msgstr ""
 
-#: inc/Setting.php:305
-msgid "Direct access to the <code>debug.log</code> file disabled."
+#: inc/Assistant/SupportUser.php:92
+#: inc/Assistant/WPDebug.php:166
+#: inc/Setting/Control.php:138
+msgid "Disabled"
 msgstr ""
 
-#: inc/Setting.php:310
-msgid "<code>WP_DEBUG_DISPLAY</code> disabled."
+#: inc/Assistant/WPDebug.php:39
+#: inc/Setting.php:132
+msgid "WP Debug"
 msgstr ""
 
-#: inc/Setting.php:316
-msgid "<code>WP_DEBUG_LOG</code> enabled."
+#: inc/Assistant/WPDebug.php:52
+msgid "The following constants are enabled: %s."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:40
-msgid "debug.log"
+#: inc/Assistant/WPDebug.php:53
+msgid "Don't leave it enabled unless you are debugging to avoid the performance issues."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:175
-msgid "Are you sure to delete the debug.log file? This action is irreversible."
+#: inc/Assistant/WPDebug.php:56
+msgid "Also, for security reasons, it's highly recommended to disable direct access to the <code>debug.log</code> file."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:188
-msgid "Log file deleted."
+#: inc/Assistant/WPDebug.php:58
+msgid "Direct access to the <code>debug.log</code> file is disabled."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:197 inc/Setting/DebugLog.php:206
-msgid "The debug log could not be downloaded because it is missing or unreadable."
+#: inc/Assistant/WPDebug.php:62
+#: inc/Setting.php:155
+msgid "Warning!"
 msgstr ""
 
-#: inc/Setting/DebugLog.php:265
-msgid "You are not allowed to delete the debug log."
+#: inc/Assistant/WPDebug.php:62
+msgid "Enabling <code>WP_DEBUG_DISPLAY</code> may block the entire interface with error messages and introduce critical security issues. <b>It is highly recommended to disable it.</b>"
 msgstr ""
 
-#: inc/Setting/DebugLog.php:272
-msgid "The debug log could not be deleted because it no longer exists."
+#: inc/Assistant/WPDebug.php:65
+msgid "Everything is fine, debug mode is disabled, error information isn't displayed or logged."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:286
-msgid "The debug log could not be deleted. Check filesystem permissions and try again."
+#: inc/Assistant/WPDebug.php:69
+msgid "The <code>debug.log</code> file still exists, but it is protected from direct access, so don't worry."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:317
-msgid "Logging is disabled."
+#: inc/Assistant/WPDebug.php:72
+msgid "But <code>debug.log</code> file still exists, it's important to delete it or disable direct access."
 msgstr ""
 
-#: inc/Setting/DebugLog.php:319
-msgid "Enable"
+#: inc/Assistant/WPDebug.php:74
+msgid "But <code>debug.log</code> file still exists, it's important to delete it."
 msgstr ""
 
-#: inc/Setting/Page.php:23
-msgid "DevAssistant"
+#: inc/Assistant/WPDebug.php:99
+#: inc/Setting.php:198
+msgid "Go to <code>debug.log</code>"
 msgstr ""
 
-#: inc/Setting.php:207
-msgid "Assistant Menu"
+#: inc/Assistant/WPDebug.php:106
+msgid "Disable <code>WP_DEBUG_DISPLAY</code>"
 msgstr ""
 
-#: inc/Setting.php:212
-msgid "Show Development Assistant in the admin bar"
+#: inc/Assistant/WPDebug.php:113
+msgid "Disable debug mode"
 msgstr ""
 
-#: inc/Setting/Page.php:62
-msgid "Settings saved."
+#: inc/Assistant/WPDebug.php:115
+msgid "Are you sure to disable debug mode?"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:81
-msgid "This section allows you to quickly create a user with administrator role that can be used by the support team to access the website for debugging purposes."
+#: inc/Assistant/WPDebug.php:119
+msgid "Enable debug mode"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:89
-msgid "Enable support user"
+#: inc/Assistant/WPDebug.php:121
+msgid "Are you sure to enable debug mode?"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:96
-msgid "Delete user after days"
+#: inc/Assistant/WPDebug.php:130
+msgid "Disable direct access to <code>debug.log</code>"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:103
-msgid "Set to 0 to disable automatic deletion."
+#: inc/Assistant/WPDebug.php:140
+msgid "Delete log file"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:115
-msgid "User Credentials"
+#: inc/Assistant/WPDebug.php:151
+msgid "Enabled with direct access to logs"
 msgstr ""
 
-#: inc/Setting/SupportUser.php:290
-msgid "Are you sure to recreate the support user? This will cause loss of access for those providing support, you will need to reshare this to keep their access."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:294
-msgid "Are you sure to delete the support user? This will cause loss of access for those providing support."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:343
-msgid "Support user created."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:357
-msgid "Support user deleted."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:367
-msgid "Support user does not exist. Stale stored credentials were removed; create a new support user."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:377
-#, php-format
-msgid "Support user could not be recreated: %s The existing support user remains active."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:390
-msgid "Support user could not be recreated because the existing account could not be deleted. The replacement account was removed; verify the existing account and try again."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:394
-#, php-format
-msgid "Support user could not be recreated, and the replacement account \"%s\" could not be removed. Delete that account manually before trying again."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:405
-msgid "Support user recreated."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:416
-msgid "Invalid email. Please recreate the user and try sharing again."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:423 inc/Setting/SupportUser.php:478
-msgid "An error occurred while trying to send the email."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:433
-msgid "Support user does not exist. Recreate the user before sharing credentials."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:455
-#, php-format
-msgid "Support access to %s"
-msgstr ""
-
-#: inc/Setting/SupportUser.php:444
-#, php-format
-msgid "Credentials were not sent because the support user account email could not be updated: %s"
-msgstr ""
-
-#: inc/Setting/SupportUser.php:472
-#, php-format
-msgid "Credentials could not be sent, and the support user account email could not be restored: %s"
-msgstr ""
-
-#: inc/Setting/SupportUser.php:489
-#, php-format
-msgid "Credentials successfully shared with %s."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:620
-msgid "Support user existence extended."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:635
-msgid "Support user does not exist. Stale stored credentials were removed."
-msgstr ""
-
-#: inc/Setting/SupportUser.php:642
-msgid "Support user could not be deleted. The account and stored credentials were preserved; verify the account and try again."
+#: inc/Assistant/WPDebug.php:163
+msgid "Disabled, but logs exists"
 msgstr ""
 
 #: inc/DebugConfigEditor.php:17
 msgid "Development Assistant refused to manage an unsupported configuration constant."
 msgstr ""
 
-#: inc/DebugConfigEditor.php:23 inc/DebugConfigEditor.php:350
+#: inc/DebugConfigEditor.php:23
+#: inc/DebugConfigEditor.php:350
 msgid "The wp-config.php file contains invalid PHP syntax. Development Assistant made no changes."
 msgstr ""
 
 #: inc/DebugConfigEditor.php:29
-#, php-format
 msgid "Multiple definitions of %s were found. Development Assistant made no changes."
 msgstr ""
 
 #: inc/DebugConfigEditor.php:57
-#, php-format
 msgid "%s uses an unsupported dynamic or non-boolean expression. Development Assistant made no changes."
 msgstr ""
 
@@ -524,8 +270,16 @@ msgstr ""
 msgid "WordPress configuration forbids file modifications. The debug log was not deleted."
 msgstr ""
 
+#: inc/ExternalFileMutationManager.php:271
+msgid "The debug log could not be deleted because it no longer exists."
+msgstr ""
+
 #: inc/ExternalFileMutationManager.php:275
 msgid "The debug log could not be deleted because it is not a readable regular file."
+msgstr ""
+
+#: inc/ExternalFileMutationManager.php:279
+msgid "The debug log could not be deleted. Check filesystem permissions and try again."
 msgstr ""
 
 #: inc/ExternalFileMutationManager.php:292
@@ -553,43 +307,43 @@ msgstr ""
 msgid "Development Assistant recovery protection files are invalid. No configuration changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:401
+#: inc/ExternalFileMutationManager.php:409
 msgid "The protected Development Assistant baseline backup is invalid. No configuration changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:410
+#: inc/ExternalFileMutationManager.php:418
 msgid "The protected Development Assistant baseline backup is corrupted. No configuration changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:438
+#: inc/ExternalFileMutationManager.php:446
 msgid "Development Assistant could not verify the recovery backup. No configuration changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:454
+#: inc/ExternalFileMutationManager.php:462
 msgid "Development Assistant could not write a required protected file. No configuration changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:469
+#: inc/ExternalFileMutationManager.php:477
 msgid "Development Assistant could not complete a protected file write. No configuration changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:484
+#: inc/ExternalFileMutationManager.php:492
 msgid "Development Assistant could not safely finish a protected file write. No configuration changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:503
+#: inc/ExternalFileMutationManager.php:511
 msgid "Development Assistant could not create a temporary configuration file. No changes were made."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:520
+#: inc/ExternalFileMutationManager.php:528
 msgid "Development Assistant could not preserve the configuration file owner. The original file was left unchanged."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:527
+#: inc/ExternalFileMutationManager.php:535
 msgid "Development Assistant could not preserve the configuration file group. The original file was left unchanged."
 msgstr ""
 
-#: inc/ExternalFileMutationManager.php:534
+#: inc/ExternalFileMutationManager.php:542
 msgid "Development Assistant could not atomically replace the configuration file. The original file was left unchanged."
 msgstr ""
 
@@ -605,15 +359,159 @@ msgstr ""
 msgid "The Development Assistant .htaccess marker block is malformed. No changes were made."
 msgstr ""
 
-#: inc/WPDebug.php:44
-msgid "Development Assistant refused an invalid debug setting."
+#: inc/MailHealth/Probe.php:51
+msgid "Mail health test %s"
 msgstr ""
 
-#: inc/WPDebug.php:314
-msgid "Development Assistant cannot safely restore an invalid saved debug configuration."
+#: inc/MailHealth/Probe.php:52
+msgid ""
+"Site: %1$s\n"
+"Test: %2$s\n"
+"Time (UTC): %3$s\n"
+"\n"
+"This is an automatic email health check from Development Assistant. No action is required."
 msgstr ""
 
-#: inc/Setting.php:235 inc/Setting/Control.php:64
+#: inc/PluginsScreen.php:80
+#: inc/PluginsScreen/ActivationManager.php:249
+msgid "Temporarily deactivate"
+msgstr ""
+
+#: inc/PluginsScreen.php:86
+msgid "Temporarily deactivated"
+msgstr ""
+
+#: inc/PluginsScreen.php:94
+#: inc/Setting/DebugLog.php:104
+msgid "Download"
+msgstr ""
+
+#: inc/PluginsScreen.php:122
+msgid "Activate temporarily deactivated plugins"
+msgstr ""
+
+#: inc/PluginsScreen.php:125
+msgid "Are you sure to deactivate Development Assistant without resetting? You can enable it in the plugin settings."
+msgstr ""
+
+#: inc/PluginsScreen/ActivationManager.php:120
+msgid "Could not reactivate the following plugin(s): %s. They remain tracked; restore missing plugin files or resolve activation errors, then try again."
+msgstr ""
+
+#: inc/PluginsScreen/ActivationManager.php:149
+msgid "Plugin temporarily deactivated."
+msgstr ""
+
+#: inc/PluginsScreen/ActivationManager.php:177
+msgid "Plugin(s) activated."
+msgstr ""
+
+#: inc/PluginsScreen/ActivationManager.php:269
+msgid "Plugin(s) temporarily deactivated."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:73
+msgid "Could not create the plugin archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:92
+#: inc/PluginsScreen/Downloader.php:100
+msgid "Could not finish the plugin archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:108
+#: inc/PluginsScreen/Downloader.php:119
+msgid "Could not read the plugin archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:126
+msgid "Could not create the plugin archive from the selected files."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:148
+msgid "The requested plugin is not installed."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:161
+#: inc/PluginsScreen/Downloader.php:185
+msgid "The requested plugin files are missing, unreadable, or outside the plugins directory."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:236
+msgid "The exclusion list would omit the selected plugin main PHP file. Update the Plugins Screen settings and try again."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:241
+msgid "Could not add the selected plugin file to the archive."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:274
+msgid "A plugin file is missing, unreadable, or outside the selected plugin directory."
+msgstr ""
+
+#: inc/PluginsScreen/Downloader.php:285
+msgid "Could not add a selected plugin file to the archive."
+msgstr ""
+
+#: inc/PluginsScreen/DownloadExclusions.php:45
+msgid "Enter literal file or folder names or plugin-relative paths, one per line. Absolute paths, dot path segments, and control characters are not allowed. The previous exclusion list was kept."
+msgstr ""
+
+#: inc/Setting.php:138
+msgid "Enable <code>WP_DEBUG</code>"
+msgstr ""
+
+#: inc/Setting.php:147
+msgid "Enable <code>WP_DEBUG_LOG</code>"
+msgstr ""
+
+#: inc/Setting.php:155
+msgid "Enabling error display may block the entire interface with error messages and introduce critical security issues."
+msgstr ""
+
+#: inc/Setting.php:161
+msgid "Enable <code>WP_DEBUG_DISPLAY</code>"
+msgstr ""
+
+#: inc/Setting.php:170
+msgid "Public access via %s to the <code>debug.log</code> file will be disabled."
+msgstr ""
+
+#: inc/Setting.php:171
+#: inc/Setting/DebugLog.php:168
+msgid "the link"
+msgstr ""
+
+#: inc/Setting.php:177
+msgid "<code>.htaccess</code> file is required (only supported on Apache HTTP Server)."
+msgstr ""
+
+#: inc/Setting.php:183
+msgid "Disable direct access"
+msgstr ""
+
+#: inc/Setting.php:193
+msgid "These options allow you to safely control the debug constants without the need to manually edit the <code>wp-config.php</code>."
+msgstr ""
+
+#: inc/Setting.php:209
+msgid "Assistant Menu"
+msgstr ""
+
+#: inc/Setting.php:214
+msgid "Show Development Assistant in the admin bar"
+msgstr ""
+
+#: inc/Setting.php:223
+msgid "Plugins Screen"
+msgstr ""
+
+#: inc/Setting.php:228
+msgid "Show active plugins first"
+msgstr ""
+
+#: inc/Setting.php:235
+#: inc/Setting/Control.php:63
 msgid "Exclude from plugin downloads"
 msgstr ""
 
@@ -621,10 +519,587 @@ msgstr ""
 msgid "One literal file or folder name or plugin-relative path per line. Names such as node_modules or .DS_Store match at any depth; paths such as assets/source match from the plugin root. A trailing slash matches folders only. Matching is case-sensitive; wildcards are not supported. Leave empty to include all files. The selected plugin main PHP file cannot be excluded."
 msgstr ""
 
-#: inc/PluginsScreen/DownloadExclusions.php:27
-msgid "Enter literal file or folder names or plugin-relative paths, one per line. Absolute paths, dot path segments, and control characters are not allowed. The previous exclusion list was kept."
+#: inc/Setting.php:248
+msgid "Reset"
 msgstr ""
 
-#: inc/PluginsScreen/Downloader.php:236
-msgid "The exclusion list would omit the selected plugin main PHP file. Update the Plugins Screen settings and try again."
+#: inc/Setting.php:253
+msgid "Reset plugin data when deactivated"
+msgstr ""
+
+#: inc/Setting.php:258
+msgid "It'll undo any possible changes that may have been made using Development Assistant %s."
+msgstr ""
+
+#: inc/Setting.php:259
+msgid "(the only exception is deleted data or files, it cannot be recovered)"
+msgstr ""
+
+#: inc/Setting.php:343
+msgid "Debug mode enabled."
+msgstr ""
+
+#: inc/Setting.php:345
+msgid "Debug mode disabled."
+msgstr ""
+
+#: inc/Setting.php:367
+msgid "Direct access to the <code>debug.log</code> file disabled."
+msgstr ""
+
+#: inc/Setting.php:382
+msgid "<code>WP_DEBUG_DISPLAY</code> disabled."
+msgstr ""
+
+#: inc/Setting.php:426
+msgid "<code>WP_DEBUG_LOG</code> enabled."
+msgstr ""
+
+#: inc/Setting/BasePage.php:108
+msgid "Settings saved."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:43
+msgid "debug.log"
+msgstr ""
+
+#: inc/Setting/DebugLog.php:78
+msgid "Can't read the log file."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:85
+msgid "Log is empty."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:110
+msgid "Delete file"
+msgstr ""
+
+#: inc/Setting/DebugLog.php:140
+msgid "size is large"
+msgstr ""
+
+#: inc/Setting/DebugLog.php:153
+msgid "Direct access to the file via %s is disabled."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:156
+msgid "Direct access to the file via %s is enabled."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:158
+msgid "Disable"
+msgstr ""
+
+#: inc/Setting/DebugLog.php:178
+msgid "Are you sure to delete the debug.log file? This action is irreversible."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:191
+msgid "Log file deleted."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:200
+#: inc/Setting/DebugLog.php:209
+msgid "The debug log could not be downloaded because it is missing or unreadable."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:266
+msgid "You are not allowed to delete the debug log."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:293
+msgid "Logging is disabled."
+msgstr ""
+
+#: inc/Setting/DebugLog.php:295
+msgid "Enable"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:35
+#: inc/Setting/MailHealth.php:197
+#: inc/Setting/MailHealth.php:217
+msgid "Mail health"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:61
+msgid "You are not allowed to change mail health settings."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:70
+msgid "The change could not be saved. Please try again."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:103
+msgid "Monitoring is off"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:104
+msgid "Checking email sending…"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:104
+msgid "The first background check will run automatically."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:105
+msgid "Email sending works"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:106
+#: inc/Setting/MailHealth.php:130
+msgid "Email sending failed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:107
+msgid "Email sending needs attention"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:107
+msgid "A backup connection sent the email, but the primary connection reported a problem."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:108
+msgid "Email sending could not be confirmed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:108
+msgid "The configured mailer did not provide a verifiable sending result. A queued message is not yet a completed send."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:108
+msgid "Review the mail plugin queue and sending logs. Monitoring will continue automatically."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:109
+msgid "The last result is out of date"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:109
+msgid "There is no current result confirming that the site can send email."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:109
+msgid "Check that WordPress scheduled tasks can run. A fresh automatic check will update this status."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:110
+msgid "Automatic checks are delayed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:110
+msgid "The background check has not started or completed within its expected time. Mail service availability is still unknown."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:110
+msgid "Check WordPress scheduled tasks or the hosting cron runner. The pending check can complete when the runner resumes."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:111
+msgid "The site administrator email is invalid"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:111
+msgid "The automatic test has no valid recipient address."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:111
+msgid "Update the Administration Email Address in WordPress Settings → General. Checks will resume automatically."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:119
+msgid "Invalid sender address"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:119
+msgid "The configured From address is invalid. WordPress stopped the email before handing it to the mail service."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:119
+msgid "Set a valid From address in your SMTP plugin or site mail configuration."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:120
+msgid "Recipient address could not be used"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:120
+msgid "A recipient address was invalid or rejected, so the affected email could not be sent."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:120
+msgid "Check the Administration Email Address in WordPress Settings → General and any plugins that change email recipients."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:121
+msgid "Email or attachment could not be processed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:121
+msgid "An email content, attachment, or encoding error prevented sending."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:121
+msgid "Check the plugin that generated the message and verify that its attachments are accessible."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:122
+msgid "Mail sending quota reached"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:122
+msgid "The mail service reported an exhausted sending quota."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:122
+msgid "Review the provider dashboard for the sending allowance and its reset time. Sending can resume when quota is available."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:123
+msgid "Mail sending temporarily limited"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:123
+msgid "The mail service is limiting sending requests."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:123
+msgid "Wait for the automatic retry. If this repeats, review the provider rate limits and the site sending volume."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:124
+msgid "Mail authentication failed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:124
+msgid "The configured mail account could not authenticate, so sending did not complete."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:124
+msgid "Verify the SMTP credentials or reconnect the mail provider OAuth account in your mail plugin."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:125
+msgid "Secure mail connection failed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:125
+msgid "A TLS or certificate problem prevented a secure mail connection."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:125
+msgid "Verify the SMTP host, port, encryption mode, and server certificate with the mail provider or host."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:126
+msgid "Mail server name could not be resolved"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:126
+msgid "The site could not resolve the configured mail server hostname."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:126
+msgid "Verify the mail server hostname and the hosting server DNS configuration."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:127
+msgid "Mail service response timed out"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:127
+msgid "Sending did not complete within the transport time limit."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:127
+msgid "Check mail service availability and the hosting network. Automatic checks will continue."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:128
+msgid "Could not connect to the mail service"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:128
+msgid "The send attempt failed while connecting to the mail service."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:128
+msgid "Check the SMTP host and port, mail service availability, and outbound firewall restrictions with your host."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:129
+msgid "Sender or relay problem"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:129
+msgid "The configured sender address could not be used or was rejected during sending."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:129
+msgid "Check the From address and verify that the mail account is allowed to send for that domain."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:130
+msgid "The email was not sent, but the available evidence does not identify the cause."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:130
+msgid "Review your mail plugin diagnostics or contact your hosting provider to identify the cause."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:135
+msgid "The From address %s is invalid. WordPress stopped the email before handing it to the mail service."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:137
+msgid "For local development, use a valid sender such as wordpress@example.test. A local mail catcher only receives messages after WordPress submits them."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:174
+msgid "What to check:"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:177
+msgid "Last checked: %s"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:204
+msgid "You are not allowed to view mail health."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:221
+msgid "Enable mail monitoring"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:222
+msgid "Checks run automatically using the site mail settings. Test emails are sent to the site administrator."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:223
+msgid "Save"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:224
+msgid "The change could not be confirmed. Check your connection and try again."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:225
+msgid "Status could not be refreshed. Reconnecting…"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:227
+msgid "Status"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:229
+msgid "A successful send confirms acceptance by the mail service. Delivery to Inbox cannot be verified automatically."
+msgstr ""
+
+#: inc/Setting/Page.php:23
+msgid "DevAssistant"
+msgstr ""
+
+#: inc/Setting/Page.php:31
+msgid "General"
+msgstr ""
+
+#: inc/Setting/Page.php:102
+msgid "Settings could not be submitted. Check your connection and try again."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:102
+msgid "This section allows you to quickly create a user with administrator role that can be used by the support team to access the website for debugging purposes."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:110
+msgid "Enable support user"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:117
+msgid "Delete user after days"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:124
+msgid "Set to 0 to disable automatic deletion."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:136
+msgid "User Credentials"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:158
+#: inc/Setting/SupportUser.php:538
+msgid "Username"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:161
+#: inc/Setting/SupportUser.php:540
+msgid "Password"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:170
+#: inc/Setting/SupportUser.php:176
+#: inc/Setting/SupportUser.php:533
+msgid "Note!"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:170
+msgid "The password is displayed only once, then it will be encrypted and you will not be able to see or share it."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:172
+msgid "Please, be careful who you share access with, this user will have access to all administrative capabilities."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:176
+msgid "You cannot share credentials that have already been displayed. Recreate the user if necessary."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:184
+msgid "Copy to Clipboard"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:188
+msgid "Copied!"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:225
+msgid "Or you can"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:226
+msgid "Share to Email"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:232
+msgid "Email you want to share with"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:233
+msgid "Email"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:240
+msgid "Your message (optional)"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:241
+msgid "Optional message"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:245
+msgid "Share Credentials"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:265
+msgid "Shared with email"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:273
+msgid "Will be auto-deleted"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:276
+msgid "after less than %s days"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:290
+msgid "Are you sure to recreate the support user? This will cause loss of access for those providing support, you will need to reshare this to keep their access."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:294
+msgid "Are you sure to delete the support user? This will cause loss of access for those providing support."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:300
+msgid "Support user not yet created."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:343
+msgid "Support user created."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:357
+msgid "Support user deleted."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:367
+msgid "Support user does not exist. Stale stored credentials were removed; create a new support user."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:377
+msgid "Support user could not be recreated: %s The existing support user remains active."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:390
+msgid "Support user could not be recreated because the existing account could not be deleted. The replacement account was removed; verify the existing account and try again."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:394
+msgid "Support user could not be recreated, and the replacement account \"%s\" could not be removed. Delete that account manually before trying again."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:405
+msgid "Support user recreated."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:416
+msgid "Invalid email. Please recreate the user and try sharing again."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:423
+#: inc/Setting/SupportUser.php:478
+msgid "An error occurred while trying to send the email."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:433
+msgid "Support user does not exist. Recreate the user before sharing credentials."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:444
+msgid "Credentials were not sent because the support user account email could not be updated: %s"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:455
+msgid "Support access to %s"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:472
+msgid "Credentials could not be sent, and the support user account email could not be restored: %s"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:489
+msgid "Credentials successfully shared with %s."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:526
+msgid "You have been requested for support and granted administrative access to %s."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:533
+msgid "User will be auto-deleted after less than %s days."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:543
+msgid "Message from customer"
+msgstr ""
+
+#: inc/Setting/SupportUser.php:620
+msgid "Support user existence extended."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:635
+msgid "Support user does not exist. Stale stored credentials were removed."
+msgstr ""
+
+#: inc/Setting/SupportUser.php:642
+msgid "Support user could not be deleted. The account and stored credentials were preserved; verify the account and try again."
+msgstr ""
+
+#: inc/WPDebug.php:44
+msgid "Development Assistant refused an invalid debug setting."
+msgstr ""
+
+#: inc/WPDebug.php:322
+msgid "Development Assistant cannot safely restore an invalid saved debug configuration."
 msgstr ""

@@ -121,3 +121,79 @@ the same PHP 8.2 image as the local WordPress service. The test profile owns a
 separate fixed-name MariaDB database backed only by tmpfs; it does not connect
 to `db`, mount `db_data`, or retain a test database after the run. Architecture
 tests in the same PHPUnit suite enforce the external-file mutation boundary.
+
+## Mail Health
+
+`App` composes `MailHealth\Store`, `Monitor`, `Probe`, `Scheduler`, and
+`Setting\MailHealth`. The submenu has one autosaved on/off checkbox and a compact
+status. Native POST submission remains available without JavaScript. The existing
+`setting` script handles autosave and authenticated status refresh every three
+seconds while the page is visible. Mutation endpoints require POST,
+`manage_options`, and the toggle nonce; the read endpoint requires capability
+and a separate nonce. No manual test or receipt-confirmation endpoint exists.
+
+The per-blog non-autoloaded `wp_dev_assist_mail_health` option uses schema version
+2. Its only user choice is enabled. Recipient comes from `admin_email`; check
+interval (one hour), evidence lifetime (two hours), SMTP timeout (15 seconds),
+and retries (approximately 5/15 minutes) are internal constants. Enabling queues
+an immediately due background check. A pending job becomes visibly delayed
+after 30 seconds; its original age is preserved when a missing cron entry is
+restored. An overdue pending job may execute when cron resumes, provided its
+configuration and attempt still match. Worker execution retains its own
+two-minute deadline. Disabling clears jobs, skips passive observation,
+and hides notices. Schema migration removes former recipient/timing settings,
+receipt tickets, delivery evidence, and manual cooldown state while preserving
+the enabled choice, live worker lease, and hourly send counters.
+
+Internal transport, freshness, scheduler, and observation evidence remain
+separate so stale or unobservable results cannot become a healthy status.
+`State::summary()` derives the short user-facing state. `Store` uses conditional
+SQL compare-and-swap and explicit cache invalidation. Workers can update only
+their own attempt/generation within a two-minute lease. The rolling cap is six
+probe sends per site per hour; concurrent requests and stale callbacks cannot
+bypass it. SMTP operation timeouts are restored in `finally`. Arbitrary custom
+transport execution cannot be forcibly cancelled by this deadline.
+
+`Monitor` observes core mail hooks and the WP Mail SMTP 4.9+ synchronous SMTP
+success hook. It correlates only request-local message hashes and blog context,
+never retaining message bodies or customer addresses. Queued/API/custom-mailer
+return values do not prove actual sending. Observed fallback success retains the
+primary failure. An unrelated successful message cannot resolve an incident;
+an accepted probe can. No inbox/provider delivery integration is included, and
+transport acceptance never claims delivery to Inbox.
+
+Known mail option changes and administrator email changes invalidate old evidence
+and queue a fresh check on the next initialization. Network activation remains
+lazy; network deactivation clears each site's jobs in batches of 100 and honors
+its reset setting. Events are bounded to 20 entries/seven days. The checkbox is
+bound to site identity to disable detected cloned-site monitoring.
+
+
+The local `scripts/init-wp.sh` writes the ignored MU plugin
+`wp/wp-content/mu-plugins/development-assistant-local-cron.php`. Its
+`cron_request` filter only redirects the local/development site's own
+`localhost` origin, matching port and cron path, to Apache at the `wordpress` Compose service on its internal port 80. This
+works from both the WordPress and WP-CLI containers. The cron query, request options, and canonical Host are
+preserved; forwarded scheme keeps WordPress's HTTPS context. Other origins,
+paths, and production environments are unchanged. No general HTTP interception,
+TLS-validation override, or production-plugin dependency is introduced.
+
+### Actionable mail diagnoses
+
+`State` distinguishes `invalid_sender` (local address validation) from the broader
+sender/relay sending failure. `Monitor` recognizes the current PHPMailer invalid
+address prefix, including a translated WordPress prefix. Only the plugin's own
+probe may retain a bounded ASCII address-shaped From value from that exact error;
+ordinary messages keep the fixed category only. Arbitrary provider text, URLs,
+HTML, multiline data, and oversized values are never retained as sender metadata.
+The additive `diagnostic` field defaults empty for existing schema-2 state.
+
+A local sender validation error is a site configuration incident. It does not
+trigger the temporary transport-failure retry sequence; normal periodic checks
+continue. Sender metadata follows the selected incident/probe and clears on
+successful probe recovery or a different failure. `Setting\\MailHealth` renders
+fixed translatable diagnosis/impact/action messages and escapes all displayed
+metadata. It revalidates stored sender metadata before rendering. Notices share
+the same diagnosis/action mapping. Cron delay and unverifiable sending have their
+own guidance and never assert an SMTP outage. No settings or frontend protocol
+changes are required.

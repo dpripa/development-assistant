@@ -46,6 +46,9 @@ export default defineConfig( ( { mode } ) => {
 					'support-user': resolve( import.meta.dirname, 'src/supportUser/index.ts' ),
 				},
 				output: {
+					// WordPress loads these entries as classic scripts sharing one global scope.
+					intro: '(function () {',
+					outro: '})();',
 					assetFileNames: `[name]${ suffix }.[ext]`,
 					chunkFileNames: `[name]${ suffix }.js`,
 					entryFileNames: `[name]${ suffix }.js`,

@@ -150,3 +150,48 @@ following documents define the development and project-maintenance rules:
 
 Development Assistant is licensed under
 [GPL-2.0-or-later](license.txt).
+
+## Mail health
+
+Open **DevAssistant → Mail health** and turn on **Enable mail monitoring**.
+The checkbox saves automatically. The plugin runs a background check immediately,
+then checks hourly using the site's existing mail configuration and administrator
+email address. The page updates its status automatically; there are no recipient,
+timing, timeout, test-code, or manual-retest controls. With JavaScript disabled,
+use the fallback Save button.
+
+The page shows a short sending status, the last check time, and a readable reason
+when something fails. Temporary sending failures are retried automatically.
+If evidence becomes older than two hours or scheduled work stops running, the
+plugin shows an uncertain or delayed status. A check that has not started within
+30 seconds is reported as delayed; it is not left indefinitely checking. Administrators also see persistent
+notices for failures and stale results. Turning monitoring off stops observation,
+scheduled tests, and notices.
+
+Test emails are real messages to the WordPress administrator address; enabling
+monitoring may incur provider charges. The site needs a working WordPress cron
+runner. A successful send proves acceptance by the mail service, not receipt or
+Inbox placement. Queued, suppressed, or unsupported mailers remain unconfirmed.
+No external inbox service, tracking pixels, or delivery-confirmation setup is used.
+The local Docker bootstrap installs a development-only cron loopback helper so
+container requests reach the local WordPress server rather than the host HTTPS
+port. The browser continues to use HTTPS.
+
+Diagnostics store fixed error categories without customer messages, credentials,
+or raw provider responses. History is bounded to 20 events and seven days.
+Deactivation clears scheduled jobs; the existing reset setting controls retained
+configuration. Changed administrator email or mail settings trigger a fresh check.
+Detected changes to site URL/environment disable inherited monitoring on clones.
+Local Mailpit capture is not proof of production delivery.
+
+Mail failures include a specific cause, its effect on sending, and a **What to
+check** action. For example, an invalid From address is identified as WordPress
+validation stopping the email before submission to the mail service. SMTP
+connection, authentication, TLS, quota, rate-limit, and cron problems have their
+own guidance; unknown failures remain explicitly unidentified. Administrator
+notices include the diagnosis and next action too.
+
+Only a bounded address-shaped From value from the plugin's own test may be kept
+for this diagnosis. Sender addresses from ordinary site messages, message bodies,
+credentials, and raw provider responses are excluded. A confirmed successful
+probe clears the old diagnostic. These messages add no configuration controls.
