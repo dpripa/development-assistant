@@ -2,43 +2,69 @@
 namespace WPDevAssist\Setting;
 
 use WPDevAssist\Asset;
+use WPDevAssist\AdminNotice;
 use WPDevAssist\MailHealth\Store;
 use WPDevAssist\MailHealth\State;
 use WPDevAssist\MailHealth\Scheduler;
 
 defined( 'ABSPATH' ) || exit;
 
-/** One switch; monitoring, test recipient, and status updates are automatic. */
-class MailHealth {
-	public const PAGE = 'wp_dev_assist_mail_health';
+/** Shared settings page; monitoring and status updates are automatic. */
+class MailHealth extends Page {
+	public const KEY        = 'wp_dev_assist_mail_health';
+	public const PAGE       = self::KEY;
+	public const ENABLE_KEY = self::KEY . '_enabled';
 	protected Store $store;
 	protected Scheduler $scheduler;
-	protected Asset $asset;
+	protected Control $control;
 
-	public function __construct( Store $store, Scheduler $scheduler, Asset $asset ) {
+	public function __construct( Store $store, Scheduler $scheduler, Asset $asset, AdminNotice $admin_notice ) {
 		$this->store     = $store;
 		$this->scheduler = $scheduler;
-		$this->asset     = $asset;
-		add_action( 'admin_menu', array( $this, 'menu' ), 20 );
-		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue' ) );
-		add_action( 'admin_post_' . self::PAGE, array( $this, 'handle' ) );
-		add_action( 'wp_ajax_' . self::PAGE . '_toggle', array( $this, 'toggle' ) );
-		add_action( 'wp_ajax_' . self::PAGE . '_status', array( $this, 'status' ) );
+		$this->control   = new Control();
+		parent::__construct( $asset, $admin_notice );
+		// The Settings API field is a projection of the atomic monitoring store.
+		add_filter( 'pre_option_' . self::ENABLE_KEY, array( $this, 'enabled_value' ) );
+		add_action( 'wp_ajax_' . self::KEY . '_status', array( $this, 'status' ) );
 		add_action( 'admin_notices', array( $this, 'notice' ) );
 	}
 
+	public function enabled_value(): string {
+		return $this->store->read()['config']['enabled'] ? 'yes' : 'no';
+	}
+
 	public function url(): string {
-		return add_query_arg( 'page', self::PAGE, admin_url( 'admin.php' ) );
+		return $this->get_page_url();
 	}
 
-	public function menu(): void {
-		add_submenu_page( \WPDevAssist\KEY, __( 'Mail health', 'development-assistant' ), __( 'Mail health', 'development-assistant' ), 'manage_options', self::PAGE, array( $this, 'render' ) );
+	protected function add_page(): callable {
+		return function (): void {
+			add_submenu_page( \WPDevAssist\KEY, __( 'Mail Health', 'development-assistant' ), __( 'Mail Health', 'development-assistant' ), 'manage_options', self::KEY, $this->render_page() );
+		};
 	}
 
-	public function enqueue(): void {
-		if ( current_user_can( 'manage_options' ) && isset( $_GET['page'] ) && self::PAGE === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-			$this->asset->enqueue_script( 'setting' );
+	protected function add_sections(): callable {
+		return function (): void {
+			$section = self::KEY . '_monitoring';
+			$this->add_section( $section, __( 'Monitoring', 'development-assistant' ) );
+			$this->add_setting(
+				$section,
+				self::ENABLE_KEY,
+				__( 'Enable mail monitoring', 'development-assistant' ),
+				array( $this->control, 'render_checkbox' ),
+				'no',
+				array( 'description' => __( 'Checks run automatically using the site mail settings. Test emails are sent to the site administrator.', 'development-assistant' ) ),
+				array( $this, 'sanitize_enabled' )
+			);
+			$this->add_control( $section, self::KEY . '_status', __( 'Status', 'development-assistant' ), array( $this, 'render_status' ) );
+		};
+	}
+
+	public function sanitize_enabled( $value ): string {
+		if ( ! $this->set_enabled( 'yes' === $value ) ) {
+			add_settings_error( self::KEY, 'mail_health_save', __( 'The change could not be saved. Please try again.', 'development-assistant' ), 'error' );
 		}
+		return $this->enabled_value();
 	}
 
 	public function set_enabled( bool $enabled ): bool {
@@ -54,33 +80,6 @@ class MailHealth {
 		}
 		$this->scheduler->ensure();
 		return true;
-	}
-
-	protected function require_post(): void {
-		if ( 'post' !== ( isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_key( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : '' ) || ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to change mail health settings.', 'development-assistant' ), '', array( 'response' => 403 ) );
-		}
-	}
-
-	public function handle(): void {
-		$this->require_post();
-		check_admin_referer( self::PAGE . '_toggle' );
-		$enabled = isset( $_POST['enabled'] ) && 'yes' === $_POST['enabled'];
-		if ( ! $this->set_enabled( $enabled ) ) {
-			wp_die( esc_html__( 'The change could not be saved. Please try again.', 'development-assistant' ), '', array( 'response' => 503 ) );
-		}
-		wp_safe_redirect( $this->url() );
-		exit;
-	}
-
-	public function toggle(): void {
-		$this->require_post();
-		check_ajax_referer( self::PAGE . '_toggle', '_wpnonce' );
-		$enabled = isset( $_POST['enabled'] ) && 'yes' === $_POST['enabled'];
-		if ( ! $this->set_enabled( $enabled ) ) {
-			wp_send_json_error( null, 503 );
-		}
-		wp_send_json_success( $this->response() );
 	}
 
 	public function status(): void {
@@ -166,7 +165,6 @@ class MailHealth {
 		$checked = max( $state['checked_at'], $state['observed_at'] );
 		ob_start();
 		?>
-		<p><strong><?php echo esc_html( $message[0] ); ?></strong></p>
 		<?php if ( $message[1] ) { ?>
 			<p><?php echo esc_html( $message[1] ); ?></p>
 		<?php } ?>
@@ -177,6 +175,19 @@ class MailHealth {
 			<p><?php echo esc_html( sprintf( __( 'Last checked: %s', 'development-assistant' ), get_date_from_gmt( gmdate( 'Y-m-d H:i:s', $checked ), get_option( 'date_format' ) . ' ' . get_option( 'time_format' ) ) ) ); ?></p>
 		<?php } ?>
 		<?php
+		$description = (string) ob_get_clean();
+		ob_start();
+		$this->control->render_status(
+			array(
+				'is_success'     => 'ok' === $summary,
+				'success_title'  => esc_html( $message[0] ),
+				'failure_title'  => esc_html( $message[0] ),
+				'disabled'       => in_array( $summary, array( 'off', 'checking' ), true ),
+				'disabled_title' => esc_html( $message[0] ),
+				'warning'        => in_array( $summary, array( 'degraded', 'unknown', 'stale', 'delayed' ), true ),
+				'description'    => $description,
+			)
+		);
 		return (string) ob_get_clean();
 	}
 
@@ -194,40 +205,33 @@ class MailHealth {
 		?>
 		<div class="notice <?php echo $error ? 'notice-error' : 'notice-warning'; ?>"><p>
 			<?php echo esc_html( $message[0] . ( $message[2] ? '. ' . $message[2] : '' ) ); ?>
-			<a href="<?php echo esc_url( $this->url() ); ?>"><?php esc_html_e( 'Mail health', 'development-assistant' ); ?></a>
+			<a href="<?php echo esc_url( $this->url() ); ?>"><?php esc_html_e( 'Mail Health', 'development-assistant' ); ?></a>
 		</p></div>
 		<?php
 	}
 
-	public function render(): void {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_die( esc_html__( 'You are not allowed to view mail health.', 'development-assistant' ), '', array( 'response' => 403 ) );
-		}
-		$this->store->sync_identity();
-		$state      = $this->store->read();
+	public function render_status(): void {
 		$status_url = add_query_arg(
 			array(
-				'action' => self::PAGE . '_status',
-				'nonce'  => wp_create_nonce( self::PAGE . '_status' ),
+				'action' => self::KEY . '_status',
+				'nonce'  => wp_create_nonce( self::KEY . '_status' ),
 			),
 			admin_url( 'admin-ajax.php' )
 		);
 		?>
-		<div class="wrap">
-			<h1><?php esc_html_e( 'Mail health', 'development-assistant' ); ?></h1>
-			<form class="da-mail-health-toggle" method="post" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" data-save-url="<?php echo esc_url( admin_url( 'admin-ajax.php' ) ); ?>" data-toggle-action="<?php echo esc_attr( self::PAGE . '_toggle' ); ?>" data-status-url="<?php echo esc_url( $status_url ); ?>">
-				<input type="hidden" name="action" value="<?php echo esc_attr( self::PAGE ); ?>">
-				<?php wp_nonce_field( self::PAGE . '_toggle' ); ?>
-				<p><label><input type="checkbox" name="enabled" value="yes" <?php checked( $state['config']['enabled'] ); ?>> <?php esc_html_e( 'Enable mail monitoring', 'development-assistant' ); ?></label></p>
-				<p class="description"><?php esc_html_e( 'Checks run automatically using the site mail settings. Test emails are sent to the site administrator.', 'development-assistant' ); ?></p>
-				<noscript><?php submit_button( __( 'Save', 'development-assistant' ), 'secondary', 'mail_health_save' ); ?></noscript>
-				<p data-save-error role="alert" hidden><?php esc_html_e( 'The change could not be confirmed. Check your connection and try again.', 'development-assistant' ); ?></p>
-				<p data-status-error role="status" hidden><?php esc_html_e( 'Status could not be refreshed. Reconnecting…', 'development-assistant' ); ?></p>
-			</form>
-			<h2><?php esc_html_e( 'Status', 'development-assistant' ); ?></h2>
+		<div data-mail-health-status data-status-url="<?php echo esc_url( $status_url ); ?>">
 			<div id="da-mail-health-status" role="status" aria-live="polite"><?php echo $this->status_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Generated escaped markup only. ?></div>
-			<p class="description"><?php esc_html_e( 'A successful send confirms acceptance by the mail service. Delivery to Inbox cannot be verified automatically.', 'development-assistant' ); ?></p>
+			<p data-status-error role="status" hidden><?php esc_html_e( 'Status could not be refreshed. Reconnecting…', 'development-assistant' ); ?></p>
 		</div>
+		<p class="description"><?php esc_html_e( 'A successful send confirms acceptance by the mail service. Delivery to Inbox cannot be verified automatically.', 'development-assistant' ); ?></p>
 		<?php
+	}
+
+	protected function render_content(): void {
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_die( esc_html__( 'You are not allowed to view Mail Health.', 'development-assistant' ), '', array( 'response' => 403 ) );
+		}
+		$this->store->sync_identity();
+		parent::render_content();
 	}
 }

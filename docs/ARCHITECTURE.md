@@ -125,12 +125,22 @@ tests in the same PHPUnit suite enforce the external-file mutation boundary.
 ## Mail Health
 
 `App` composes `MailHealth\Store`, `Monitor`, `Probe`, `Scheduler`, and
-`Setting\MailHealth`. The submenu has one autosaved on/off checkbox and a compact
-status. Native POST submission remains available without JavaScript. The existing
-`setting` script handles autosave and authenticated status refresh every three
-seconds while the page is visible. Mutation endpoints require POST,
-`manage_options`, and the toggle nonce; the read endpoint requires capability
-and a separate nonce. No manual test or receipt-confirmation endpoint exists.
+`Setting\MailHealth`. The submenu extends the shared `Setting\Page`, registers
+sections through `BasePage`, and uses `Control` for the checkbox and status badge.
+It uses the standard Settings API form, Save Changes behavior, saved notices, and
+shared assets. `BasePage::add_control` registers read-only fields without creating
+writable settings. `Control::render_status` supports warning labels as well as the
+existing success, failure, and disabled states.
+
+The enabled field is a Settings API projection of the atomic monitoring store:
+`pre_option` reads the current choice, and its sanitizer delegates to the store
+and scheduler. No second persisted setting or migration is needed; existing
+monitoring choices, evidence, clone safeguards, and reset behavior are preserved.
+WordPress options.php protects writes with the settings nonce and capability;
+the sanitizer also requires `manage_options`. The separate read endpoint requires
+that capability and its own nonce. The existing `setting` script only refreshes
+the read-only status every three seconds while visible; it never overwrites
+unsaved checkbox values. No bespoke toggle endpoint or autosave flow remains.
 
 The per-blog non-autoloaded `wp_dev_assist_mail_health` option uses schema version
 2. Its only user choice is enabled. Recipient comes from `admin_email`; check

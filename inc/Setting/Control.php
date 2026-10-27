@@ -122,6 +122,8 @@ class Control {
 
 		if ( isset( $args['disabled'] ) && $args['disabled'] ) {
 			$status_classname = 'da-setting-status__label_disabled';
+		} elseif ( ! empty( $args['warning'] ) ) {
+			$status_classname = 'da-setting-status__label_warning';
 		} elseif ( $args['is_success'] ) {
 			$status_classname = 'da-setting-status__label_success';
 		} else {

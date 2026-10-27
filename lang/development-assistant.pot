@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-25T21:57:03+00:00\n"
+"POT-Creation-Date: 2026-10-27T15:12:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: development-assistant\n"
@@ -97,7 +97,7 @@ msgstr ""
 
 #: inc/Assistant/SupportUser.php:92
 #: inc/Assistant/WPDebug.php:166
-#: inc/Setting/Control.php:138
+#: inc/Setting/Control.php:140
 msgid "Disabled"
 msgstr ""
 
@@ -555,7 +555,7 @@ msgstr ""
 msgid "<code>WP_DEBUG_LOG</code> enabled."
 msgstr ""
 
-#: inc/Setting/BasePage.php:108
+#: inc/Setting/BasePage.php:119
 msgid "Settings saved."
 msgstr ""
 
@@ -616,283 +616,274 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
-#: inc/Setting/MailHealth.php:35
-#: inc/Setting/MailHealth.php:197
-#: inc/Setting/MailHealth.php:217
-msgid "Mail health"
+#: inc/Setting/MailHealth.php:42
+#: inc/Setting/MailHealth.php:208
+msgid "Mail Health"
 msgstr ""
 
-#: inc/Setting/MailHealth.php:61
-msgid "You are not allowed to change mail health settings."
+#: inc/Setting/MailHealth.php:49
+msgid "Monitoring"
 msgstr ""
 
-#: inc/Setting/MailHealth.php:70
-msgid "The change could not be saved. Please try again."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:103
-msgid "Monitoring is off"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:104
-msgid "Checking email sending…"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:104
-msgid "The first background check will run automatically."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:105
-msgid "Email sending works"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:106
-#: inc/Setting/MailHealth.php:130
-msgid "Email sending failed"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:107
-msgid "Email sending needs attention"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:107
-msgid "A backup connection sent the email, but the primary connection reported a problem."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:108
-msgid "Email sending could not be confirmed"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:108
-msgid "The configured mailer did not provide a verifiable sending result. A queued message is not yet a completed send."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:108
-msgid "Review the mail plugin queue and sending logs. Monitoring will continue automatically."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:109
-msgid "The last result is out of date"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:109
-msgid "There is no current result confirming that the site can send email."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:109
-msgid "Check that WordPress scheduled tasks can run. A fresh automatic check will update this status."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:110
-msgid "Automatic checks are delayed"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:110
-msgid "The background check has not started or completed within its expected time. Mail service availability is still unknown."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:110
-msgid "Check WordPress scheduled tasks or the hosting cron runner. The pending check can complete when the runner resumes."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:111
-msgid "The site administrator email is invalid"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:111
-msgid "The automatic test has no valid recipient address."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:111
-msgid "Update the Administration Email Address in WordPress Settings → General. Checks will resume automatically."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:119
-msgid "Invalid sender address"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:119
-msgid "The configured From address is invalid. WordPress stopped the email before handing it to the mail service."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:119
-msgid "Set a valid From address in your SMTP plugin or site mail configuration."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:120
-msgid "Recipient address could not be used"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:120
-msgid "A recipient address was invalid or rejected, so the affected email could not be sent."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:120
-msgid "Check the Administration Email Address in WordPress Settings → General and any plugins that change email recipients."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:121
-msgid "Email or attachment could not be processed"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:121
-msgid "An email content, attachment, or encoding error prevented sending."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:121
-msgid "Check the plugin that generated the message and verify that its attachments are accessible."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:122
-msgid "Mail sending quota reached"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:122
-msgid "The mail service reported an exhausted sending quota."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:122
-msgid "Review the provider dashboard for the sending allowance and its reset time. Sending can resume when quota is available."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:123
-msgid "Mail sending temporarily limited"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:123
-msgid "The mail service is limiting sending requests."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:123
-msgid "Wait for the automatic retry. If this repeats, review the provider rate limits and the site sending volume."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:124
-msgid "Mail authentication failed"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:124
-msgid "The configured mail account could not authenticate, so sending did not complete."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:124
-msgid "Verify the SMTP credentials or reconnect the mail provider OAuth account in your mail plugin."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:125
-msgid "Secure mail connection failed"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:125
-msgid "A TLS or certificate problem prevented a secure mail connection."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:125
-msgid "Verify the SMTP host, port, encryption mode, and server certificate with the mail provider or host."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:126
-msgid "Mail server name could not be resolved"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:126
-msgid "The site could not resolve the configured mail server hostname."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:126
-msgid "Verify the mail server hostname and the hosting server DNS configuration."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:127
-msgid "Mail service response timed out"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:127
-msgid "Sending did not complete within the transport time limit."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:127
-msgid "Check mail service availability and the hosting network. Automatic checks will continue."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:128
-msgid "Could not connect to the mail service"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:128
-msgid "The send attempt failed while connecting to the mail service."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:128
-msgid "Check the SMTP host and port, mail service availability, and outbound firewall restrictions with your host."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:129
-msgid "Sender or relay problem"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:129
-msgid "The configured sender address could not be used or was rejected during sending."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:129
-msgid "Check the From address and verify that the mail account is allowed to send for that domain."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:130
-msgid "The email was not sent, but the available evidence does not identify the cause."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:130
-msgid "Review your mail plugin diagnostics or contact your hosting provider to identify the cause."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:135
-msgid "The From address %s is invalid. WordPress stopped the email before handing it to the mail service."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:137
-msgid "For local development, use a valid sender such as wordpress@example.test. A local mail catcher only receives messages after WordPress submits them."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:174
-msgid "What to check:"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:177
-msgid "Last checked: %s"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:204
-msgid "You are not allowed to view mail health."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:221
+#: inc/Setting/MailHealth.php:53
 msgid "Enable mail monitoring"
 msgstr ""
 
-#: inc/Setting/MailHealth.php:222
+#: inc/Setting/MailHealth.php:56
 msgid "Checks run automatically using the site mail settings. Test emails are sent to the site administrator."
 msgstr ""
 
-#: inc/Setting/MailHealth.php:223
-msgid "Save"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:224
-msgid "The change could not be confirmed. Check your connection and try again."
-msgstr ""
-
-#: inc/Setting/MailHealth.php:225
-msgid "Status could not be refreshed. Reconnecting…"
-msgstr ""
-
-#: inc/Setting/MailHealth.php:227
+#: inc/Setting/MailHealth.php:59
 msgid "Status"
 msgstr ""
 
-#: inc/Setting/MailHealth.php:229
+#: inc/Setting/MailHealth.php:65
+msgid "The change could not be saved. Please try again."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:102
+msgid "Monitoring is off"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:103
+msgid "Checking email sending…"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:103
+msgid "The first background check will run automatically."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:104
+msgid "Email sending works"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:105
+#: inc/Setting/MailHealth.php:129
+msgid "Email sending failed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:106
+msgid "Email sending needs attention"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:106
+msgid "A backup connection sent the email, but the primary connection reported a problem."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:107
+msgid "Email sending could not be confirmed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:107
+msgid "The configured mailer did not provide a verifiable sending result. A queued message is not yet a completed send."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:107
+msgid "Review the mail plugin queue and sending logs. Monitoring will continue automatically."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:108
+msgid "The last result is out of date"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:108
+msgid "There is no current result confirming that the site can send email."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:108
+msgid "Check that WordPress scheduled tasks can run. A fresh automatic check will update this status."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:109
+msgid "Automatic checks are delayed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:109
+msgid "The background check has not started or completed within its expected time. Mail service availability is still unknown."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:109
+msgid "Check WordPress scheduled tasks or the hosting cron runner. The pending check can complete when the runner resumes."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:110
+msgid "The site administrator email is invalid"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:110
+msgid "The automatic test has no valid recipient address."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:110
+msgid "Update the Administration Email Address in WordPress Settings → General. Checks will resume automatically."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:118
+msgid "Invalid sender address"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:118
+msgid "The configured From address is invalid. WordPress stopped the email before handing it to the mail service."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:118
+msgid "Set a valid From address in your SMTP plugin or site mail configuration."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:119
+msgid "Recipient address could not be used"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:119
+msgid "A recipient address was invalid or rejected, so the affected email could not be sent."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:119
+msgid "Check the Administration Email Address in WordPress Settings → General and any plugins that change email recipients."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:120
+msgid "Email or attachment could not be processed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:120
+msgid "An email content, attachment, or encoding error prevented sending."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:120
+msgid "Check the plugin that generated the message and verify that its attachments are accessible."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:121
+msgid "Mail sending quota reached"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:121
+msgid "The mail service reported an exhausted sending quota."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:121
+msgid "Review the provider dashboard for the sending allowance and its reset time. Sending can resume when quota is available."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:122
+msgid "Mail sending temporarily limited"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:122
+msgid "The mail service is limiting sending requests."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:122
+msgid "Wait for the automatic retry. If this repeats, review the provider rate limits and the site sending volume."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:123
+msgid "Mail authentication failed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:123
+msgid "The configured mail account could not authenticate, so sending did not complete."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:123
+msgid "Verify the SMTP credentials or reconnect the mail provider OAuth account in your mail plugin."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:124
+msgid "Secure mail connection failed"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:124
+msgid "A TLS or certificate problem prevented a secure mail connection."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:124
+msgid "Verify the SMTP host, port, encryption mode, and server certificate with the mail provider or host."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:125
+msgid "Mail server name could not be resolved"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:125
+msgid "The site could not resolve the configured mail server hostname."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:125
+msgid "Verify the mail server hostname and the hosting server DNS configuration."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:126
+msgid "Mail service response timed out"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:126
+msgid "Sending did not complete within the transport time limit."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:126
+msgid "Check mail service availability and the hosting network. Automatic checks will continue."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:127
+msgid "Could not connect to the mail service"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:127
+msgid "The send attempt failed while connecting to the mail service."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:127
+msgid "Check the SMTP host and port, mail service availability, and outbound firewall restrictions with your host."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:128
+msgid "Sender or relay problem"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:128
+msgid "The configured sender address could not be used or was rejected during sending."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:128
+msgid "Check the From address and verify that the mail account is allowed to send for that domain."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:129
+msgid "The email was not sent, but the available evidence does not identify the cause."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:129
+msgid "Review your mail plugin diagnostics or contact your hosting provider to identify the cause."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:134
+msgid "The From address %s is invalid. WordPress stopped the email before handing it to the mail service."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:136
+msgid "For local development, use a valid sender such as wordpress@example.test. A local mail catcher only receives messages after WordPress submits them."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:172
+msgid "What to check:"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:175
+msgid "Last checked: %s"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:224
+msgid "Status could not be refreshed. Reconnecting…"
+msgstr ""
+
+#: inc/Setting/MailHealth.php:226
 msgid "A successful send confirms acceptance by the mail service. Delivery to Inbox cannot be verified automatically."
+msgstr ""
+
+#: inc/Setting/MailHealth.php:232
+msgid "You are not allowed to view Mail Health."
 msgstr ""
 
 #: inc/Setting/Page.php:23

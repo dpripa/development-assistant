@@ -41,8 +41,11 @@ class MailHealthTest extends WP_UnitTestCase {
 		$this->monitor   = new Monitor( $this->store );
 		$this->probe     = new Probe( $this->store, $this->monitor );
 		$this->scheduler = new Scheduler( $this->store, $this->probe );
-		$this->page      = new MailHealth( $this->store, $this->scheduler, \WPDevAssist\app()->asset() );
+		$this->page      = new MailHealth( $this->store, $this->scheduler, \WPDevAssist\app()->asset(), \WPDevAssist\app()->admin_notice() );
 		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$sections = new \ReflectionMethod( $this->page, 'add_sections' );
+		$sections->setAccessible( true );
+		$sections->invoke( $this->page )();
 	}
 
 	public function tear_down(): void {
@@ -494,16 +497,51 @@ class MailHealthTest extends WP_UnitTestCase {
 	public function test_one_checkbox_and_no_manual_controls_or_technical_table(): void {
 		$this->enable();
 		ob_start();
-		$this->page->render();
+		$_GET['page']     = MailHealth::KEY;
+		$GLOBALS['title'] = 'Mail Health';
+		$render           = new \ReflectionMethod( $this->page, 'render_page' );
+		$render->setAccessible( true );
+		$render->invoke( $this->page )();
 		$html = ob_get_clean();
 		$this->assertSame( 1, substr_count( $html, 'type="checkbox"' ) );
 		$this->assertSame( 1, substr_count( $html, '<form ' ) );
-		foreach ( array( 'type="email"', 'type="number"', 'name="recipient"', 'name="test_id"', 'name="code"', '<table', 'Queue a mail test', 'Refresh status', 'Confirm receipt' ) as $unwanted ) {
+		foreach ( array( 'type="email"', 'type="number"', 'name="recipient"', 'name="test_id"', 'name="code"', 'da-mail-health-toggle', 'Queue a mail test', 'Refresh status', 'Confirm receipt' ) as $unwanted ) {
 			$this->assertStringNotContainsString( $unwanted, $html );
 		}
+		$this->assertInstanceOf( \WPDevAssist\Setting\Page::class, $this->page );
+		$this->assertStringContainsString( 'da-setting-page wrap', $html );
+		$this->assertStringContainsString( 'da-setting-form', $html );
+		$this->assertStringContainsString( 'da-setting-checkbox', $html );
+		$this->assertStringContainsString( 'da-setting-status', $html );
+		$this->assertStringContainsString( 'options.php', $html );
+		$this->assertStringContainsString( 'Mail Health', $html );
 		$this->assertStringContainsString( 'data-status-url=', $html );
 		$this->assertStringContainsString( '<noscript>', $html );
+		$this->assertStringContainsString( 'id="da-setting-submit-no-js"', $html );
+		$this->assertStringContainsString( 'name="' . MailHealth::ENABLE_KEY . '"', $html );
+		$this->assertStringContainsString( 'value="no"', $html );
+		$this->assertStringContainsString( 'value="yes"', $html );
 		$this->assertEmpty( $this->store->read()['sends'] );
+	}
+
+	public function test_shared_saved_notice_uses_settings_errors_without_a_duplicate_transient(): void {
+		$old_post                                = $_POST;
+		$old_actions                             = $GLOBALS['wp_actions']['updated_option'] ?? 0;
+		$old_errors                              = $GLOBALS['wp_settings_errors'] ?? array();
+		$_POST['_wpnonce']                       = wp_create_nonce( MailHealth::KEY . '-options' );
+		$GLOBALS['wp_actions']['updated_option'] = 1;
+		$GLOBALS['wp_settings_errors']           = array();
+		$notice                                  = new \ReflectionMethod( $this->page, 'render_notice_saved' );
+		$notice->setAccessible( true );
+		try {
+			$notice->invoke( $this->page )();
+			$this->assertCount( 1, get_settings_errors( MailHealth::KEY ) );
+			$this->assertSame( 'settings_updated', get_settings_errors( MailHealth::KEY )[0]['code'] );
+		} finally {
+			$_POST                                   = $old_post;
+			$GLOBALS['wp_actions']['updated_option'] = $old_actions;
+			$GLOBALS['wp_settings_errors']           = $old_errors;
+		}
 	}
 
 	public function test_submenu_registration_and_non_admin_access(): void {
@@ -544,35 +582,52 @@ class MailHealthTest extends WP_UnitTestCase {
 		return array( json_decode( $output, true ), $output );
 	}
 
-	public function test_ajax_toggle_and_status_are_protected_and_status_never_sends(): void {
-		$toggle = array(
-			'_wpnonce'  => wp_create_nonce( MailHealth::PAGE . '_toggle' ),
-			'enabled'   => 'yes',
-			'recipient' => 'ignored@example.org',
-			'interval'  => '1',
-		);
-		$result = $this->endpoint( 'toggle', $toggle )[0];
-		$this->assertTrue( $result['success'] );
-		$this->assertTrue( $result['data']['enabled'] );
+	public function test_settings_api_checkbox_preserves_store_and_status_does_not_mutate(): void {
+		$this->assertSame( 'no', get_option( MailHealth::ENABLE_KEY ) );
+		update_option( MailHealth::ENABLE_KEY, 'yes' );
+		$this->assertTrue( $this->store->read()['config']['enabled'] );
+		$this->assertSame( 'yes', get_option( MailHealth::ENABLE_KEY ) );
 		$this->assertSame( 'health@example.org', $this->store->read()['config']['recipient'] );
 		$before = $this->store->read();
-		$result = $this->endpoint( 'status', array( 'nonce' => wp_create_nonce( MailHealth::PAGE . '_status' ) ), 'GET' )[0];
+		$result = $this->endpoint( 'status', array( 'nonce' => wp_create_nonce( MailHealth::KEY . '_status' ) ), 'GET' )[0];
 		$this->assertTrue( $result['success'] );
 		$this->assertSame( $before, $this->store->read() );
 		$this->assertSame( array( 'enabled', 'html' ), array_keys( $result['data'] ) );
-		$toggle['enabled'] = 'no';
-		$this->endpoint( 'toggle', $toggle );
+		// Re-saving the current choice must retain evidence and pending work.
+		$id = $before['attempt']['id'];
+		update_option( MailHealth::ENABLE_KEY, 'yes' );
+		$this->assertSame( $id, $this->store->read()['attempt']['id'] );
+		update_option( MailHealth::ENABLE_KEY, 'no' );
 		$this->assertFalse( $this->store->read()['config']['enabled'] );
+		$this->assertFalse( wp_next_scheduled( Scheduler::TICK, array( $this->store->read()['generation'] ) ) );
+		$this->assertSame( 'no', get_option( MailHealth::ENABLE_KEY ) );
+		remove_filter( 'pre_option_' . MailHealth::ENABLE_KEY, array( $this->page, 'enabled_value' ) );
+		try {
+			$this->assertFalse( get_option( MailHealth::ENABLE_KEY ), 'The UI must not introduce a second persisted enabled flag.' );
+		} finally {
+			add_filter( 'pre_option_' . MailHealth::ENABLE_KEY, array( $this->page, 'enabled_value' ) );
+		}
 	}
 
-	public function test_http_rejects_get_and_bad_nonce_without_changing_the_switch(): void {
-		$request = array(
-			'_wpnonce' => 'invalid',
-			'enabled'  => 'yes',
-		);
-		$this->endpoint( 'toggle', $request, 'GET' );
-		$this->endpoint( 'toggle', $request );
+	public function test_status_and_setting_reject_unauthorized_access(): void {
+		$this->endpoint( 'status', array( 'nonce' => 'invalid' ), 'GET' );
 		$this->assertFalse( $this->store->read()['config']['enabled'] );
+		wp_set_current_user( self::factory()->user->create( array( 'role' => 'subscriber' ) ) );
+		$this->assertSame( 'no', $this->page->sanitize_enabled( 'yes' ) );
+		$this->endpoint( 'status', array( 'nonce' => wp_create_nonce( MailHealth::KEY . '_status' ) ), 'GET' );
+		$this->assertFalse( $this->store->read()['config']['enabled'] );
+		$this->assertFalse( has_action( 'wp_ajax_' . MailHealth::KEY . '_toggle' ) );
+		$this->assertFalse( has_action( 'admin_post_' . MailHealth::KEY ) );
+	}
+
+	public function test_status_control_is_read_only_and_warning_is_not_a_success(): void {
+		$this->assertArrayNotHasKey( MailHealth::KEY . '_status', get_registered_settings() );
+		$this->enable();
+		$this->store->clock += State::QUEUE_TIMEOUT;
+		$html                = $this->page->status_html();
+		$this->assertStringContainsString( 'da-setting-status__label_warning', $html );
+		$this->assertStringNotContainsString( 'da-setting-status__label_success', $html );
+		$this->assertStringContainsString( 'Automatic checks are delayed', $html );
 	}
 
 	public function test_missing_core_success_hook_does_not_make_a_false_success(): void {

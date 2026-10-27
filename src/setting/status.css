@@ -25,3 +25,8 @@
 	margin-top: 8px;
 	color: var(--da-gray-text);
 }
+
+.da-setting-status__label_warning {
+	color: #1d2327;
+	background-color: var(--da-warning);
+}

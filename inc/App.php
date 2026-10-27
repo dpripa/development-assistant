@@ -42,11 +42,10 @@ class App {
 		$mail_monitor                = new MailHealth\Monitor( $mail_store );
 		$mail_probe                  = new MailHealth\Probe( $mail_store, $mail_monitor );
 		$this->mail_health_scheduler = new MailHealth\Scheduler( $mail_store, $mail_probe );
-		new Setting\MailHealth( $mail_store, $this->mail_health_scheduler, $this->asset );
 
-		$this->htaccess       = new Htaccess( $this->file_mutations );
-		$this->wp_debug       = new WPDebug( $this->admin_notice, $this->file_mutations, $this->htaccess, new DebugConfigEditor() );
-		$this->setting        = new Setting(
+		$this->htaccess = new Htaccess( $this->file_mutations );
+		$this->wp_debug = new WPDebug( $this->admin_notice, $this->file_mutations, $this->htaccess, new DebugConfigEditor() );
+		$this->setting  = new Setting(
 			$this->action_query,
 			$this->asset,
 			$this->fs,
@@ -55,6 +54,8 @@ class App {
 			$this->htaccess,
 			$this->wp_debug
 		);
+		new Setting\MailHealth( $mail_store, $this->mail_health_scheduler, $this->asset, $this->admin_notice );
+
 		$this->plugins_screen = new PluginsScreen(
 			$this->action_query,
 			$this->asset,

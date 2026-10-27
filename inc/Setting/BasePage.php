@@ -56,12 +56,11 @@ abstract class BasePage {
 			$key,
 			is_callable( $sanitize_callback ) ? $sanitize_callback : 'sanitize_text_field'
 		);
-		add_settings_field(
+		$this->add_control(
+			$section_key,
 			$key,
 			$title,
 			$control,
-			static::KEY,
-			$section_key,
 			wp_parse_args(
 				$args,
 				array(
@@ -69,6 +68,18 @@ abstract class BasePage {
 					'default' => $default_value,
 				)
 			)
+		);
+	}
+
+	/** Add a read-only control without registering a writable option. */
+	protected function add_control( string $section_key, string $key, string $title, callable $control, array $args = array() ): void {
+		add_settings_field(
+			$key,
+			$title,
+			$control,
+			static::KEY,
+			$section_key,
+			$args
 		);
 	}
 
@@ -105,7 +116,7 @@ abstract class BasePage {
 				return;
 			}
 
-			$this->admin_notice->add_transient( __( 'Settings saved.', 'development-assistant' ), 'success' );
+			add_settings_error( static::KEY, 'settings_updated', __( 'Settings saved.', 'development-assistant' ), 'success' );
 		};
 	}
 }

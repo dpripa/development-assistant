@@ -151,14 +151,13 @@ following documents define the development and project-maintenance rules:
 Development Assistant is licensed under
 [GPL-2.0-or-later](license.txt).
 
-## Mail health
+## Mail Health
 
-Open **DevAssistant → Mail health** and turn on **Enable mail monitoring**.
-The checkbox saves automatically. The plugin runs a background check immediately,
+Open **DevAssistant → Mail Health** and turn on **Enable mail monitoring**.
+Click **Save Changes**, as on the other settings pages. The plugin runs a background check immediately after enabling,
 then checks hourly using the site's existing mail configuration and administrator
 email address. The page updates its status automatically; there are no recipient,
-timing, timeout, test-code, or manual-retest controls. With JavaScript disabled,
-use the fallback Save button.
+timing, timeout, test-code, or manual-retest controls. The same form also works without JavaScript.
 
 The page shows a short sending status, the last check time, and a readable reason
 when something fails. Temporary sending failures are retried automatically.
