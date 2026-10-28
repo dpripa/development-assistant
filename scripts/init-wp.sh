@@ -210,6 +210,41 @@ wait_for_database() {
   return 1
 }
 
+load_required_plugins() {
+  env_file="$WP_ROOT/../.env"
+
+  if [ ! -f "$env_file" ]; then
+    return
+  fi
+
+  # Read only this literal slug list; never execute the checkout's .env file.
+  REQUIRED_PLUGINS="$(awk -v fallback="${REQUIRED_PLUGINS:-}" '
+    /^[[:space:]]*(export[[:space:]]+)?REQUIRED_PLUGINS[[:space:]]*=/ {
+      value = $0
+      sub(/^[^=]*=[[:space:]]*/, "", value)
+      sub(/\r$/, "", value)
+      sub(/[[:space:]]+#.*$/, "", value)
+      sub(/[[:space:]]+$/, "", value)
+      quote = substr(value, 1, 1)
+      if (quote == "\042" || quote == "\047") {
+        if (length(value) < 2 || substr(value, length(value), 1) != quote) {
+          exit 1
+        }
+        value = substr(value, 2, length(value) - 2)
+      }
+      if (value !~ /^[[:space:]a-zA-Z0-9_-]*$/) {
+        exit 1
+      }
+      found = 1
+      plugins = value
+    }
+    END { print found ? plugins : fallback }
+  ' "$env_file")" || {
+    echo "Invalid REQUIRED_PLUGINS in $env_file; use a whitespace-separated list of plugin slugs." >&2
+    exit 1
+  }
+}
+
 install_required_plugins() {
   for plugin_slug in ${REQUIRED_PLUGINS:-}; do
     if wp_cli --skip-plugins --skip-themes plugin is-installed "$plugin_slug" >/dev/null 2>&1; then
@@ -262,6 +297,7 @@ else
     --skip-email
 fi
 
+load_required_plugins
 install_required_plugins
 activate_plugin "$PROJECT_PLUGIN"
 

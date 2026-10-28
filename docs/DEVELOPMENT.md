@@ -53,6 +53,18 @@ WordPress is installed automatically on first startup. Admin credentials, ports,
 required helper plugins, and Xdebug settings can be changed in the ignored
 `.env` file.
 
+On every WordPress container start, restart, and initialization, the startup
+script reads the current `REQUIRED_PLUGINS` list directly from the checkout's
+`.env`, installs any missing plugins, and activates the listed plugins. Use a
+whitespace-separated list of WordPress.org plugin slugs, optionally enclosed in
+single or double quotes; shell commands and variable interpolation are not
+supported in this value. Installed plugins are not reinstalled or updated, and
+removing a slug from the list does not uninstall or deactivate it. If `.env` or
+its `REQUIRED_PLUGINS` entry is absent, the container environment is used instead.
+An empty entry requires no helper plugins. Changes to this list take effect even
+with `docker compose restart wordpress`; other environment changes still require
+container recreation with `make restart`.
+
 ## Runtime Commands
 
 ```sh
